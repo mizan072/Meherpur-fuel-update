@@ -92,6 +92,9 @@
                         </span>
                         <span class="text-[10px] text-slate-400">রিয়েল-টাইম আপডেট</span>
                     </div>
+                    <button onclick="showAboutModal()" class="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-full transition-colors group relative" title="আমাদের সম্পর্কে">
+                        <i class="ph ph-info text-sky-400 group-hover:text-white text-lg transition-colors"></i>
+                    </button>
                     <button onclick="loadData()" id="refreshBtn" class="p-2.5 bg-slate-800 hover:bg-slate-700 rounded-full transition-colors group relative" title="ডেটা রিফ্রেশ করুন">
                         <i class="ph ph-arrows-clockwise text-emerald-400 group-hover:text-white text-lg transition-transform" id="refreshIcon"></i>
                     </button>
@@ -241,6 +244,29 @@
             <p class="text-slate-600 text-sm mb-8 leading-relaxed">আপনার কাছে কোন ফিলিং স্টেশনের তথ্য থাকলে এখানে যোগ করে অন্য কে সহায়তা করেন।</p>
             <button id="contributeBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-emerald-500/30 flex justify-center items-center gap-2 text-sm">
                 <i class="ph-fill ph-pencil-simple text-lg"></i> তথ্য দিন
+            </button>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[3000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="aboutModalContent" class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 p-8 text-center relative border border-slate-200">
+            <button id="closeAboutBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 bg-slate-50 rounded-full transition-colors"><i class="ph ph-x text-lg"></i></button>
+            <div class="w-16 h-16 bg-sky-50 text-sky-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <i class="ph-fill ph-info text-3xl"></i>
+            </div>
+            <h3 class="text-slate-800 font-bold text-xl mb-3">সতর্কীকরণ ও তথ্য</h3>
+            <div class="text-slate-600 text-sm mb-6 leading-relaxed text-justify">
+                এই অ্যাপে প্রদর্শিত কোনো তথ্যই আমাদের নিজস্ব প্রদানকৃত নয়। এটি সম্পূর্ণ একটি কমিউনিটি-চালিত প্ল্যাটফর্ম, যেখানে ব্যবহারকারীরাই একে অপরের সুবিধার্থে লাইভ তথ্য হালনাগাদ করে থাকেন।
+                <br><br>
+                তাই অনাকাঙ্ক্ষিত কোনো ভুল বা অসম্পূর্ণ তথ্যের জন্য আমরা দায়বদ্ধ নই। পাম্পে যাওয়ার পূর্বে তথ্যের নির্ভরতা যাচাই করে নেওয়ার অনুরোধ রইলো।
+            </div>
+            <div class="bg-slate-50 p-4 rounded-xl text-xs text-slate-500 border border-slate-100">
+                যেকোনো সমস্যা বা যোগাযোগের জন্য ইমেইল করুন:<br>
+                <a href="mailto:bcsinpdf@gmail.com" class="font-bold text-emerald-600 hover:text-emerald-700 text-sm mt-1 inline-block">bcsinpdf@gmail.com</a>
+            </div>
+            <button id="aboutOkBtn" class="mt-6 w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition-colors text-sm">
+                বুঝতে পেরেছি
             </button>
         </div>
     </div>
@@ -612,6 +638,28 @@
             }, 300);
         }
 
+        function showAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            const content = document.getElementById('aboutModalContent');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeAboutModal() {
+            const modal = document.getElementById('aboutModal');
+            const content = document.getElementById('aboutModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', (e) => { searchQuery = e.target.value; renderUI(); });
             document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -648,6 +696,10 @@
                     document.getElementById('mobileListToggle').classList.add('translate-y-[150%]');
                 }
             });
+
+            // About Modal Listeners
+            document.getElementById('closeAboutBtn').addEventListener('click', closeAboutModal);
+            document.getElementById('aboutOkBtn').addEventListener('click', closeAboutModal);
         }
 
         window.onload = function() {
