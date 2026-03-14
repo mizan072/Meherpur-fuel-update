@@ -321,10 +321,10 @@
         const hidePwaModal = () => installModal.classList.add('translate-y-full');
         closePwaBtn.addEventListener('click', hidePwaModal);
         closePwaBtnDesktop.addEventListener('click', hidePwaModal);
-
-
-        // --- 2. API Configuration ---
+        // --- 2. API & Cooldown Configuration ---
         const API_URL = "https://script.google.com/macros/s/AKfycbzzZYJWNsS0IKt7ucREk6oxLMIRbKhayxEuNjxRhz4ktjhD8daG-qetp6tyn8L1oZ0/exec";
+        const COOLDOWN_KEY = 'mft_last_report_time';
+        const COOLDOWN_TIME = 5 * 60 * 1000; // ৫ মিনিট (মিলি-সেকেন্ডে)
         
         let stations = [];
         let map, markersLayer;
@@ -361,6 +361,20 @@
             }
         }
 
+        // --- Cooldown Checker ---
+        function checkCooldown() {
+            const lastReport = localStorage.getItem(COOLDOWN_KEY);
+            if (!lastReport) return { allowed: true };
+
+            const timePassed = Date.now() - parseInt(lastReport);
+            if (timePassed < COOLDOWN_TIME) {
+                const timeLeftMs = COOLDOWN_TIME - timePassed;
+                const minutesLeft = Math.ceil(timeLeftMs / (60 * 1000));
+                return { allowed: false, minutes: toBengaliNum(minutesLeft) };
+            }
+            return { allowed: true };
+        }
+
         async function saveUpdateData(id, newPetrol, newOctane) {
             const btn = document.getElementById('submitUpdateBtn');
             const originalBtnHtml = btn.innerHTML;
@@ -386,6 +400,10 @@
                             setTimeout(() => stations[index].marker.openPopup(), 400);
                         }
                     }
+                    
+                    // সফলভাবে সেভ হলে বর্তমান সময় লোকাল স্টোরেজে সেভ করে রাখা (৫ মিনিটের কাউন্টডাউনের জন্য)
+                    localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+                    
                     closeUpdateModal();
                     showToast("স্ট্যাটাস সফলভাবে সেভ হয়েছে!");
                 } else {
@@ -558,6 +576,13 @@
         }
 
         function openUpdateModal(id) {
+            // ১. মডেল ওপেন করার আগেই চেক করা হবে তার ৫ মিনিট টাইম-আউট শেষ হয়েছে কি না
+            const cooldown = checkCooldown();
+            if (!cooldown.allowed) {
+                showToast(`স্প্যাম রোধে টাইম-আউট চলছে! দয়া করে ${cooldown.minutes} মিনিট পর আবার চেষ্টা করুন।`, "error");
+                return; // মডেল ওপেন হবে না
+            }
+
             const station = stations.find(s => parseInt(s.id) === parseInt(id));
             if (!station) return;
             currentEditingId = parseInt(id);
