@@ -64,6 +64,9 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Grayscale filter for outdated pins */
+        .outdated-pin { filter: grayscale(100%) opacity(0.8); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden relative">
@@ -176,6 +179,44 @@
         </a>
     </footer>
 
+    <!-- Contribute Info Modal -->
+    <div id="contributeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[3000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="contributeModalContent" class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 p-8 text-center relative border border-emerald-100">
+            <button id="closeContributeBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 bg-slate-50 rounded-full transition-colors"><i class="ph ph-x text-lg"></i></button>
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <i class="ph-fill ph-hands-clapping text-4xl animate-bounce"></i>
+            </div>
+            <h3 class="text-slate-800 font-bold text-xl mb-3">তথ্য দিয়ে সহায়তা করুন!</h3>
+            <p class="text-slate-600 text-sm mb-8 leading-relaxed">আপনার কাছে কোন ফিলিং স্টেশনের তথ্য থাকলে এখানে যোগ করে অন্য কে সহায়তা করেন।</p>
+            <button id="contributeBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-emerald-500/30 flex justify-center items-center gap-2 text-sm">
+                <i class="ph-fill ph-pencil-simple text-lg"></i> তথ্য দিন
+            </button>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[3000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="aboutModalContent" class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 p-8 text-center relative border border-slate-200">
+            <button id="closeAboutBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 bg-slate-50 rounded-full transition-colors"><i class="ph ph-x text-lg"></i></button>
+            <div class="w-16 h-16 bg-sky-50 text-sky-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <i class="ph-fill ph-info text-3xl"></i>
+            </div>
+            <h3 class="text-slate-800 font-bold text-xl mb-3">সতর্কীকরণ ও তথ্য</h3>
+            <div class="text-slate-600 text-sm mb-6 leading-relaxed text-justify">
+                এই অ্যাপে প্রদর্শিত কোনো তথ্যই আমাদের নিজস্ব প্রদানকৃত নয়। এটি সম্পূর্ণ একটি কমিউনিটি-চালিত প্ল্যাটফর্ম, যেখানে ব্যবহারকারীরাই একে অপরের সুবিধার্থে লাইভ তথ্য হালনাগাদ করে থাকেন।
+                <br><br>
+                তাই অনাকাঙ্ক্ষিত কোনো ভুল বা অসম্পূর্ণ তথ্যের জন্য আমরা দায়বদ্ধ নই। পাম্পে যাওয়ার পূর্বে তথ্যের নির্ভরতা যাচাই করে নেওয়ার অনুরোধ রইলো।
+            </div>
+            <div class="bg-slate-50 p-4 rounded-xl text-xs text-slate-500 border border-slate-100">
+                যেকোনো সমস্যা বা যোগাযোগের জন্য ইমেইল করুন:<br>
+                <a href="mailto:bcsinpdf@gmail.com" class="font-bold text-emerald-600 hover:text-emerald-700 text-sm mt-1 inline-block">bcsinpdf@gmail.com</a>
+            </div>
+            <button id="aboutOkBtn" class="mt-6 w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition-colors text-sm">
+                বুঝতে পেরেছি
+            </button>
+        </div>
+    </div>
+
     <!-- Update Status Modal -->
     <div id="updateModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] hidden items-end md:items-center justify-center p-0 md:p-4 opacity-0 transition-opacity duration-300">
         <div id="updateModalContent" class="bg-white rounded-t-3xl md:rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform translate-y-full md:translate-y-10 transition-transform duration-300 max-h-[90vh] flex flex-col">
@@ -233,44 +274,6 @@
         </div>
     </div>
 
-    <!-- Contribute Info Modal -->
-    <div id="contributeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[3000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div id="contributeModalContent" class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300 p-8 text-center relative border border-emerald-100">
-            <button id="closeContributeBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 bg-slate-50 rounded-full transition-colors"><i class="ph ph-x text-lg"></i></button>
-            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
-                <i class="ph-fill ph-hands-clapping text-4xl animate-bounce"></i>
-            </div>
-            <h3 class="text-slate-800 font-bold text-xl mb-3">তথ্য দিয়ে সহায়তা করুন!</h3>
-            <p class="text-slate-600 text-sm mb-8 leading-relaxed">আপনার কাছে কোন ফিলিং স্টেশনের তথ্য থাকলে এখানে যোগ করে অন্য কে সহায়তা করেন।</p>
-            <button id="contributeBtn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-emerald-500/30 flex justify-center items-center gap-2 text-sm">
-                <i class="ph-fill ph-pencil-simple text-lg"></i> তথ্য দিন
-            </button>
-        </div>
-    </div>
-
-    <!-- About Modal -->
-    <div id="aboutModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[3000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div id="aboutModalContent" class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform duration-300 p-8 text-center relative border border-slate-200">
-            <button id="closeAboutBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1.5 bg-slate-50 rounded-full transition-colors"><i class="ph ph-x text-lg"></i></button>
-            <div class="w-16 h-16 bg-sky-50 text-sky-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-                <i class="ph-fill ph-info text-3xl"></i>
-            </div>
-            <h3 class="text-slate-800 font-bold text-xl mb-3">সতর্কীকরণ ও তথ্য</h3>
-            <div class="text-slate-600 text-sm mb-6 leading-relaxed text-justify">
-                এই অ্যাপে প্রদর্শিত কোনো তথ্যই আমাদের নিজস্ব প্রদানকৃত নয়। এটি সম্পূর্ণ একটি কমিউনিটি-চালিত প্ল্যাটফর্ম, যেখানে ব্যবহারকারীরাই একে অপরের সুবিধার্থে লাইভ তথ্য হালনাগাদ করে থাকেন।
-                <br><br>
-                তাই অনাকাঙ্ক্ষিত কোনো ভুল বা অসম্পূর্ণ তথ্যের জন্য আমরা দায়বদ্ধ নই। পাম্পে যাওয়ার পূর্বে তথ্যের নির্ভরতা যাচাই করে নেওয়ার অনুরোধ রইলো।
-            </div>
-            <div class="bg-slate-50 p-4 rounded-xl text-xs text-slate-500 border border-slate-100">
-                যেকোনো সমস্যা বা যোগাযোগের জন্য ইমেইল করুন:<br>
-                <a href="mailto:bcsinpdf@gmail.com" class="font-bold text-emerald-600 hover:text-emerald-700 text-sm mt-1 inline-block">bcsinpdf@gmail.com</a>
-            </div>
-            <button id="aboutOkBtn" class="mt-6 w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition-colors text-sm">
-                বুঝতে পেরেছি
-            </button>
-        </div>
-    </div>
-
     <!-- Toast -->
     <div id="toast" class="fixed top-20 right-4 md:top-20 md:right-8 bg-slate-800 text-white px-5 py-3 rounded-xl shadow-2xl transform translate-x-[150%] transition-transform duration-300 z-[3000] flex items-center gap-3 border border-slate-700">
         <i class="ph-fill ph-check-circle text-emerald-400 text-xl" id="toastIcon"></i>
@@ -298,14 +301,10 @@
         const closePwaBtn = document.getElementById('pwaCloseBtn');
         const closePwaBtnDesktop = document.getElementById('pwaCloseBtnDesktop');
 
-        // Listen for browser install prompt
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // Show custom tailwind modal after 2 seconds
-            setTimeout(() => {
-                installModal.classList.remove('translate-y-full');
-            }, 2000);
+            setTimeout(() => { installModal.classList.remove('translate-y-full'); }, 2000);
         });
 
         installBtn.addEventListener('click', async () => {
@@ -313,7 +312,6 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
                 deferredPrompt = null;
             }
         });
@@ -321,10 +319,13 @@
         const hidePwaModal = () => installModal.classList.add('translate-y-full');
         closePwaBtn.addEventListener('click', hidePwaModal);
         closePwaBtnDesktop.addEventListener('click', hidePwaModal);
-        // --- 2. API & Cooldown Configuration ---
+
+
+        // --- 2. API & Application Config ---
         const API_URL = "https://script.google.com/macros/s/AKfycbzzZYJWNsS0IKt7ucREk6oxLMIRbKhayxEuNjxRhz4ktjhD8daG-qetp6tyn8L1oZ0/exec";
         const COOLDOWN_KEY = 'mft_last_report_time';
-        const COOLDOWN_TIME = 5 * 60 * 1000; // ৫ মিনিট (মিলি-সেকেন্ডে)
+        const COOLDOWN_TIME = 5 * 60 * 1000; // ৫ মিনিট টাইমআউট
+        const OUTDATED_THRESHOLD = 12 * 60 * 60 * 1000; // ১২ ঘণ্টা (মিলি-সেকেন্ডে)
         
         let stations = [];
         let map, markersLayer;
@@ -332,26 +333,19 @@
         let searchQuery = '';
         let currentEditingId = null;
 
-        // ডিফল্ট ডাটা (যদি গুগল শিট লোড হতে দেরি হয়)
-        const defaultStations = [
-            { id: 1, name: "জেড কে ফিলিং স্টেশন", lat: 23.7700, lng: 88.6300, petrol: "পর্যাপ্ত", octane: "সীমিত", lastUpdated: Date.now() - 300000, upazila: "কাঁথুলি রোড, মেহেরপুর সদর", reports: 42, phone: "01711-941181", note: "২৪ ঘণ্টা খোলা" },
-            { id: 2, name: "মেসার্স মেহেরপুর ফিলিং স্টেশন", lat: 23.7650, lng: 88.6400, petrol: "সীমিত", octane: "স্টক নেই", lastUpdated: Date.now() - 3600000, upazila: "কলেজ ক্রসিং, মেহেরপুর", reports: 15 },
-            { id: 3, name: "মা ফিলিং স্টেশন", lat: 23.7600, lng: 88.6350, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 1200000, upazila: "বামনপাড়া, মেহেরপুর", reports: 28 },
-            { id: 4, name: "নূর ফিলিং স্টেশন", lat: 23.7800, lng: 88.6350, petrol: "স্টক নেই", octane: "সীমিত", lastUpdated: Date.now() - 4500000, upazila: "পুলিশ লাইন রোড, মেহেরপুর", reports: 34 },
-            { id: 5, name: "অয়ন ফিলিং স্টেশন", lat: 23.7500, lng: 88.6500, petrol: "সীমিত", octane: "স্টক নেই", lastUpdated: Date.now() - 7200000, upazila: "চুয়াডাঙ্গা-মেহেরপুর হাইওয়ে", reports: 11 },
-            { id: 6, name: "অনামিকা ফিলিং স্টেশন", lat: 23.7900, lng: 88.6600, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 1800000, upazila: "কোমরপুর, মেহেরপুর", reports: 89, phone: "01865-716004", note: "২৪ ঘণ্টা খোলা" },
-            { id: 7, name: "মুজিবনগর ফিলিং স্টেশন", lat: 23.6600, lng: 88.5800, petrol: "পর্যাপ্ত", octane: "সীমিত", lastUpdated: Date.now() - 2400000, upazila: "রামনগর, মুজিবনগর", reports: 19 },
-            { id: 8, name: "গাংনী হাইওয়ে পাম্প", lat: 23.8300, lng: 88.6800, petrol: "সীমিত", octane: "স্টক নেই", lastUpdated: Date.now() - 400000, upazila: "মেহেরপুর-কুষ্টিয়া হাইওয়ে, গাংনী", reports: 56 },
-            { id: 9, name: "এম/এস এম.এম ফিলিং স্টেশন", lat: 23.6300, lng: 88.6250, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 900000, upazila: "কার্পাসডাঙ্গা, দামুড়হুদা (চুয়াডাঙ্গা)", reports: 35, phone: "01713-920353", note: "সকাল ৭টা - রাত ৯টা" },
-            { id: 10, name: "হক ফিলিং স্টেশন", lat: 23.7580, lng: 88.6250, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 500000, upazila: "চাঁদবিল, মেহেরপুর সদর", reports: 12, phone: "", note: "২৪ ঘণ্টা খোলা" },
-            { id: 11, name: "শতাব্দী ফিলিং স্টেশন", lat: 23.7850, lng: 88.6400, petrol: "পর্যাপ্ত", octane: "সীমিত", lastUpdated: Date.now() - 800000, upazila: "মেহেরপুর সদর", reports: 7, phone: "", note: "" }
-        ];
-
         const themeMap = {
             'পর্যাপ্ত': { bg: 'bg-emerald-500', text: 'text-emerald-700', border: 'border-emerald-200', light: 'bg-emerald-50' },
             'সীমিত':   { bg: 'bg-amber-500',   text: 'text-amber-700',   border: 'border-amber-200',   light: 'bg-amber-50' },
             'স্টক নেই': { bg: 'bg-rose-500',    text: 'text-rose-700',    border: 'border-rose-200',    light: 'bg-rose-50' }
         };
+        // Theme for outdated stations
+        const outdatedTheme = { bg: 'bg-slate-400', text: 'text-slate-500', border: 'border-slate-200', light: 'bg-slate-50' };
+
+        // ১২ ঘণ্টার বেশি পুরোনো কিনা চেক করার ফাংশন
+        function isOutdated(timestamp) {
+            if (!timestamp) return true;
+            return (Date.now() - timestamp) > OUTDATED_THRESHOLD;
+        }
 
         async function loadData() {
             const refreshIcon = document.getElementById('refreshIcon');
@@ -363,11 +357,7 @@
                 stations = data;
                 renderUI();
                 
-                // Show contribute modal after successful load (Delay 1.5s for smooth UX)
-                setTimeout(() => {
-                    showContributeModal();
-                }, 1500);
-                
+                setTimeout(() => { showContributeModal(); }, 1500);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 showToast("ডেটা লোড করতে সমস্যা হচ্ছে। আপনার ইন্টারনেট চেক করুন।", "error");
@@ -376,7 +366,6 @@
             }
         }
 
-        // --- Cooldown Checker ---
         function checkCooldown() {
             const lastReport = localStorage.getItem(COOLDOWN_KEY);
             if (!lastReport) return { allowed: true };
@@ -415,10 +404,7 @@
                             setTimeout(() => stations[index].marker.openPopup(), 400);
                         }
                     }
-                    
-                    // সফলভাবে সেভ হলে বর্তমান সময় লোকাল স্টোরেজে সেভ করে রাখা (৫ মিনিটের কাউন্টডাউনের জন্য)
                     localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
-                    
                     closeUpdateModal();
                     showToast("স্ট্যাটাস সফলভাবে সেভ হয়েছে!");
                 } else {
@@ -466,7 +452,6 @@
             }).addTo(map);
             markersLayer = L.layerGroup().addTo(map);
             
-            // Load District Outline
             loadDistrictBoundary();
         }
 
@@ -485,6 +470,7 @@
         }
 
         function getPinTheme(station) {
+            if (isOutdated(station.lastUpdated)) return 'bg-slate-400';
             if (station.petrol === 'পর্যাপ্ত' || station.octane === 'পর্যাপ্ত') return 'bg-emerald-500';
             if (station.petrol === 'স্টক নেই' && station.octane === 'স্টক নেই') return 'bg-rose-500';
             return 'bg-amber-500'; 
@@ -512,29 +498,33 @@
             }
 
             filtered.forEach(s => {
-                const pTheme = themeMap[s.petrol] || themeMap['স্টক নেই'];
-                const oTheme = themeMap[s.octane] || themeMap['স্টক নেই'];
+                const outdated = isOutdated(s.lastUpdated);
+                const pTheme = outdated ? outdatedTheme : (themeMap[s.petrol] || themeMap['স্টক নেই']);
+                const oTheme = outdated ? outdatedTheme : (themeMap[s.octane] || themeMap['স্টক নেই']);
+                
                 let phoneHtml = s.phone ? `<p class="text-[10px] text-slate-500 mt-1 flex items-center gap-1"><i class="ph-fill ph-phone"></i>${s.phone}</p>` : '';
                 let noteHtml = s.note ? `<span class="bg-blue-100 text-blue-700 text-[9px] px-1.5 py-0.5 rounded font-bold ml-2 shrink-0">${s.note}</span>` : '';
+                let outdatedWarningHtml = outdated ? `<div class="bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-bold px-2 py-1.5 rounded-lg flex items-center justify-center gap-1 mt-2 mb-1"><i class="ph-fill ph-warning-circle text-slate-400 text-sm"></i> তথ্যটি অনেক পুরোনো (১২ ঘণ্টার বেশি)</div>` : '';
 
                 const card = document.createElement('div');
                 card.className = "bg-white p-4 rounded-2xl mb-3 border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-200 cursor-pointer transition-all fade-in group";
                 card.onclick = () => focusStation(s.id);
 
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
+                    <div class="flex justify-between items-start mb-2">
                         <div>
                             <h3 class="font-bold text-slate-800 text-sm md:text-base group-hover:text-emerald-700 transition-colors flex items-center flex-wrap gap-y-1">${s.name} ${noteHtml}</h3>
                             <p class="text-[11px] text-slate-500 mt-1 flex items-center gap-1"><i class="ph-fill ph-map-pin text-slate-400"></i>${s.upazila}</p>
                             ${phoneHtml}
                         </div>
-                        <div class="bg-amber-100 border border-amber-300 text-amber-800 text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0 shadow-sm animate-pulse" title="মোট রিপোর্ট করা হয়েছে">
+                        <div class="bg-amber-100 border border-amber-300 text-amber-800 text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0 shadow-sm" title="মোট রিপোর্ট করা হয়েছে">
                             <i class="ph-fill ph-users text-amber-600 text-sm"></i> ${toBengaliNum(s.reports)} টি রিপোর্ট
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 mb-3">
-                        <div class="border ${pTheme.border} ${pTheme.light} rounded-xl p-2 flex flex-col items-center justify-center"><span class="text-[10px] font-bold text-slate-500 mb-1 flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-red-500"></div> পেট্রোল</span><span class="text-xs font-bold ${pTheme.text}">${s.petrol}</span></div>
-                        <div class="border ${oTheme.border} ${oTheme.light} rounded-xl p-2 flex flex-col items-center justify-center"><span class="text-[10px] font-bold text-slate-500 mb-1 flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-blue-500"></div> অকটেন</span><span class="text-xs font-bold ${oTheme.text}">${s.octane}</span></div>
+                    ${outdatedWarningHtml}
+                    <div class="grid grid-cols-2 gap-2 mb-3 mt-2">
+                        <div class="border ${pTheme.border} ${pTheme.light} rounded-xl p-2 flex flex-col items-center justify-center"><span class="text-[10px] font-bold text-slate-500 mb-1 flex items-center gap-1"><div class="w-2 h-2 rounded-full ${outdated ? 'bg-slate-400' : 'bg-red-500'}"></div> পেট্রোল</span><span class="text-xs font-bold ${pTheme.text}">${s.petrol}</span></div>
+                        <div class="border ${oTheme.border} ${oTheme.light} rounded-xl p-2 flex flex-col items-center justify-center"><span class="text-[10px] font-bold text-slate-500 mb-1 flex items-center gap-1"><div class="w-2 h-2 rounded-full ${outdated ? 'bg-slate-400' : 'bg-blue-500'}"></div> অকটেন</span><span class="text-xs font-bold ${oTheme.text}">${s.octane}</span></div>
                     </div>
                     <div class="flex justify-between items-center border-t border-slate-50 pt-3 mt-1">
                         <div class="flex items-center gap-1.5 text-[10px] text-slate-500 font-medium"><i class="ph ph-clock text-slate-400"></i><span class="time-display" data-timestamp="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span></div>
@@ -547,10 +537,13 @@
         function renderMapMarkers(filtered) {
             markersLayer.clearLayers();
             filtered.forEach(s => {
+                const outdated = isOutdated(s.lastUpdated);
                 const pinColor = getPinTheme(s);
-                const pTheme = themeMap[s.petrol] || themeMap['স্টক নেই'];
-                const oTheme = themeMap[s.octane] || themeMap['স্টক নেই'];
+                const pTheme = outdated ? outdatedTheme : (themeMap[s.petrol] || themeMap['স্টক নেই']);
+                const oTheme = outdated ? outdatedTheme : (themeMap[s.octane] || themeMap['স্টক নেই']);
+                
                 let phoneHtml = s.phone ? `<p class="text-[10px] text-slate-400 mt-1"><i class="ph-fill ph-phone mr-1"></i>${s.phone}</p>` : '';
+                let outdatedWarningHtml = outdated ? `<div class="bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-bold px-2 py-1.5 rounded-lg flex items-center justify-center gap-1 mt-2 mb-2"><i class="ph-fill ph-warning-circle text-slate-400 text-sm"></i> তথ্যটি ১২ ঘণ্টার বেশি পুরোনো</div>` : '';
 
                 const customIcon = L.divIcon({
                     className: '',
@@ -562,13 +555,13 @@
                     <div class="bg-white rounded-2xl overflow-hidden w-full">
                         <div class="bg-slate-900 px-4 py-3 relative"><h3 class="font-bold text-white text-sm pr-6 leading-tight">${s.name}</h3><p class="text-[10px] text-slate-400 mt-0.5">${s.upazila}</p>${phoneHtml}</div>
                         <div class="p-4">
+                            ${outdatedWarningHtml}
                             <div class="grid grid-cols-2 gap-2 mb-4">
                                 <div class="border ${pTheme.border} ${pTheme.light} rounded-xl p-2 text-center"><span class="block text-[10px] font-bold text-slate-500 mb-1">পেট্রোল</span><span class="block text-xs font-bold ${pTheme.text}">${s.petrol}</span></div>
                                 <div class="border ${oTheme.border} ${oTheme.light} rounded-xl p-2 text-center"><span class="block text-[10px] font-bold text-slate-500 mb-1">অকটেন</span><span class="block text-xs font-bold ${oTheme.text}">${s.octane}</span></div>
                             </div>
                             <div class="text-[10px] text-slate-500 mb-3 text-center bg-slate-50 py-1.5 rounded-lg border border-slate-100 flex justify-between px-3 items-center">
-                                <span>আপডেট: <span class="font-semibold text-slate-700 time-display" data-timestamp="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span></span>
-                                <span class="bg-amber-100 border border-amber-300 text-amber-800 px-2 py-1 rounded-md text-[10px] font-bold shadow-sm flex items-center gap-1"><i class="ph-fill ph-users text-amber-600"></i> ${toBengaliNum(s.reports)} টি রিপোর্ট</span>
+                                <span>আপডেট: <span class="font-semibold text-slate-700 time-display" data-timestamp="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span></span><span class="bg-amber-100 border border-amber-300 text-amber-800 px-2 py-1 rounded-md text-[10px] font-bold shadow-sm flex items-center gap-1"><i class="ph-fill ph-users text-amber-600"></i> ${toBengaliNum(s.reports)} টি রিপোর্ট</span>
                             </div>
                             <button onclick="openUpdateModal(${s.id})" class="w-full py-2.5 bg-emerald-500 text-white text-xs font-bold rounded-xl hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-500/20 flex items-center justify-center gap-1.5"><i class="ph ph-pencil-simple"></i> স্ট্যাটাস আপডেট করুন</button>
                         </div>
@@ -591,11 +584,10 @@
         }
 
         function openUpdateModal(id) {
-            // ১. মডেল ওপেন করার আগেই চেক করা হবে তার ৫ মিনিট টাইম-আউট শেষ হয়েছে কি না
             const cooldown = checkCooldown();
             if (!cooldown.allowed) {
                 showToast(`স্প্যাম রোধে টাইম-আউট চলছে! দয়া করে ${cooldown.minutes} মিনিট পর আবার চেষ্টা করুন।`, "error");
-                return; // মডেল ওপেন হবে না
+                return;
             }
 
             const station = stations.find(s => parseInt(s.id) === parseInt(id));
@@ -653,7 +645,6 @@
         }
 
         function showContributeModal() {
-            // Show only once per session so it doesn't annoy users on every refresh
             if (!sessionStorage.getItem('contributeModalShown')) {
                 const modal = document.getElementById('contributeModal');
                 const content = document.getElementById('contributeModalContent');
@@ -726,18 +717,15 @@
             });
             document.getElementById('updateModal').addEventListener('click', (e) => { if(e.target.id === 'updateModal') closeUpdateModal(); });
             
-            // Contribute Modal Listeners
             document.getElementById('closeContributeBtn').addEventListener('click', closeContributeModal);
             document.getElementById('contributeBtn').addEventListener('click', () => {
                 closeContributeModal();
-                // Open sidebar on mobile when they click to contribute
                 if (window.innerWidth < 768) {
                     document.getElementById('sidebar').classList.remove('translate-y-full');
                     document.getElementById('mobileListToggle').classList.add('translate-y-[150%]');
                 }
             });
 
-            // About Modal Listeners
             document.getElementById('closeAboutBtn').addEventListener('click', closeAboutModal);
             document.getElementById('aboutOkBtn').addEventListener('click', closeAboutModal);
         }
@@ -747,6 +735,7 @@
             setupEventListeners();
             loadData();
         };
+
     </script>
 </body>
 </html>
