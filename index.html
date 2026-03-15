@@ -172,7 +172,7 @@
     <footer class="bg-slate-900 text-slate-400 py-2.5 text-center text-[11px] md:text-xs z-30 shrink-0 border-t border-slate-800">
         Developed by 
         <a href="https://t.me/Mizan0072" target="_blank" rel="noopener noreferrer" class="text-emerald-400 font-bold hover:text-emerald-300 transition-colors ml-1">
-            Unknown
+            Md.Mizanur Rahaman
         </a>
     </footer>
 
@@ -331,6 +331,21 @@
         let activeFilter = 'all';
         let searchQuery = '';
         let currentEditingId = null;
+
+        // ডিফল্ট ডাটা (যদি গুগল শিট লোড হতে দেরি হয়)
+        const defaultStations = [
+            { id: 1, name: "জেড কে ফিলিং স্টেশন", lat: 23.7700, lng: 88.6300, petrol: "পর্যাপ্ত", octane: "সীমিত", lastUpdated: Date.now() - 300000, upazila: "কাঁথুলি রোড, মেহেরপুর সদর", reports: 42, phone: "01711-941181", note: "২৪ ঘণ্টা খোলা" },
+            { id: 2, name: "মেসার্স মেহেরপুর ফিলিং স্টেশন", lat: 23.7650, lng: 88.6400, petrol: "সীমিত", octane: "স্টক নেই", lastUpdated: Date.now() - 3600000, upazila: "কলেজ ক্রসিং, মেহেরপুর", reports: 15 },
+            { id: 3, name: "মা ফিলিং স্টেশন", lat: 23.7600, lng: 88.6350, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 1200000, upazila: "বামনপাড়া, মেহেরপুর", reports: 28 },
+            { id: 4, name: "নূর ফিলিং স্টেশন", lat: 23.7800, lng: 88.6350, petrol: "স্টক নেই", octane: "সীমিত", lastUpdated: Date.now() - 4500000, upazila: "পুলিশ লাইন রোড, মেহেরপুর", reports: 34 },
+            { id: 5, name: "অয়ন ফিলিং স্টেশন", lat: 23.7500, lng: 88.6500, petrol: "সীমিত", octane: "স্টক নেই", lastUpdated: Date.now() - 7200000, upazila: "চুয়াডাঙ্গা-মেহেরপুর হাইওয়ে", reports: 11 },
+            { id: 6, name: "অনামিকা ফিলিং স্টেশন", lat: 23.7900, lng: 88.6600, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 1800000, upazila: "কোমরপুর, মেহেরপুর", reports: 89, phone: "01865-716004", note: "২৪ ঘণ্টা খোলা" },
+            { id: 7, name: "মুজিবনগর ফিলিং স্টেশন", lat: 23.6600, lng: 88.5800, petrol: "পর্যাপ্ত", octane: "সীমিত", lastUpdated: Date.now() - 2400000, upazila: "রামনগর, মুজিবনগর", reports: 19 },
+            { id: 8, name: "গাংনী হাইওয়ে পাম্প", lat: 23.8300, lng: 88.6800, petrol: "সীমিত", octane: "স্টক নেই", lastUpdated: Date.now() - 400000, upazila: "মেহেরপুর-কুষ্টিয়া হাইওয়ে, গাংনী", reports: 56 },
+            { id: 9, name: "এম/এস এম.এম ফিলিং স্টেশন", lat: 23.6300, lng: 88.6250, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 900000, upazila: "কার্পাসডাঙ্গা, দামুড়হুদা (চুয়াডাঙ্গা)", reports: 35, phone: "01713-920353", note: "সকাল ৭টা - রাত ৯টা" },
+            { id: 10, name: "হক ফিলিং স্টেশন", lat: 23.7580, lng: 88.6250, petrol: "পর্যাপ্ত", octane: "পর্যাপ্ত", lastUpdated: Date.now() - 500000, upazila: "চাঁদবিল, মেহেরপুর সদর", reports: 12, phone: "", note: "২৪ ঘণ্টা খোলা" },
+            { id: 11, name: "শতাব্দী ফিলিং স্টেশন", lat: 23.7850, lng: 88.6400, petrol: "পর্যাপ্ত", octane: "সীমিত", lastUpdated: Date.now() - 800000, upazila: "মেহেরপুর সদর", reports: 7, phone: "", note: "" }
+        ];
 
         const themeMap = {
             'পর্যাপ্ত': { bg: 'bg-emerald-500', text: 'text-emerald-700', border: 'border-emerald-200', light: 'bg-emerald-50' },
