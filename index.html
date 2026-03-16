@@ -443,7 +443,7 @@
         closePwaBtnDesktop.addEventListener('click', hidePwaModal);
 
         // --- 2. API & Application Config ---
-        const API_URL = "https://script.google.com/macros/s/AKfycbzS6N1exM7m5vJdZav5wncSW-NfHLPjOaM-SpbtCl0M1miQPOGxGLfq59tifsQh0p0N/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzzZYJWNsS0IKt7ucREk6oxLMIRbKhayxEuNjxRhz4ktjhD8daG-qetp6tyn8L1oZ0/exec";
         const COOLDOWN_KEY = 'mft_last_report_time';
         const COOLDOWN_TIME = 5 * 60 * 1000; 
         const OUTDATED_THRESHOLD = 12 * 60 * 60 * 1000; 
@@ -453,6 +453,11 @@
         let activeFilter = 'all';
         let searchQuery = '';
         let currentEditingId = null;
+
+        // Notification Badge Variables
+        let lastKnownLatestUpdate = 0;
+        let isUnread = false;
+        const originalTitle = document.title;
 
         const themeMap = {
             'পর্যাপ্ত': { bg: 'bg-emerald-500', text: 'text-emerald-700', border: 'border-emerald-200', light: 'bg-emerald-50' },
@@ -466,22 +471,64 @@
             return (Date.now() - timestamp) > OUTDATED_THRESHOLD;
         }
 
-        async function loadData() {
+        // --- Notification Badge Logic ---
+        function setUnreadBadge(active) {
+            isUnread = active;
+            let link = document.querySelector("link[rel*='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+            
+            link.type = 'image/svg+xml';
+
+            if (active) {
+                // Red dot favicon (লাল ডট যুক্ত ফ্যাভিকন)
+                link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⛽</text><circle cx="85" cy="15" r="15" fill="%23ef4444" stroke="%23ffffff" stroke-width="4"/></svg>';
+                document.title = "(১) নতুন আপডেট! - " + originalTitle;
+            } else {
+                // Normal favicon (সাধারণ ফ্যাভিকন)
+                link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⛽</text></svg>';
+                document.title = originalTitle;
+            }
+        }
+
+        // ট্যাব পরিবর্তনের ইভেন্ট লিসেনার (Tab Visibility)
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden && isUnread) {
+                setUnreadBadge(false); // ইউজার ফিরে আসলে নোটিফিকেশন ক্লিয়ার হবে
+            }
+        });
+
+        // isSilent প্যারামিটার দিয়ে ব্যাকগ্রাউন্ড রিফ্রেশ করা হবে
+        async function loadData(isSilent = false) {
             const refreshIcon = document.getElementById('refreshIcon');
-            refreshIcon.classList.add('animate-spin');
+            if (!isSilent) refreshIcon.classList.add('animate-spin');
             
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 stations = data;
+                
+                // চেক করা হচ্ছে নতুন কোনো আপডেট আছে কি না
+                const currentMaxUpdate = Math.max(...data.map(s => parseInt(s.lastUpdated) || 0));
+                
+                if (lastKnownLatestUpdate > 0 && currentMaxUpdate > lastKnownLatestUpdate && document.hidden) {
+                    setUnreadBadge(true); // নতুন আপডেট এবং ইউজার অন্য ট্যাবে থাকলে ব্যাজ দেখাবে
+                }
+                lastKnownLatestUpdate = currentMaxUpdate;
+
                 renderUI();
                 
-                setTimeout(() => { showContributeModal(); }, 1800);
+                if (!isSilent) {
+                    setTimeout(() => { showContributeModal(); }, 1800);
+                }
             } catch (error) {
                 console.error(error);
-                showToast("ডেটা লোড করতে সমস্যা হচ্ছে।", "error");
+                if (!isSilent) showToast("ডেটা লোড করতে সমস্যা হচ্ছে।", "error");
             } finally {
-                refreshIcon.classList.remove('animate-spin');
+                if (!isSilent) refreshIcon.classList.remove('animate-spin');
             }
         }
 
@@ -502,7 +549,6 @@
             btn.disabled = true;
 
             try {
-                // API Request sending the new fuelAmount along with petrol and octane
                 const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ id, petrol: newPetrol, octane: newOctane, fuelAmount: newAmount }) });
                 const result = await response.json();
                 
@@ -511,9 +557,13 @@
                     if (index !== -1) {
                         stations[index].petrol = newPetrol;
                         stations[index].octane = newOctane;
-                        stations[index].fuelAmount = newAmount; // Set new local state
+                        stations[index].fuelAmount = newAmount;
                         stations[index].lastUpdated = Date.now();
                         stations[index].reports = (parseInt(stations[index].reports) || 0) + 1;
+                        
+                        // নিজের করা আপডেটে যেন নোটিফিকেশন না আসে তাই লোকাল ভ্যালু আপডেট
+                        lastKnownLatestUpdate = stations[index].lastUpdated;
+                        
                         renderUI();
                         if (window.innerWidth >= 768 && stations[index].marker) setTimeout(() => stations[index].marker.openPopup(), 400);
                     }
@@ -586,7 +636,6 @@
                 let noteHtml = s.note ? `<span class="bg-sky-50 text-sky-700 border border-sky-200 text-[10px] px-2.5 py-0.5 rounded-md font-black ml-2 shrink-0">${s.note}</span>` : '';
                 let outWarn = outdated ? `<div class="bg-slate-100 border-2 border-slate-200 text-slate-600 text-[11px] font-black px-3 py-2 rounded-xl flex items-center justify-center gap-1.5 mt-3 mb-1"><i class="ph-fill ph-warning-circle text-slate-500 text-[15px]"></i> তথ্যটি অনেক পুরোনো (১২ ঘণ্টার বেশি)</div>` : '';
 
-                // Fuel Amount display default logic
                 let fuelAmountText = s.fuelAmount && s.fuelAmount !== "" ? s.fuelAmount : 'Unknown';
 
                 const card = document.createElement('div');
@@ -685,12 +734,10 @@
             document.getElementById('modalStationName').textContent = station.name;
             document.getElementById('modalStationArea').innerHTML = `<i class="ph-fill ph-map-pin mr-1 text-slate-400"></i>${station.upazila}`;
             
-            // Clear existing selection
             document.querySelectorAll('input[name="petrolStatus"]').forEach(r => r.checked = false);
             document.querySelectorAll('input[name="octaneStatus"]').forEach(r => r.checked = false);
             document.querySelectorAll('input[name="fuelAmount"]').forEach(r => r.checked = false);
             
-            // Assign existing Values
             const pRadio = document.querySelector(`input[name="petrolStatus"][value="${station.petrol}"]`); if(pRadio) pRadio.checked = true;
             const oRadio = document.querySelector(`input[name="octaneStatus"][value="${station.octane}"]`); if(oRadio) oRadio.checked = true;
             
@@ -767,7 +814,6 @@
             document.getElementById('closeModalBtn').addEventListener('click', closeUpdateModal);
             document.getElementById('cancelModalBtn').addEventListener('click', closeUpdateModal);
             
-            // Saving Date Flow Logic
             document.getElementById('submitUpdateBtn').addEventListener('click', () => {
                 if (currentEditingId !== null) {
                     const pR = document.querySelector('input[name="petrolStatus"]:checked'); 
@@ -776,7 +822,6 @@
                     
                     if (!pR || !oR) { showToast("দয়া করে পেট্রোল ও অকটেনের স্ট্যাটাস নির্বাচন করুন।", "error"); return; }
                     
-                    // If amount is not selected, set to Unknown
                     const amountVal = aR ? aR.value : "Unknown"; 
                     saveUpdateData(currentEditingId, pR.value, oR.value, amountVal);
                 }
@@ -791,7 +836,16 @@
             document.getElementById('aboutOkBtn').addEventListener('click', closeAboutModal);
         }
 
-        window.onload = function() { initMap(); setupEventListeners(); loadData(); };
+        window.onload = function() { 
+            initMap(); 
+            setupEventListeners(); 
+            loadData(); 
+            
+            // অটো-রিফ্রেশ: প্রতি ২ মিনিট পরপর ব্যাকগ্রাউন্ডে চেক করবে নতুন ডেটা এসেছে কি না
+            setInterval(() => {
+                loadData(true); // true মানে silent রিফ্রেশ, স্পিনার ঘুরবে না
+            }, 2 * 60 * 1000); 
+        };
     </script>
 </body>
 </html>
