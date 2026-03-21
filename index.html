@@ -54,7 +54,9 @@
 
     <style>
         body { overscroll-behavior-y: none; font-family: 'Noto Sans Bengali', sans-serif; -webkit-tap-highlight-color: transparent; }
-        #map { height: 100%; width: 100%; z-index: 10; }
+        
+        /* Map Layout Fixes */
+        #map { position: absolute; inset: 0; height: 100%; width: 100%; z-index: 10; }
         
         /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -87,9 +89,33 @@
         
         /* App Drag Handle for Mobile Bottom Sheets */
         .drag-handle { width: 40px; height: 5px; background-color: #cbd5e1; border-radius: 10px; margin: 0 auto; }
+        
+        /* Custom Progress Bar Animation for Fullscreen Loader */
+        @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-medium h-screen flex flex-col overflow-hidden relative">
+
+    <!-- Fullscreen Initial Loader -->
+    <div id="appLoader" class="fixed inset-0 bg-slate-900 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative w-24 h-24 mb-8">
+            <div class="absolute inset-0 bg-emerald-500 rounded-full animate-ping opacity-20"></div>
+            <div class="absolute inset-2 bg-emerald-500 rounded-full animate-ping opacity-40" style="animation-delay: 0.3s"></div>
+            <div class="absolute inset-4 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full shadow-lg shadow-emerald-500/50 flex items-center justify-center z-10">
+                <i class="ph-fill ph-gas-pump text-4xl text-white animate-bounce"></i>
+            </div>
+        </div>
+        <h2 class="text-white font-black text-2xl tracking-tight mb-3">মেহেরপুর ফুয়েল ট্র্যাকার</h2>
+        <div class="flex flex-col items-center w-64">
+            <p id="loaderText" class="text-emerald-400 text-[13px] font-bold tracking-wide mb-3 text-center h-4">লাইভ সার্ভারের সাথে যুক্ত হচ্ছে...</p>
+            <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full w-1/2 animate-[progress_1.5s_ease-in-out_infinite]"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Top Navigation (Glassmorphism) -->
     <nav class="glass-nav text-white shadow-md z-20 flex-shrink-0 relative border-b border-slate-700/50">
@@ -206,7 +232,7 @@
     <footer class="bg-slate-900 text-slate-300 py-3.5 text-center text-xs md:text-[13px] z-30 shrink-0 border-t border-slate-800/80 font-bold">
         Developed by 
         <a href="https://t.me/Mizan0072" target="_blank" rel="noopener noreferrer" class="text-emerald-400 font-black hover:text-emerald-300 transition-colors ml-1 tracking-wide">
-            Unknown
+            Md.Mizanur Rahaman
         </a>
     </footer>
 
@@ -443,7 +469,7 @@
         closePwaBtnDesktop.addEventListener('click', hidePwaModal);
 
         // --- 2. API & Application Config ---
-        const API_URL = "https://script.google.com/macros/s/AKfycbzS6N1exM7m5vJdZav5wncSW-NfHLPjOaM-SpbtCl0M1miQPOGxGLfq59tifsQh0p0N/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzzZYJWNsS0IKt7ucREk6oxLMIRbKhayxEuNjxRhz4ktjhD8daG-qetp6tyn8L1oZ0/exec";
         const COOLDOWN_KEY = 'mft_last_report_time';
         const COOLDOWN_TIME = 5 * 60 * 1000; 
         const OUTDATED_THRESHOLD = 12 * 60 * 60 * 1000; 
@@ -484,49 +510,89 @@
             link.type = 'image/svg+xml';
 
             if (active) {
-                // Red dot favicon (লাল ডট যুক্ত ফ্যাভিকন)
+                // Red dot favicon 
                 link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⛽</text><circle cx="85" cy="15" r="15" fill="%23ef4444" stroke="%23ffffff" stroke-width="4"/></svg>';
                 document.title = "(১) নতুন আপডেট! - " + originalTitle;
             } else {
-                // Normal favicon (সাধারণ ফ্যাভিকন)
+                // Normal favicon
                 link.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⛽</text></svg>';
                 document.title = originalTitle;
             }
         }
 
-        // ট্যাব পরিবর্তনের ইভেন্ট লিসেনার (Tab Visibility)
         document.addEventListener("visibilitychange", () => {
             if (!document.hidden && isUnread) {
-                setUnreadBadge(false); // ইউজার ফিরে আসলে নোটিফিকেশন ক্লিয়ার হবে
+                setUnreadBadge(false); 
             }
         });
 
-        // isSilent প্যারামিটার দিয়ে ব্যাকগ্রাউন্ড রিফ্রেশ করা হবে
+        // --- Loader & Cache Logic ---
+        const loaderMessages = [
+            "লাইভ সার্ভারের সাথে যুক্ত হচ্ছে...",
+            "পাম্পের সর্বশেষ স্ট্যাটাস খোঁজা হচ্ছে...",
+            "ডেটাবেস সিঙ্ক করা হচ্ছে...",
+            "প্রায় হয়ে এসেছে..."
+        ];
+        let loaderMsgInterval;
+
+        function startLoader() {
+            let i = 0;
+            loaderMsgInterval = setInterval(() => {
+                i = (i + 1) % loaderMessages.length;
+                const txt = document.getElementById('loaderText');
+                if(txt) txt.innerText = loaderMessages[i];
+            }, 1500);
+        }
+
+        function hideLoader() {
+            clearInterval(loaderMsgInterval);
+            const appLoader = document.getElementById('appLoader');
+            if(appLoader) {
+                appLoader.classList.add('opacity-0');
+                setTimeout(() => { appLoader.style.display = 'none'; }, 500);
+            }
+        }
+
         async function loadData(isSilent = false) {
             const refreshIcon = document.getElementById('refreshIcon');
             if (!isSilent) refreshIcon.classList.add('animate-spin');
+            
+            const cachedData = localStorage.getItem('mft_cached_stations');
+            if (cachedData && !isSilent) {
+                try {
+                    stations = JSON.parse(cachedData);
+                    renderUI();
+                    hideLoader();
+                } catch(e) { console.error(e); }
+            } else if (!isSilent) {
+                startLoader();
+            }
             
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 stations = data;
+                localStorage.setItem('mft_cached_stations', JSON.stringify(data));
                 
-                // চেক করা হচ্ছে নতুন কোনো আপডেট আছে কি না
                 const currentMaxUpdate = Math.max(...data.map(s => parseInt(s.lastUpdated) || 0));
                 
                 if (lastKnownLatestUpdate > 0 && currentMaxUpdate > lastKnownLatestUpdate && document.hidden) {
-                    setUnreadBadge(true); // নতুন আপডেট এবং ইউজার অন্য ট্যাবে থাকলে ব্যাজ দেখাবে
+                    setUnreadBadge(true); 
                 }
                 lastKnownLatestUpdate = currentMaxUpdate;
 
                 renderUI();
                 
                 if (!isSilent) {
+                    hideLoader();
                     setTimeout(() => { showContributeModal(); }, 1800);
                 }
             } catch (error) {
                 console.error(error);
-                if (!isSilent) showToast("ডেটা লোড করতে সমস্যা হচ্ছে।", "error");
+                if (!isSilent) {
+                    showToast("ডেটা লোড করতে সমস্যা হচ্ছে।", "error");
+                    hideLoader();
+                }
             } finally {
                 if (!isSilent) refreshIcon.classList.remove('animate-spin');
             }
@@ -561,8 +627,8 @@
                         stations[index].lastUpdated = Date.now();
                         stations[index].reports = (parseInt(stations[index].reports) || 0) + 1;
                         
-                        // নিজের করা আপডেটে যেন নোটিফিকেশন না আসে তাই লোকাল ভ্যালু আপডেট
                         lastKnownLatestUpdate = stations[index].lastUpdated;
+                        localStorage.setItem('mft_cached_stations', JSON.stringify(stations)); // Update Cache
                         
                         renderUI();
                         if (window.innerWidth >= 768 && stations[index].marker) setTimeout(() => stations[index].marker.openPopup(), 400);
@@ -594,6 +660,11 @@
             L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19, attribution: 'OSM' }).addTo(map);
             markersLayer = L.layerGroup().addTo(map);
             loadDistrictBoundary();
+            
+            // Map Sizing Fix 
+            setTimeout(() => { map.invalidateSize(); }, 500);
+            const resizeObserver = new ResizeObserver(() => { if (map) map.invalidateSize(); });
+            resizeObserver.observe(document.getElementById('map'));
         }
 
         async function loadDistrictBoundary() {
@@ -649,8 +720,8 @@
                             <p class="text-[13px] text-slate-600 mt-1.5 flex items-center gap-1 font-bold"><i class="ph-fill ph-map-pin text-slate-500"></i>${s.upazila}</p>
                             ${phoneHtml}
                         </div>
-                        <div class="bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0 shadow-sm" title="মোট রিপোর্ট">
-                            <i class="ph-fill ph-users text-amber-600 text-[13px]"></i> ${toBengaliNum(s.reports)} টি রিপোর্ট
+                        <div class="bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-black px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0 shadow-sm" title="তথ্য প্রদানকারীর সংখ্যা">
+                            <i class="ph-fill ph-users text-amber-600 text-[13px]"></i> ${toBengaliNum(s.reports)} জনের দেওয়া তথ্য
                         </div>
                     </div>
                     ${outWarn}
@@ -701,7 +772,11 @@
                                 <div class="border-2 ${oTheme.border} ${oTheme.light} rounded-xl p-2.5 text-center"><span class="block text-[11px] font-black text-slate-600 mb-1.5 tracking-wide">অকটেন</span><span class="block text-[13px] font-black ${oTheme.text}">${s.octane}</span></div>
                             </div>
                             <div class="text-[11px] text-slate-600 mb-4 text-center bg-slate-50 py-2.5 rounded-xl border border-slate-200 flex justify-between px-3 items-center font-bold">
-                                <span>আপডেট: <span class="font-black text-slate-800 time-display" data-timestamp="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span></span><span class="bg-amber-100 text-amber-800 px-2 py-1 rounded-md font-black shadow-sm flex items-center gap-1"><i class="ph-fill ph-users"></i> ${toBengaliNum(s.reports)}</span>
+                                <div class="flex flex-col text-left">
+                                    <span class="text-[9px] text-slate-400">সর্বশেষ আপডেট</span>
+                                    <span class="font-black text-slate-800 time-display" data-timestamp="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span>
+                                </div>
+                                <span class="bg-amber-100 text-amber-800 px-2.5 py-1.5 rounded-md font-black shadow-sm flex items-center gap-1"><i class="ph-fill ph-users"></i> ${toBengaliNum(s.reports)} জনের দেওয়া তথ্য</span>
                             </div>
                             <button onclick="openUpdateModal(${s.id})" class="w-full py-3.5 bg-emerald-500 text-white text-[13px] font-black rounded-xl hover:bg-emerald-600 transition-all shadow-md hover:shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5 active:scale-95"><i class="ph-bold ph-pencil-simple text-[15px]"></i> স্ট্যাটাস আপডেট করুন</button>
                         </div>
@@ -841,9 +916,8 @@
             setupEventListeners(); 
             loadData(); 
             
-            // অটো-রিফ্রেশ: প্রতি ২ মিনিট পরপর ব্যাকগ্রাউন্ডে চেক করবে নতুন ডেটা এসেছে কি না
             setInterval(() => {
-                loadData(true); // true মানে silent রিফ্রেশ, স্পিনার ঘুরবে না
+                loadData(true); 
             }, 2 * 60 * 1000); 
         };
     </script>
