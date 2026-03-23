@@ -615,29 +615,43 @@
             btn.disabled = true;
 
             try {
-                const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ id, petrol: newPetrol, octane: newOctane, fuelAmount: newAmount }) });
-                const result = await response.json();
+                // Google Apps Script POST requests often throw CORS errors when returning data.
+                // Using mode: 'no-cors' prevents the browser from blocking the request.
+                await fetch(API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ id, petrol: newPetrol, octane: newOctane, fuelAmount: newAmount }) 
+                });
                 
-                if (result.status === "success") {
-                    const index = stations.findIndex(s => parseInt(s.id) === id);
-                    if (index !== -1) {
-                        stations[index].petrol = newPetrol;
-                        stations[index].octane = newOctane;
-                        stations[index].fuelAmount = newAmount;
-                        stations[index].lastUpdated = Date.now();
-                        stations[index].reports = (parseInt(stations[index].reports) || 0) + 1;
-                        
-                        lastKnownLatestUpdate = stations[index].lastUpdated;
-                        localStorage.setItem('mft_cached_stations', JSON.stringify(stations)); // Update Cache
-                        
-                        renderUI();
-                        if (window.innerWidth >= 768 && stations[index].marker) setTimeout(() => stations[index].marker.openPopup(), 400);
-                    }
-                    localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
-                    closeUpdateModal();
-                    showToast("স্ট্যাটাস সফলভাবে সেভ হয়েছে!");
-                } else showToast("সেভ করতে সমস্যা হয়েছে।", "error");
-            } catch (error) { showToast("ইন্টারনেট সমস্যা। সেভ করা যায়নি।", "error"); } 
+                // Since mode is no-cors, the response is opaque. We assume success if no network error occurred.
+                const index = stations.findIndex(s => parseInt(s.id) === id);
+                if (index !== -1) {
+                    stations[index].petrol = newPetrol;
+                    stations[index].octane = newOctane;
+                    stations[index].fuelAmount = newAmount;
+                    stations[index].lastUpdated = Date.now();
+                    stations[index].reports = (parseInt(stations[index].reports) || 0) + 1;
+                    
+                    lastKnownLatestUpdate = stations[index].lastUpdated;
+                    
+                    // Circular structure error ফিক্স করার জন্য marker অবজেক্ট বাদ দিয়ে ক্যাশ আপডেট করা হচ্ছে
+                    const stationsToCache = stations.map(s => {
+                        const { marker, ...stationData } = s;
+                        return stationData;
+                    });
+                    localStorage.setItem('mft_cached_stations', JSON.stringify(stationsToCache));
+                    
+                    renderUI();
+                    if (window.innerWidth >= 768 && stations[index].marker) setTimeout(() => stations[index].marker.openPopup(), 400);
+                }
+                localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+                closeUpdateModal();
+                showToast("স্ট্যাটাস সফলভাবে সেভ হয়েছে!");
+            } catch (error) { 
+                console.error("Save Error:", error);
+                showToast("ইন্টারনেট সমস্যা। সেভ করা যায়নি।", "error"); 
+            } 
             finally { btn.innerHTML = originalBtnHtml; btn.disabled = false; }
         }
 
