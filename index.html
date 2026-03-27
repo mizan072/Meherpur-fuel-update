@@ -348,6 +348,11 @@
                         <label class="block font-black text-slate-800 text-[13px] mb-2">অতিরিক্ত তথ্য (ঐচ্ছিক)</label>
                         <input type="text" id="noticeDetails" placeholder="যেমন: শুধু পেট্রোল দেওয়া হবে" class="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 font-bold text-[14px] text-slate-700">
                     </div>
+                    
+                    <div>
+                        <label class="block font-black text-slate-800 text-[13px] mb-2">আপনার নাম (ঐচ্ছিক)</label>
+                        <input type="text" id="noticeAuthor" placeholder="আপনার নাম লিখুন..." class="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 font-bold text-[14px] text-slate-700">
+                    </div>
                 </div>
 
                 <button onclick="submitNewNotice()" id="submitNoticeBtn" class="mt-6 w-full py-4 bg-purple-600 text-white font-black rounded-2xl hover:bg-purple-700 transition-all shadow-lg hover:shadow-xl shadow-purple-600/30 flex justify-center items-center gap-2 text-[15px] active:scale-95">
@@ -563,7 +568,7 @@
                     <p class="text-[11px] text-slate-500 mb-3 pl-2"><i class="ph-fill ph-map-pin mr-1"></i>${s.upazila}</p>
                     <div class="bg-purple-50 p-3 rounded-xl text-[13px] font-bold text-purple-900 border border-purple-100 flex items-start gap-2.5">
                         <i class="ph-fill ph-megaphone text-purple-500 text-lg shrink-0 mt-0.5"></i>
-                        ${s.announcement}
+                        <div class="w-full">${s.announcement}</div>
                     </div>
                 </div>`;
             });
@@ -575,6 +580,7 @@
             const dateVal = document.getElementById('noticeDate').value;
             const timeVal = document.getElementById('noticeTime').value;
             const detailsVal = document.getElementById('noticeDetails').value.trim();
+            const authorVal = document.getElementById('noticeAuthor').value.trim() || 'অজ্ঞাত';
 
             if (!id) return showToast("দয়া করে একটি পাম্প সিলেক্ট করুন।", "error");
             if (!dateVal || !timeVal) return showToast("তারিখ এবং সময় প্রদান করুন।", "error");
@@ -590,8 +596,17 @@
             let [hours, minutes] = timeVal.split(':'); hours = parseInt(hours);
             const ampm = hours >= 12 ? 'PM' : 'AM'; hours = hours % 12 || 12;
             const formattedTime = `${toBengaliNum(hours)}:${toBengaliNum(minutes)} ${ampm}`;
+            
+            // Current Notice Post Time
+            const now = new Date();
+            const addedTime = now.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' }) + ', ' + now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
 
-            const announcementString = `📅 ${formattedDate}, ⏰ ${formattedTime} ${detailsVal ? '<br>📌 ' + detailsVal : ''}`;
+            const announcementString = `
+                <div>📅 ${formattedDate}, ⏰ ${formattedTime} ${detailsVal ? '<br>📌 ' + detailsVal : ''}</div>
+                <div class="mt-2.5 pt-2 border-t border-purple-200/60 flex justify-between items-center text-[10px] font-bold text-purple-600/80">
+                    <span class="flex items-center gap-1"><i class="ph-fill ph-user"></i> ${authorVal}</span>
+                    <span class="flex items-center gap-1"><i class="ph-fill ph-clock"></i> ${addedTime}</span>
+                </div>`;
 
             const st = stations.find(s => parseInt(s.id) === parseInt(id));
             saveUpdateData(parseInt(id), st.petrol, st.octane, st.fuelAmount, announcementString, true);
@@ -657,7 +672,7 @@
                 let outWarn = outdated ? `<div class="bg-slate-100 border-2 border-slate-200 text-slate-600 text-[11px] font-black px-3 py-2 rounded-xl flex items-center justify-center gap-1.5 mt-3 mb-1"><i class="ph-fill ph-warning-circle text-[15px]"></i> ১২ ঘণ্টার বেশি পুরোনো</div>` : '';
                 
                 let annHtml = (s.announcement && s.announcement.trim() !== "" && s.announcement !== "undefined") 
-                    ? `<div class="relative bg-gradient-to-br from-indigo-50 to-purple-50 border border-purple-200 rounded-xl p-3 mt-3 mb-2 shadow-sm"><div class="flex items-center gap-1.5 mb-1.5"><span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-purple-500"></span></span><span class="text-[10px] font-extrabold text-purple-600 uppercase tracking-widest">নোটিশ বোর্ড</span></div><div class="text-[12px] font-black text-slate-800 leading-snug">${s.announcement}</div></div>` : '';
+                    ? `<div class="relative bg-gradient-to-br from-indigo-50 to-purple-50 border border-purple-200 rounded-xl p-3 mt-3 mb-2 shadow-sm"><div class="flex items-center gap-1.5 mb-1.5"><span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-purple-500"></span></span><span class="text-[10px] font-extrabold text-purple-600 uppercase tracking-widest">নোটিশ বোর্ড</span></div><div class="text-[12px] font-black text-slate-800 leading-snug w-full">${s.announcement}</div></div>` : '';
 
                 const card = document.createElement('div');
                 card.className = "bg-white p-5 rounded-3xl mb-4 border-2 border-slate-200 shadow-sm hover:shadow-soft hover:border-emerald-300 cursor-pointer transition-all duration-300 fade-in group";
@@ -692,7 +707,7 @@
                 let outWarn = outdated ? `<div class="bg-slate-50 border-2 border-slate-200 text-slate-600 text-[11px] font-black px-2 py-1.5 rounded-xl flex items-center justify-center mt-2 mb-2"><i class="ph-fill ph-warning-circle text-slate-500 mr-1"></i> ১২ ঘণ্টার বেশি পুরোনো</div>` : '';
                 
                 let annHtml = (s.announcement && s.announcement.trim() !== "" && s.announcement !== "undefined") 
-                    ? `<div class="relative bg-purple-50 border border-purple-200 rounded-xl p-2.5 mt-3 mb-3 shadow-sm"><div class="flex items-center gap-1 mb-1"><span class="text-[9px] font-extrabold text-purple-600 uppercase">নোটিশ</span></div><div class="text-[11px] font-black text-slate-800 leading-snug">${s.announcement}</div></div>` : '';
+                    ? `<div class="relative bg-purple-50 border border-purple-200 rounded-xl p-2.5 mt-3 mb-3 shadow-sm"><div class="flex items-center gap-1 mb-1"><span class="text-[9px] font-extrabold text-purple-600 uppercase">নোটিশ</span></div><div class="text-[11px] font-black text-slate-800 leading-snug w-full">${s.announcement}</div></div>` : '';
 
                 const customIcon = L.divIcon({ className: '', html: `<div class="relative group cursor-pointer flex flex-col items-center"><div class="w-11 h-11 ${pinColor} text-white rounded-full flex items-center justify-center shadow-lg border-[3px] border-white relative z-10 transform transition-all duration-300 group-hover:-translate-y-2 group-hover:scale-110"><i class="ph-bold ph-gas-pump text-[20px]"></i></div><div class="w-5 h-1.5 bg-black/20 rounded-[100%] absolute -bottom-1.5 blur-[2px] transform scale-x-150 transition-all duration-300 group-hover:scale-x-[2.5] group-hover:opacity-60"></div></div>`, iconSize: [44, 52], iconAnchor: [22, 48], popupAnchor: [0, -52] });
 
