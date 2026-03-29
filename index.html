@@ -386,10 +386,10 @@
 
         // Theme Mapping for Premium UI
         const uiMap = {
-            'পর্যাপ্ত': { text: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', icon: 'ph-check-circle', dot: 'bg-emerald-500' },
-            'সীমিত':   { text: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100', icon: 'ph-warning-circle', dot: 'bg-amber-500' },
-            'স্টক নেই': { text: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100', icon: 'ph-x-circle', dot: 'bg-rose-500' },
-            'outdated': { text: 'text-slate-500', bg: 'bg-slate-50', border: 'border-slate-200', icon: 'ph-clock', dot: 'bg-slate-400' }
+            'পর্যাপ্ত': { text: 'text-emerald-700', bg: 'bg-emerald-100', border: 'border-emerald-200', borderHover: 'group-hover:border-emerald-400', dot: 'bg-emerald-500' },
+            'সীমিত':   { text: 'text-amber-700', bg: 'bg-amber-100', border: 'border-amber-200', borderHover: 'group-hover:border-amber-400', dot: 'bg-amber-500' },
+            'স্টক নেই': { text: 'text-rose-700', bg: 'bg-rose-100', border: 'border-rose-200', borderHover: 'group-hover:border-rose-400', dot: 'bg-rose-500' },
+            'outdated': { text: 'text-slate-500', bg: 'bg-slate-100', border: 'border-slate-200', borderHover: 'group-hover:border-slate-400', dot: 'bg-slate-400' }
         };
 
         // --- Core Functions ---
@@ -531,50 +531,63 @@
                 const ot = isOut ? uiMap.outdated : (uiMap[s.octane] || uiMap['স্টক নেই']);
                 
                 const hasNotice = s.announcement && s.announcement.trim() !== "";
-                const noticeBadge = hasNotice ? `<div class="absolute -top-3 -right-2 bg-purple-500 text-white text-[9px] md:text-[10px] font-black px-2.5 md:px-3 py-1 md:py-1.5 rounded-full shadow-md animate-bounce flex items-center gap-1 border-2 border-white"><i class="ph-fill ph-megaphone"></i> নোটিশ</div>` : '';
+                const noticeBadge = hasNotice ? `<span class="bg-purple-100 text-purple-700 text-[9px] px-2 py-0.5 rounded font-black uppercase tracking-widest flex items-center gap-1 animate-pulse border border-purple-200 shadow-sm"><i class="ph-fill ph-bell-ringing"></i> নোটিশ</span>` : '';
 
-                const outWarn = isOut ? `<div class="w-full bg-slate-50 border border-slate-200 text-slate-500 text-[10.5px] md:text-[11.5px] font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 mt-2.5 mb-1.5"><i class="ph-fill ph-warning-circle text-rose-400 text-sm md:text-md"></i> ১২ ঘণ্টার বেশি পুরোনো তথ্য</div>` : '';
+                const outWarn = isOut ? `<div class="w-full bg-rose-50 border border-rose-100/60 text-rose-500 text-[11px] font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 mt-3 mb-1 z-10 relative"><i class="ph-fill ph-warning-circle text-rose-500 text-sm"></i> ১২ ঘণ্টার বেশি পুরোনো তথ্য</div>` : '';
                 
-                // Add Phone Number Link Support
                 const phoneHtml = (s.phone && s.phone.trim() !== "") 
-                    ? `<a href="tel:${s.phone}" class="text-[11px] md:text-[12px] font-bold text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-md flex items-center gap-1 border border-brand-100 hover:bg-brand-100 transition-colors z-10 relative"><i class="ph-fill ph-phone text-brand-500"></i> ${s.phone}</a>` 
+                    ? `<a href="tel:${s.phone}" class="flex items-center gap-1 bg-slate-50 hover:bg-brand-50 hover:text-brand-600 text-slate-500 px-2 py-1 rounded-md border border-slate-100 transition-colors"><i class="ph-fill ph-phone text-brand-500"></i> ${s.phone}</a>` 
                     : '';
 
                 container.innerHTML += `
-                <div class="bg-white rounded-[1.25rem] md:rounded-[1.5rem] p-4.5 md:p-6 shadow-sm hover:shadow-card hover:-translate-y-1 border border-slate-100 transition-all duration-300 fade-in relative group">
-                    ${noticeBadge}
-                    <div class="flex justify-between items-start mb-3 md:mb-4">
-                        <div class="flex flex-col gap-1.5 pr-2">
-                            <h3 class="font-black text-[16px] md:text-[18px] text-slate-800 leading-tight">${s.name}</h3>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <p class="text-[11px] md:text-[12px] font-bold text-slate-500 flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded-md border border-slate-100"><i class="ph-fill ph-map-pin"></i> ${s.upazila}</p>
+                <div class="bg-white rounded-[1.5rem] p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(16,185,129,0.08)] hover:-translate-y-1 border border-slate-100 transition-all duration-400 fade-in flex flex-col h-full group relative overflow-hidden">
+                    <div class="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-brand-50 to-emerald-50/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"></div>
+
+                    <div class="flex justify-between items-start mb-1 relative z-10">
+                        <div class="pr-2">
+                            <div class="flex items-center gap-2 mb-2">
+                                <h3 class="font-black text-[16px] md:text-[17px] text-slate-800 leading-tight">${s.name}</h3>
+                                ${noticeBadge}
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 text-[11px] font-bold text-slate-500">
+                                <span class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-md border border-slate-100"><i class="ph-fill ph-map-pin"></i> ${s.upazila}</span>
                                 ${phoneHtml}
                             </div>
                         </div>
-                        <button onclick="openUpdateModal(${s.id})" class="bg-slate-900 text-white text-[10px] md:text-[12px] font-black px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl flex items-center gap-1.5 shadow-sm active:scale-95 shrink-0 hover:bg-brand-600 transition-colors"><i class="ph-bold ph-pencil-simple text-sm md:text-base"></i> আপডেট</button>
                     </div>
                     
                     ${outWarn}
                     
-                    <div class="grid grid-cols-2 gap-2.5 md:gap-3 mb-3.5 md:mb-4 mt-3 md:mt-4">
-                        <div class="border ${pt.border} ${pt.bg} rounded-xl md:rounded-2xl p-2.5 md:p-3.5 flex flex-col items-center justify-center relative overflow-hidden group-hover:border-opacity-100 transition-colors">
-                            <div class="flex items-center gap-1 mb-1.5 z-10"><div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${pt.dot}"></div><span class="text-[10px] md:text-[11px] font-bold text-slate-500 uppercase tracking-wide">পেট্রোল</span></div>
-                            <span class="text-[14px] md:text-[16px] font-black ${pt.text} z-10">${s.petrol}</span>
-                            <i class="ph-fill ph-gas-pump absolute -right-2 -bottom-2 text-3xl md:text-4xl opacity-[0.03] text-black"></i>
+                    <div class="grid grid-cols-2 gap-3 mt-4 mb-4 relative z-10">
+                        <div class="bg-white ${pt.border} shadow-sm rounded-2xl p-3.5 flex flex-col relative overflow-hidden ${pt.borderHover} transition-colors">
+                            <div class="flex items-center justify-between w-full mb-2 z-10">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">পেট্রোল</span>
+                                <div class="w-2.5 h-2.5 rounded-full ${pt.dot} shadow-sm border border-white"></div>
+                            </div>
+                            <span class="text-[16px] font-black ${pt.text} z-10">${s.petrol}</span>
+                            <div class="absolute -right-4 -bottom-4 w-16 h-16 rounded-full ${pt.bg} opacity-60 z-0"></div>
                         </div>
-                        <div class="border ${ot.border} ${ot.bg} rounded-xl md:rounded-2xl p-2.5 md:p-3.5 flex flex-col items-center justify-center relative overflow-hidden group-hover:border-opacity-100 transition-colors">
-                            <div class="flex items-center gap-1 mb-1.5 z-10"><div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${ot.dot}"></div><span class="text-[10px] md:text-[11px] font-bold text-slate-500 uppercase tracking-wide">অকটেন</span></div>
-                            <span class="text-[14px] md:text-[16px] font-black ${ot.text} z-10">${s.octane}</span>
-                            <i class="ph-fill ph-gas-pump absolute -right-2 -bottom-2 text-3xl md:text-4xl opacity-[0.03] text-black"></i>
+                        <div class="bg-white ${ot.border} shadow-sm rounded-2xl p-3.5 flex flex-col relative overflow-hidden ${ot.borderHover} transition-colors">
+                            <div class="flex items-center justify-between w-full mb-2 z-10">
+                                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">অকটেন</span>
+                                <div class="w-2.5 h-2.5 rounded-full ${ot.dot} shadow-sm border border-white"></div>
+                            </div>
+                            <span class="text-[16px] font-black ${ot.text} z-10">${s.octane}</span>
+                            <div class="absolute -right-4 -bottom-4 w-16 h-16 rounded-full ${ot.bg} opacity-60 z-0"></div>
                         </div>
                     </div>
                     
-                    <div class="flex items-center justify-between bg-slate-50 rounded-xl p-3 md:p-3.5 border border-slate-100/80">
-                        <div class="flex items-center gap-1.5 text-[11.5px] md:text-[13px] text-indigo-600 font-black"><i class="ph-fill ph-funnel text-[15px] md:text-[18px]"></i> ${s.fuelAmount || 'Unknown'}</div>
-                        <div class="flex items-center gap-3.5 text-[10px] md:text-[11px] text-slate-500 font-bold">
-                            <span class="flex items-center gap-1"><i class="ph-fill ph-users text-amber-500 text-sm md:text-base"></i> ${toBn(s.reports)}</span>
-                            <span class="flex items-center gap-1"><i class="ph-fill ph-clock-counter-clockwise text-brand-500 text-sm md:text-base"></i> <span class="time-el" data-ts="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span></span>
+                    <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between relative z-10">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center gap-1.5 text-[11px] font-black text-slate-600 bg-slate-50 border border-slate-100 px-2 py-1 rounded-md w-fit"><i class="ph-fill ph-funnel text-brand-500"></i> পরিমাণ: <span class="text-brand-600">${s.fuelAmount || 'Unknown'}</span></div>
+                            <div class="flex items-center gap-3 text-[10px] font-bold text-slate-400">
+                                <span class="flex items-center gap-1"><i class="ph-fill ph-users text-amber-400"></i> ${toBn(s.reports)} আপডেট</span>
+                                <span class="flex items-center gap-1"><i class="ph-fill ph-clock text-sky-400"></i> <span class="time-el" data-ts="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span></span>
+                            </div>
                         </div>
+                        <button onclick="openUpdateModal(${s.id})" class="w-11 h-11 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/30 transition-all active:scale-95 shrink-0 group/btn" title="আপডেট করুন">
+                            <i class="ph-bold ph-pencil-simple text-lg group-hover/btn:scale-110 transition-transform"></i>
+                        </button>
                     </div>
                 </div>`;
             });
