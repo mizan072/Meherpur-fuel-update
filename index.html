@@ -81,9 +81,12 @@
         .glass-header { background: rgba(255, 255, 255, 0.90); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .glass-nav { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
         .drag-handle { width: 40px; height: 5px; background-color: #cbd5e1; border-radius: 10px; margin: 0 auto; }
+        
+        /* Smooth Scrolling Fix for Mobile */
+        .overflow-y-auto { -webkit-overflow-scrolling: touch; }
     </style>
 </head>
-<body class="text-slate-900 h-screen flex flex-col overflow-hidden selection:bg-brand-500 selection:text-white">
+<body class="text-slate-900 h-[100dvh] flex flex-col overflow-hidden selection:bg-brand-500 selection:text-white">
 
     <!-- Top App Bar (Responsive Header) -->
     <header class="glass-header border-b border-slate-200/80 z-30 shrink-0 px-4 md:px-8 py-3.5 flex justify-between items-center sticky top-0">
@@ -162,9 +165,9 @@
                     </div>
                 </div>
 
-                <!-- Right Content (Card Grid) -->
-                <div class="flex-1 pb-10">
-                    <div id="stationListContainer" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
+                <!-- Right Content (Single Column Feed) -->
+                <div class="flex-1 pb-10 flex justify-center md:justify-start">
+                    <div id="stationListContainer" class="w-full max-w-2xl grid grid-cols-1 gap-4 md:gap-5">
                         <!-- Skeletons will be injected here initially -->
                     </div>
                 </div>
@@ -173,7 +176,7 @@
         </div>
 
         <!-- View 2: Notice Board -->
-        <div id="viewNotice" class="hidden w-full max-w-5xl mx-auto px-4 md:px-8 pt-6 md:pt-10 pb-10 transition-opacity duration-300">
+        <div id="viewNotice" class="hidden w-full max-w-3xl mx-auto px-4 md:px-8 pt-6 md:pt-10 pb-10 transition-opacity duration-300">
             <div class="text-center mb-8 md:mb-10">
                 <div class="w-16 h-16 md:w-20 md:h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-5 shadow-inner relative">
                     <div class="absolute inset-0 bg-purple-400 rounded-full animate-ping opacity-20"></div>
@@ -188,8 +191,8 @@
                 <i class="ph-bold ph-plus-circle text-xl md:text-2xl"></i> নতুন নোটিশ যুক্ত করুন
             </button>
 
-            <!-- Notice Feed Grid -->
-            <div id="noticeFeedContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            <!-- Notice Feed (Single Column) -->
+            <div id="noticeFeedContainer" class="grid grid-cols-1 gap-4 md:gap-5 max-w-2xl mx-auto">
                 <!-- Notices will be injected here -->
             </div>
         </div>
@@ -544,14 +547,24 @@
                     <div class="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-brand-50 to-emerald-50/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"></div>
 
                     <div class="flex justify-between items-start mb-1 relative z-10">
-                        <div class="pr-2">
-                            <div class="flex items-center gap-2 mb-2">
+                        <div class="pr-2 flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-2">
                                 <h3 class="font-black text-[16px] md:text-[17px] text-slate-800 leading-tight">${s.name}</h3>
                                 ${noticeBadge}
                             </div>
                             <div class="flex flex-wrap items-center gap-2 text-[11px] font-bold text-slate-500">
                                 <span class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-md border border-slate-100"><i class="ph-fill ph-map-pin"></i> ${s.upazila}</span>
                                 ${phoneHtml}
+                            </div>
+                        </div>
+                        
+                        <!-- Top Right Corner: Updates & Time -->
+                        <div class="flex flex-col items-end gap-1.5 shrink-0 ml-2">
+                            <div class="flex items-center gap-1 text-[10px] font-bold text-slate-500 bg-slate-50 px-2 py-1 rounded-md border border-slate-100 whitespace-nowrap shadow-sm">
+                                <i class="ph-fill ph-clock text-sky-500"></i> <span class="time-el" data-ts="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span>
+                            </div>
+                            <div class="flex items-center gap-1 text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-1 rounded-md border border-amber-100 whitespace-nowrap shadow-sm">
+                                <i class="ph-fill ph-users text-amber-500"></i> ${toBn(s.reports)} আপডেট
                             </div>
                         </div>
                     </div>
@@ -578,12 +591,8 @@
                     </div>
                     
                     <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between relative z-10">
-                        <div class="flex flex-col gap-2">
-                            <div class="flex items-center gap-1.5 text-[11px] font-black text-slate-600 bg-slate-50 border border-slate-100 px-2 py-1 rounded-md w-fit"><i class="ph-fill ph-funnel text-brand-500"></i> পরিমাণ: <span class="text-brand-600">${s.fuelAmount || 'Unknown'}</span></div>
-                            <div class="flex items-center gap-3 text-[10px] font-bold text-slate-400">
-                                <span class="flex items-center gap-1"><i class="ph-fill ph-users text-amber-400"></i> ${toBn(s.reports)} আপডেট</span>
-                                <span class="flex items-center gap-1"><i class="ph-fill ph-clock text-sky-400"></i> <span class="time-el" data-ts="${s.lastUpdated}">${timeAgo(s.lastUpdated)}</span></span>
-                            </div>
+                        <div class="flex items-center gap-1.5 text-[12px] font-black text-slate-600 bg-slate-50 border border-slate-100 px-3 py-2 rounded-xl w-fit shadow-sm">
+                            <i class="ph-fill ph-funnel text-brand-500 text-[15px]"></i> বিক্রির পরিমাণ: <span class="text-brand-600 ml-0.5">${s.fuelAmount || 'Unknown'}</span>
                         </div>
                         <button onclick="openUpdateModal(${s.id})" class="w-11 h-11 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/30 transition-all active:scale-95 shrink-0 group/btn" title="আপডেট করুন">
                             <i class="ph-bold ph-pencil-simple text-lg group-hover/btn:scale-110 transition-transform"></i>
