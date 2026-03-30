@@ -390,6 +390,7 @@
         }
 
         function checkCooldown() {
+            if (localStorage.getItem('mft_admin') === 'true') return true; // Secret Admin Bypass
             const lr = localStorage.getItem(COOLDOWN_KEY); if (!lr) return true;
             const diff = Date.now() - parseInt(lr);
             if (diff < COOLDOWN_TIME) { showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - diff)/60000))} মিনিট পর চেষ্টা করুন।`, "error"); return false; }
@@ -620,7 +621,21 @@
         }
 
         function initApp() {
-            document.getElementById('searchInput').addEventListener('input', e => { searchQuery = e.target.value; processUI(); });
+            document.getElementById('searchInput').addEventListener('input', e => { 
+                // Secret Admin Mode Logic
+                if (e.target.value === '*admin*') {
+                    localStorage.setItem('mft_admin', 'true');
+                    showToast("অ্যাডমিন মোড চালু! (No Cooldown)");
+                    e.target.value = '';
+                } else if (e.target.value === '*user*') {
+                    localStorage.removeItem('mft_admin');
+                    showToast("অ্যাডমিন মোড বন্ধ!", "error");
+                    e.target.value = '';
+                }
+                
+                searchQuery = e.target.value; 
+                processUI(); 
+            });
             document.getElementById('sortSelect').addEventListener('change', e => { activeSort = e.target.value; processUI(); });
             document.getElementById('areaFilter').addEventListener('change', e => { activeArea = e.target.value; processUI(); });
             document.querySelectorAll('.filter-btn').forEach(btn => {
