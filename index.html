@@ -214,6 +214,31 @@
         </div>
     </nav>
 
+    <!-- Contribute Info Modal (Help Pop-up) -->
+    <div id="contributeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[3000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="contributeModalContent" class="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-float w-full max-w-sm overflow-hidden transform scale-95 transition-all duration-400 p-8 text-center relative border border-slate-100">
+            <button onclick="closeContributeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 p-2.5 rounded-full transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
+            
+            <div class="w-24 h-24 md:w-28 md:h-28 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 shadow-inner relative">
+                <div class="absolute inset-0 bg-emerald-400 rounded-full animate-ping opacity-20"></div>
+                <i class="ph-fill ph-hands-clapping text-5xl md:text-6xl z-10"></i>
+            </div>
+            
+            <h3 class="text-slate-900 font-extrabold text-2xl md:text-3xl mb-3 tracking-tight">তথ্য দিয়ে সহায়তা করুন!</h3>
+            <p class="text-slate-600 text-[14px] md:text-[15px] mb-5 leading-relaxed font-medium">আপনার কাছে কোনো ফিলিং স্টেশনের বর্তমান তথ্য থাকলে, তা আপডেট করে অন্যকে ভোগান্তি থেকে বাঁচান।</p>
+            
+            <div class="bg-emerald-50/80 p-3.5 rounded-xl border-l-4 border-emerald-500 text-left mb-6 shadow-sm">
+                <i class="ph-fill ph-quotes text-emerald-300 text-lg mb-1"></i><br>
+                <p class="text-[12px] md:text-[13px] text-slate-700 font-medium">"আল্লাহ বান্দার সাহায্যে থাকেন, যতক্ষণ বান্দা তার ভাইয়ের সাহায্যে থাকে।"</p>
+                <span class="text-[10px] md:text-[11px] font-bold text-emerald-600 mt-1.5 flex items-center gap-1"><i class="ph-fill ph-book-open"></i> - সহিহ মুসলিম: ২৬৯৯</span>
+            </div>
+            
+            <button onclick="closeContributeModal(); switchView('Home');" class="w-full bg-slate-900 hover:bg-brand-500 text-white font-bold py-4 rounded-2xl transition-all shadow-[0_10px_20px_rgba(0,0,0,0.15)] flex justify-center items-center gap-2 text-[15px] md:text-[16px] active:scale-95">
+                <i class="ph-bold ph-pencil-simple text-xl"></i> আপডেট করতে চাই
+            </button>
+        </div>
+    </div>
+
     <!-- Update Modal -->
     <div id="updateModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[2000] hidden items-end md:items-center justify-center p-0 md:p-4 opacity-0 transition-opacity duration-300">
         <div id="updateModalContent" class="bg-white rounded-t-[2rem] md:rounded-[2.5rem] shadow-float w-full max-w-md overflow-hidden transform translate-y-full md:translate-y-0 md:scale-95 md:opacity-0 transition-all duration-500 ease-out max-h-[92vh] flex flex-col border border-white">
@@ -396,6 +421,11 @@
             if (diff < COOLDOWN_TIME) { showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - diff)/60000))} মিনিট পর চেষ্টা করুন।`, "error"); return false; }
             return true;
         }
+        
+        function closeContributeModal() {
+            const m = document.getElementById('contributeModal'); const c = document.getElementById('contributeModalContent');
+            if(m && c) { m.classList.add('opacity-0'); c.classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300); }
+        }
 
         function renderSkeletons() {
             const container = document.getElementById('stationListContainer'); container.innerHTML = '';
@@ -411,7 +441,17 @@
             try {
                 const res = await fetch(API_URL); stations = await res.json();
                 localStorage.setItem('mft_v3_cache', JSON.stringify(stations)); processUI();
-            } catch(e) { if(!silent) showToast("ডেটা লোড ফেইলড!", "error"); } finally { if(!silent) icon.classList.remove('animate-spin'); }
+            } catch(e) { if(!silent) showToast("ডেটা লোড ফেইলড!", "error"); } finally { 
+                if(!silent) icon.classList.remove('animate-spin'); 
+                
+                // Show Contribute Pop-up Once per session
+                if (!sessionStorage.getItem('mft_v3_contribute_shown') && !silent) {
+                    setTimeout(() => {
+                        const m = document.getElementById('contributeModal'); const c = document.getElementById('contributeModalContent');
+                        if(m && c) { m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); c.classList.remove('scale-95'); }, 10); sessionStorage.setItem('mft_v3_contribute_shown', 'true'); }
+                    }, 2500);
+                }
+            }
         }
 
         function processUI() {
