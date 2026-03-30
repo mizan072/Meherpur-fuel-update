@@ -37,8 +37,18 @@
     <style>
         body { font-family: 'Noto Sans Bengali', sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
         .bg-mesh { background-image: radial-gradient(at 90% 10%, hsla(158, 85%, 90%, 0.4) 0px, transparent 50%), radial-gradient(at 10% 90%, hsla(250, 85%, 95%, 0.5) 0px, transparent 50%); background-color: #f8fafc; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Premium Custom Scrollbar for PC */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid #f8fafc; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        * { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+
+        /* Hide scrollbar only for mobile horizontal swipe menus */
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
         .overflow-y-auto { -webkit-overflow-scrolling: touch; }
         
         /* Animations */
@@ -86,19 +96,22 @@
         </button>
     </header>
 
-    <main class="flex-1 overflow-y-auto no-scrollbar relative pb-24 md:pb-10">
+    <!-- Removed no-scrollbar to allow the premium PC scrollbar -->
+    <main class="flex-1 overflow-y-auto relative pb-24 md:pb-10">
         
-        <div id="viewHome" class="w-full max-w-7xl mx-auto px-4 md:px-8 pt-5 md:pt-8 transition-opacity duration-300">
+        <!-- Adjusted PC Layout to perfectly center the single column feed like Facebook/Twitter -->
+        <div id="viewHome" class="w-full max-w-5xl mx-auto px-4 md:px-8 pt-5 md:pt-8 transition-opacity duration-300">
             <div class="flex flex-col md:flex-row gap-6 md:gap-8">
                 
-                <div class="w-full md:w-72 lg:w-80 shrink-0">
+                <div class="w-full md:w-72 shrink-0">
                     <div class="bg-white/80 backdrop-blur-xl p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-soft border border-white md:sticky md:top-6 z-20">
                         <div class="relative group mb-5">
                             <i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg transition-colors group-focus-within:text-brand-500"></i>
                             <input type="text" id="searchInput" placeholder="পাম্পের নাম বা এলাকা খুঁজুন..." class="w-full pl-11 pr-4 py-3.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-[14px] font-medium text-slate-800 placeholder-slate-400 shadow-inner">
                         </div>
                         
-                        <div class="flex md:flex-col gap-4 overflow-x-auto md:overflow-visible no-scrollbar w-full pb-2 md:pb-0">
+                        <!-- Used hide-scroll here for horizontal mobile filter -->
+                        <div class="flex md:flex-col gap-4 overflow-x-auto md:overflow-visible hide-scroll w-full pb-2 md:pb-0">
                             <!-- Sort Option Restored -->
                             <div class="shrink-0 md:w-full">
                                 <label class="hidden md:flex items-center gap-1.5 text-[11px] font-bold text-slate-400 mb-2.5 uppercase tracking-widest pl-1"><i class="ph-bold ph-sort-ascending"></i> তালিকা সাজান</label>
@@ -128,8 +141,9 @@
                     </div>
                 </div>
 
-                <div class="flex-1 pb-10 flex justify-center md:justify-start">
-                    <div id="stationListContainer" class="w-full max-w-2xl grid grid-cols-1 gap-5 md:gap-6">
+                <!-- Feed Container -->
+                <div class="flex-1 pb-10">
+                    <div id="stationListContainer" class="w-full grid grid-cols-1 gap-5 md:gap-6">
                         <!-- Skeletons will be rendered here -->
                     </div>
                 </div>
