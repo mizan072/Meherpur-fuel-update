@@ -42,6 +42,7 @@
 </head>
 <body class="text-slate-800 antialiased flex flex-col overflow-hidden selection:bg-brand-500 selection:text-white bg-mesh">
 
+    <!-- Header -->
     <header class="glass-header border-b border-slate-200/50 z-30 shrink-0 px-4 md:px-8 py-3.5 flex justify-between items-center sticky top-0">
         <div class="flex items-center gap-3.5 group cursor-pointer" onclick="switchView('Home')">
             <div class="w-11 h-11 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg text-white transform transition-all group-hover:scale-105 group-hover:rotate-3 group-hover:bg-brand-500"><i class="ph-bold ph-gas-pump text-2xl"></i></div>
@@ -103,7 +104,7 @@
             <div id="noticeFeedContainer" class="grid grid-cols-1 gap-5 max-w-2xl mx-auto"></div>
         </div>
 
-        <!-- 🚀 NEW View: Feedback -->
+        <!-- View 3: Feedback -->
         <div id="viewFeedback" class="hidden w-full max-w-2xl mx-auto px-4 pt-6 md:pt-10 pb-10 transition-opacity duration-300">
             <div class="text-center mb-8">
                 <div class="w-20 h-20 bg-amber-50 text-amber-500 rounded-[2rem] flex items-center justify-center mx-auto mb-5 shadow-inner relative transform -rotate-3">
@@ -116,12 +117,12 @@
             <div class="bg-white/80 backdrop-blur-xl rounded-[2rem] p-6 md:p-8 shadow-float border border-white">
                 <div class="space-y-5">
                     <div>
-                        <label class="block font-extrabold text-slate-700 text-[13px] mb-2 ml-1">আপনার নাম (ঐচ্ছিক):</label>
+                        <label class="block font-extrabold text-slate-700 text-[13px] mb-2 ml-1">আপনার নাম (আবশ্যক):</label>
                         <input type="text" id="fbName" placeholder="যেমন: মিজানুর রহমান" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-[14px] text-slate-800 shadow-sm outline-none focus:bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all">
                     </div>
                     
                     <div>
-                        <label class="block font-extrabold text-slate-700 text-[13px] mb-2 ml-1">মোবাইল নম্বর / ইমেইল (ঐচ্ছিক):</label>
+                        <label class="block font-extrabold text-slate-700 text-[13px] mb-2 ml-1">মোবাইল নম্বর / ইমেইল (আবশ্যক):</label>
                         <input type="text" id="fbContact" placeholder="যোগাযোগের মাধ্যম" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-[14px] text-slate-800 shadow-sm outline-none focus:bg-white focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all">
                     </div>
                     
@@ -178,6 +179,7 @@
         </div>
     </main>
 
+    <!-- Bottom Navigation -->
     <nav class="md:hidden glass-header shadow-[0_-10px_40px_rgba(0,0,0,0.06)] border-t border-slate-200/60 fixed bottom-0 w-full z-40 pb-safe">
         <div class="max-w-md mx-auto flex justify-between items-center px-4 py-2 h-16 relative">
             <button onclick="switchView('Home')" id="navHome" class="nav-item active flex-1 flex flex-col items-center gap-1 transition-colors relative group z-10"><i class="ph-bold ph-house text-[24px] md:text-[26px] nav-icon text-slate-400 transition-all duration-300"></i><span class="text-[10px] md:text-[11px] font-bold tracking-wide">হোম</span></button>
@@ -187,7 +189,7 @@
         </div>
     </nav>
 
-    <!-- Contribute Info Modal (RESTORED) -->
+    <!-- Contribute Info Modal -->
     <div id="contributeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[3000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div id="contributeModalContent" class="bg-white rounded-[2rem] md:rounded-[2.5rem] shadow-float w-full max-w-sm overflow-hidden transform scale-95 transition-all duration-400 p-8 text-center relative border border-slate-100">
             <button onclick="closeContributeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 p-2.5 rounded-full transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
@@ -228,6 +230,15 @@
                 <div>
                     <label class="font-extrabold text-slate-800 flex items-center gap-2 text-[14px] md:text-[15px] mb-3 ml-1"><div class="p-1 bg-sky-50 text-sky-500 rounded"><i class="ph-bold ph-note-pencil text-[16px]"></i></div> ছোট নোট (ঐচ্ছিক)</label>
                     <input type="text" id="shortNoteInput" placeholder="যেমন: সিরিয়াল দ্রুত এগোচ্ছে / শুধু বাইকে দিচ্ছে..." class="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl font-medium text-[13px] md:text-[14px] text-slate-800 shadow-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all">
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                    <label class="font-extrabold text-slate-800 flex items-center justify-between text-[14px] md:text-[15px] mb-4"><div class="flex items-center gap-2"><div class="p-1.5 bg-rose-50 rounded-lg"><i class="ph-fill ph-police-car text-rose-500 text-[18px]"></i></div> কাগজের কড়াকড়ি</div></label>
+                    <div class="grid grid-cols-3 gap-1.5 md:gap-2">
+                        <label class="cursor-pointer group relative"><input type="radio" name="enforcementStatus" value="কড়াকড়ি চলছে" class="peer sr-only"><div class="text-center py-3 border-2 border-slate-100 rounded-xl peer-checked:bg-rose-50 peer-checked:text-rose-600 peer-checked:border-rose-400 transition-all text-slate-500 bg-white shadow-sm flex flex-col items-center gap-1"><i class="ph-bold ph-warning-octagon text-[16px] hidden peer-checked:block fade-in"></i><div class="text-[11px] md:text-[12px] font-bold">কড়াকড়ি চলছে</div></div></label>
+                        <label class="cursor-pointer group relative"><input type="radio" name="enforcementStatus" value="স্বাভাবিক" class="peer sr-only"><div class="text-center py-3 border-2 border-slate-100 rounded-xl peer-checked:bg-emerald-50 peer-checked:text-emerald-600 peer-checked:border-emerald-300 transition-all text-slate-500 bg-white shadow-sm flex flex-col items-center gap-1"><i class="ph-bold ph-check-circle text-[16px] hidden peer-checked:block fade-in"></i><div class="text-[11px] md:text-[12px] font-bold">স্বাভাবিক</div></div></label>
+                        <label class="cursor-pointer group relative"><input type="radio" name="enforcementStatus" value="অজ্ঞাত" class="peer sr-only"><div class="text-center py-3 border-2 border-slate-100 rounded-xl peer-checked:bg-slate-100 peer-checked:text-slate-600 peer-checked:border-slate-300 transition-all text-slate-500 bg-white shadow-sm flex flex-col items-center gap-1"><div class="text-[11px] md:text-[12px] font-bold mt-1">অজ্ঞাত</div></div></label>
+                    </div>
                 </div>
 
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
@@ -395,7 +406,6 @@
             return true;
         }
 
-        // 🚀 RESTORED: Close Contribute Modal Function
         function closeContributeModal() {
             const m = document.getElementById('contributeModal'); const c = document.getElementById('contributeModalContent');
             if(m && c) { m.classList.add('opacity-0'); c.classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300); }
@@ -405,7 +415,10 @@
             const st = stations.find(s => parseInt(s.id) === parseInt(id)); if(!st) return;
             let fAmt = st.fuelAmount || 'অজানা';
             if(fAmt === 'Unknown') fAmt = 'অজানা'; if(fAmt === 'Unlimited') fAmt = 'আনলিমিটেড'; if(fAmt === '500 TK') fAmt = '৫০০ টাকা'; if(fAmt === '300 TK') fAmt = '৩০০ টাকা'; if(fAmt === '200 TK') fAmt = '২০০ টাকা'; if(fAmt === '100 TK') fAmt = '১০০ টাকা';
-            const text = `⛽ ${st.name}-এ এখন তেলের অবস্থা:\n\n🔴 পেট্রোল: ${st.petrol}\n🔵 অকটেন: ${st.octane}\n👥 ভিড়: ${st.queueStatus || 'অজ্ঞাত'}\n⛽ পরিমাণ: ${fAmt}\n⏱️ আপডেট: ${timeAgo(st.lastUpdated)}\n\n🔗 বিস্তারিত: https://mfueltracker.pages.dev/\n- মেহেরপুর ফুয়েল ট্র্যাকার`;
+            
+            let enfText = st.enforcementStatus || 'অজ্ঞাত';
+            const text = `⛽ ${st.name}-এ এখন তেলের অবস্থা:\n\n🔴 পেট্রোল: ${st.petrol}\n🔵 অকটেন: ${st.octane}\n👥 ভিড়: ${st.queueStatus || 'অজ্ঞাত'}\n⛽ পরিমাণ: ${fAmt}\n🚨 কাগজের কড়াকড়ি: ${enfText}\n⏱️ আপডেট: ${timeAgo(st.lastUpdated)}\n\n🔗 বিস্তারিত: https://mfueltracker.pages.dev/\n- মেহেরপুর ফুয়েল ট্র্যাকার`;
+            
             const textArea = document.createElement("textarea"); textArea.value = text; document.body.appendChild(textArea); textArea.select();
             try { document.execCommand('copy'); showToast("কপি করা হয়েছে!"); } catch (err) { showToast("কপি করতে সমস্যা হয়েছে!", "error"); } document.body.removeChild(textArea);
         }
@@ -451,7 +464,15 @@
                 const ot = isOut ? uiMap.outdated : (uiMap[s.octane] || uiMap['স্টক নেই']);
                 const qt = qMap[s.queueStatus || 'অজ্ঞাত'] || qMap['অজ্ঞাত']; 
                 const isStockOut = s.petrol === 'স্টক নেই' && s.octane === 'স্টক নেই';
+                
                 const noteHtml = (s.note && s.note.trim() !== "") ? `<div class="mt-3.5 bg-sky-50 border border-sky-100/50 p-3 rounded-xl flex items-start gap-2 text-[12px] md:text-[13px] text-sky-800 font-medium shadow-sm"><i class="ph-fill ph-info text-sky-500 text-[16px] mt-0.5 shrink-0"></i> <span>${s.note}</span></div>` : '';
+
+                let enfBadge = '';
+                if (s.enforcementStatus === 'কড়াকড়ি চলছে' && !isOut) {
+                    enfBadge = `<div class="mt-3.5 bg-rose-50 border border-rose-100/60 p-3 rounded-xl flex items-start gap-2 text-[12px] md:text-[13px] text-rose-800 font-medium shadow-sm"><i class="ph-fill ph-warning-octagon text-rose-500 text-[18px] mt-0.5 shrink-0 animate-pulse"></i> <span>হেলমেট ও কাগজে <b>কড়াকড়ি চলছে</b></span></div>`;
+                } else if (s.enforcementStatus === 'স্বাভাবিক' && !isOut) {
+                    enfBadge = `<div class="mt-3.5 bg-emerald-50 border border-emerald-100/60 p-3 rounded-xl flex items-start gap-2 text-[12px] md:text-[13px] text-emerald-800 font-medium shadow-sm"><i class="ph-fill ph-check-circle text-emerald-500 text-[18px] mt-0.5 shrink-0"></i> <span>হেলমেট ও কাগজে কড়াকড়ি নেই <b>(স্বাভাবিক)</b></span></div>`;
+                }
 
                 let fAmt = s.fuelAmount || 'অজানা';
                 if(fAmt === 'Unknown') fAmt = 'অজানা'; if(fAmt === 'Unlimited') fAmt = 'আনলিমিটেড'; if(fAmt === '500 TK') fAmt = '৫০০ টাকা'; if(fAmt === '300 TK') fAmt = '৩০০ টাকা'; if(fAmt === '200 TK') fAmt = '২০০ টাকা'; if(fAmt === '100 TK') fAmt = '১০০ টাকা';
@@ -482,7 +503,7 @@
                         </div>
                     </div>
                     
-                    ${outWarn} ${noteHtml} ${verifyBadge}
+                    ${outWarn} ${noteHtml} ${enfBadge} ${verifyBadge}
                     
                     <div class="grid grid-cols-2 gap-3 mt-4 mb-4">
                         <div class="bg-white ${pt.border} shadow-sm rounded-2xl p-4 flex flex-col relative overflow-hidden"><div class="flex items-center justify-between w-full mb-2.5 z-10"><span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">পেট্রোল</span><div class="w-2.5 h-2.5 rounded-full ${pt.dot}"></div></div><span class="text-[16px] md:text-[18px] font-extrabold ${pt.text} z-10 mt-1">${s.petrol}</span><div class="absolute -right-4 -bottom-4 w-16 h-16 rounded-full ${pt.bg} opacity-60"></div></div>
@@ -554,12 +575,14 @@
 
         function openUpdateModal(id) {
             currentEditingId = parseInt(id); const st = stations.find(s => parseInt(s.id) === currentEditingId); document.getElementById('modalStationName').textContent = st.name;
-            ['petrolStatus', 'octaneStatus', 'fuelAmount', 'queueStatus'].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+            ['petrolStatus', 'octaneStatus', 'fuelAmount', 'queueStatus', 'enforcementStatus'].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
             const pR = document.querySelector(`input[name="petrolStatus"][value="${st.petrol}"]`); if(pR) pR.checked = true;
             const oR = document.querySelector(`input[name="octaneStatus"][value="${st.octane}"]`); if(oR) oR.checked = true;
             let curAmt = st.fuelAmount || 'অজানা'; if(curAmt === 'Unknown') curAmt = 'অজানা'; if(curAmt === 'Unlimited') curAmt = 'আনলিমিটেড'; if(curAmt === '500 TK') curAmt = '৫০০ টাকা'; if(curAmt === '300 TK') curAmt = '৩০০ টাকা'; if(curAmt === '200 TK') curAmt = '২০০ টাকা'; if(curAmt === '100 TK') curAmt = '১০০ টাকা';
             const aR = document.querySelector(`input[name="fuelAmount"][value="${curAmt}"]`); if(aR) aR.checked = true;
             const qR = document.querySelector(`input[name="queueStatus"][value="${st.queueStatus||'অজ্ঞাত'}"]`); if(qR) qR.checked = true;
+            const eR = document.querySelector(`input[name="enforcementStatus"][value="${st.enforcementStatus||'অজ্ঞাত'}"]`); if(eR) eR.checked = true;
+            
             document.getElementById('shortNoteInput').value = st.note || ""; 
             const m = document.getElementById('updateModal'); const c = document.getElementById('updateModalContent'); m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); if(window.innerWidth < 768) { c.classList.remove('translate-y-full'); } else { c.classList.remove('md:scale-95', 'md:opacity-0'); } }, 10);
         }
@@ -586,55 +609,46 @@
                 await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
                 const idx = stations.findIndex(s => parseInt(s.id) === parseInt(payload.id));
                 if (idx !== -1) {
-                    if(payload.action === 'updateNotice') { stations[idx].announcement = payload.announcement; stations[idx].noticeVerifiedCount = 0; stations[idx].noticeLastVerified = ""; } else if(payload.action === 'update') { stations[idx].petrol = payload.petrol; stations[idx].octane = payload.octane; stations[idx].fuelAmount = payload.fuelAmount; stations[idx].queueStatus = payload.queueStatus; stations[idx].note = payload.note; stations[idx].verifiedCount = 0; stations[idx].lastVerified = ""; stations[idx].lastUpdated = Date.now(); stations[idx].reports = (parseInt(stations[idx].reports)||0) + 1; }
+                    if(payload.action === 'updateNotice') { stations[idx].announcement = payload.announcement; stations[idx].noticeVerifiedCount = 0; stations[idx].noticeLastVerified = ""; } 
+                    else if(payload.action === 'update') { 
+                        stations[idx].petrol = payload.petrol; stations[idx].octane = payload.octane; stations[idx].fuelAmount = payload.fuelAmount; 
+                        stations[idx].queueStatus = payload.queueStatus; stations[idx].note = payload.note; 
+                        stations[idx].enforcementStatus = payload.enforcementStatus;
+                        stations[idx].verifiedCount = 0; stations[idx].lastVerified = ""; stations[idx].lastUpdated = Date.now(); stations[idx].reports = (parseInt(stations[idx].reports)||0) + 1; 
+                    }
                     safeSetLocal('mft_v3_cache', JSON.stringify(stations)); processUI();
                 }
                 safeSetLocal(COOLDOWN_KEY, Date.now().toString()); showToast("সফলভাবে সেভ হয়েছে!");
             } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
         }
 
-        // 🚀 NEW: Submit Feedback Function
         async function submitFeedbackForm() {
             const fbName = document.getElementById('fbName').value.trim();
             const fbContact = document.getElementById('fbContact').value.trim();
             const fbType = document.getElementById('fbType').value;
             const fbDesc = document.getElementById('fbDesc').value.trim();
             
+            if (!fbName) return showToast("দয়া করে আপনার নাম লিখুন!", "error");
+            if (!fbContact) return showToast("দয়া করে আপনার মোবাইল নম্বর বা ইমেইল দিন!", "error");
             if (fbDesc.length < 5) return showToast("দয়া করে বিস্তারিত অংশে কিছু লিখুন!", "error");
 
-            // Simple spam protection: 1 message per 3 hours
             const lastMsg = safeGetLocal('mft_last_feedback');
             if (lastMsg && (Date.now() - parseInt(lastMsg)) < 3 * 60 * 60 * 1000) {
                 return showToast("আপনি ইতিমধ্যে একটি মেসেজ পাঠিয়েছেন। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।", "error");
             }
 
             const btn = document.getElementById('submitFeedbackBtn');
-            const ob = btn.innerHTML;
-            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-xl"></i> পাঠানো হচ্ছে...`;
-            btn.disabled = true;
+            const ob = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-xl"></i> পাঠানো হচ্ছে...`; btn.disabled = true;
 
             try {
                 await fetch(API_URL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                     body: JSON.stringify({ action: "submitFeedback", name: fbName, contact: fbContact, type: fbType, description: fbDesc }) 
                 });
-                
                 safeSetLocal('mft_last_feedback', Date.now().toString());
                 showToast("ধন্যবাদ! আপনার মতামত সফলভাবে আমাদের কাছে পৌঁছেছে।");
-                
-                // Clear form
-                document.getElementById('fbName').value = '';
-                document.getElementById('fbContact').value = '';
-                document.getElementById('fbDesc').value = '';
-                
-            } catch(e) { 
-                showToast("ইন্টারনেট সমস্যা! মেসেজ পাঠানো যায়নি।", "error"); 
-            } finally { 
-                btn.innerHTML = ob; 
-                btn.disabled = false; 
-            }
+                document.getElementById('fbName').value = ''; document.getElementById('fbContact').value = ''; document.getElementById('fbDesc').value = '';
+            } catch(e) { showToast("ইন্টারনেট সমস্যা! মেসেজ পাঠানো যায়নি।", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
         }
 
         async function openStatsModal() {
@@ -647,7 +661,6 @@
             try {
                 if (!safeGetSession('mft_visit_recorded')) { fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'recordVisit' }) }); safeSetSession('mft_visit_recorded', 'true'); }
                 
-                // 🚀 RESTORED: Contribute Modal Trigger (Shows after 2.5s once per session)
                 if (!safeGetSession('mft_v3_contribute_shown')) {
                     setTimeout(() => {
                         const m = document.getElementById('contributeModal'); const c = document.getElementById('contributeModalContent');
@@ -660,9 +673,10 @@
                     updateBtn.addEventListener('click', async () => {
                         if(!checkCooldown() || !currentEditingId) return;
                         const pR = document.querySelector('input[name="petrolStatus"]:checked'); const oR = document.querySelector('input[name="octaneStatus"]:checked'); const aR = document.querySelector('input[name="fuelAmount"]:checked'); const qR = document.querySelector('input[name="queueStatus"]:checked');
-                        if (!pR || !oR || !qR) return showToast("সকল তথ্য নির্বাচন করুন!", "error");
+                        const eR = document.querySelector('input[name="enforcementStatus"]:checked'); 
+                        if (!pR || !oR || !qR || !eR) return showToast("সকল তথ্য নির্বাচন করুন!", "error");
                         const noteText = document.getElementById('shortNoteInput').value.trim();
-                        await sendDataToAPI({ id: currentEditingId, petrol: pR.value, octane: oR.value, fuelAmount: aR?aR.value:"অজানা", queueStatus: qR.value, note: noteText, action: "update" }, 'submitUpdateBtn'); closeUpdateModal();
+                        await sendDataToAPI({ id: currentEditingId, petrol: pR.value, octane: oR.value, fuelAmount: aR?aR.value:"অজানা", queueStatus: qR.value, enforcementStatus: eR.value, note: noteText, action: "update" }, 'submitUpdateBtn'); closeUpdateModal();
                     });
                 }
                 document.getElementById('searchInput').addEventListener('input', e => { if (e.target.value === '*admin*') { safeSetLocal('mft_admin', 'true'); showToast("অ্যাডমিন মোড চালু!"); e.target.value = ''; processUI(); } else if (e.target.value === '*user*') { safeRemoveLocal('mft_admin'); showToast("অ্যাডমিন মোড বন্ধ!", "error"); e.target.value = ''; processUI(); } searchQuery = e.target.value; processUI(); });
