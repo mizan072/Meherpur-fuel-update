@@ -147,18 +147,8 @@
             </div>
             <div class="bg-white/90 backdrop-blur-xl rounded-[2rem] p-6 md:p-10 shadow-soft border border-white">
                 <div class="space-y-6">
-                    <div><label class="block font-extrabold text-slate-800 text-[14px] mb-2.5 ml-1">আপনার নাম (আবশ্যক):</label><input type="text" id="fbName" placeholder="যেমন: মিজানুর রহমান" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[15px] text-slate-900 shadow-sm outline-none focus:bg-white focus:border-amber-400 transition-all"></div>
-                    <div><label class="block font-extrabold text-slate-800 text-[14px] mb-2.5 ml-1">মোবাইল নম্বর / ইমেইল (আবশ্যক):</label><input type="text" id="fbContact" placeholder="যোগাযোগের মাধ্যম" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[15px] text-slate-900 shadow-sm outline-none focus:bg-white focus:border-amber-400 transition-all"></div>
-                    <div><label class="block font-extrabold text-slate-800 text-[14px] mb-2.5 ml-1">মতামতের ধরন (আবশ্যক):</label>
-                        <select id="fbType" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[15px] text-slate-900 shadow-sm appearance-none outline-none focus:bg-white focus:border-amber-400 transition-all bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[position:right_16px_center]">
-                            <option value="ভুল তথ্যের রিপোর্ট">ভুল তথ্যের রিপোর্ট (Fake Info Report)</option>
-                            <option value="নতুন পাম্প যুক্ত করার অনুরোধ">নতুন পাম্প যুক্ত করার অনুরোধ</option>
-                            <option value="অ্যাপের সমস্যা (Bug)">অ্যাপের সমস্যা (Bug Report)</option>
-                            <option value="নতুন ফিচারের পরামর্শ">নতুন ফিচারের পরামর্শ</option>
-                            <option value="অন্যান্য">অন্যান্য (Other)</option>
-                        </select>
-                    </div>
-                    <div><label class="block font-extrabold text-slate-800 text-[14px] mb-2.5 ml-1">বিস্তারিত লিখুন (আবশ্যক):</label><textarea id="fbDesc" rows="4" placeholder="আপনার অভিযোগ বা পরামর্শ এখানে বিস্তারিত লিখুন..." class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[15px] text-slate-900 shadow-sm outline-none focus:bg-white focus:border-amber-400 transition-all resize-none"></textarea></div>
+                    <div><label class="block font-extrabold text-slate-800 text-[14px] mb-2.5 ml-1">আপনার নাম (ঐচ্ছিক):</label><input type="text" id="fbName" placeholder="যেমন: মিজানুর রহমান" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[15px] text-slate-900 shadow-sm outline-none focus:bg-white focus:border-amber-400 transition-all"></div>
+                    <div><label class="block font-extrabold text-slate-800 text-[14px] mb-2.5 ml-1">বিস্তারিত লিখুন (আবশ্যক):</label><textarea id="fbDesc" rows="4" placeholder="আপনার অনুভূতি, অভিযোগ বা পরামর্শ এখানে বিস্তারিত লিখুন..." class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[15px] text-slate-900 shadow-sm outline-none focus:bg-white focus:border-amber-400 transition-all resize-none"></textarea></div>
                     <button onclick="submitFeedbackForm()" id="submitFeedbackBtn" class="mt-6 w-full py-4 bg-slate-900 text-white font-extrabold tracking-wide rounded-xl hover:bg-amber-500 transition-all shadow-md active:scale-95 text-[16px] flex items-center justify-center gap-2.5 group"><i class="ph-fill ph-paper-plane-right text-[22px] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i> মেসেজ পাঠান</button>
                 </div>
             </div>
@@ -207,7 +197,7 @@
             </div>
             
             <p class="text-[13px] md:text-sm font-bold text-slate-500 mb-4 md:mb-5 shrink-0">
-                কোনো কিছু জানাতে চাইলে আমাদের <a href="#" onclick="lockToFeedback(); return false;" class="text-brand-600 underline hover:text-brand-700 transition-colors">মতামত</a> দিন।
+                কোনো কিছু জানাতে চাইলে, কোনো পরামর্শ, অভিযোগ, উপদেশ থাকলে আমাদের সাথে <a href="#" onclick="lockToFeedback(); return false;" class="text-brand-600 underline hover:text-brand-700 transition-colors">যোগাযোগ করুন</a>।
             </p>
 
             <button onclick="lockToFeedback()" class="w-full bg-slate-900 hover:bg-brand-600 text-white font-extrabold py-3.5 md:py-4 rounded-xl transition-all shadow-md active:scale-95 text-[15px] md:text-[16px] shrink-0">
@@ -559,15 +549,44 @@
         }
 
         async function submitFeedbackForm() {
-            const fbName = document.getElementById('fbName').value.trim(); const fbContact = document.getElementById('fbContact').value.trim(); const fbType = document.getElementById('fbType').value; const fbDesc = document.getElementById('fbDesc').value.trim();
-            if (!fbName) return showToast("দয়া করে আপনার নাম লিখুন!", "error"); if (!fbContact) return showToast("দয়া করে আপনার মোবাইল নম্বর বা ইমেইল দিন!", "error"); if (fbDesc.length < 5) return showToast("দয়া করে বিস্তারিত অংশে কিছু লিখুন!", "error");
-            const lastMsg = safeGetLocal('mft_last_feedback'); if (lastMsg && (Date.now() - parseInt(lastMsg)) < 3 * 60 * 60 * 1000) { return showToast("আপনি ইতিমধ্যে একটি মেসেজ পাঠিয়েছেন। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।", "error"); }
-            const btn = document.getElementById('submitFeedbackBtn'); const ob = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[22px]"></i> পাঠানো হচ্ছে...`; btn.disabled = true;
+            const fbName = document.getElementById('fbName').value.trim() || 'অজ্ঞাত'; 
+            const fbDesc = document.getElementById('fbDesc').value.trim();
+            
+            if (fbDesc.length < 5) return showToast("দয়া করে বিস্তারিত অংশে কিছু লিখুন!", "error");
+            
+            const lastMsg = safeGetLocal('mft_last_feedback'); 
+            if (lastMsg && (Date.now() - parseInt(lastMsg)) < 3 * 60 * 60 * 1000) { 
+                return showToast("আপনি ইতিমধ্যে একটি মেসেজ পাঠিয়েছেন। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।", "error"); 
+            }
+            
+            const btn = document.getElementById('submitFeedbackBtn'); 
+            const ob = btn.innerHTML; 
+            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[22px]"></i> পাঠানো হচ্ছে...`; 
+            btn.disabled = true;
+            
             try {
-                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: "submitFeedback", name: fbName, contact: fbContact, type: fbType, description: fbDesc }) });
-                safeSetLocal('mft_last_feedback', Date.now().toString()); showToast("ধন্যবাদ! আপনার মতামত সফলভাবে আমাদের কাছে পৌঁছেছে।");
-                document.getElementById('fbName').value = ''; document.getElementById('fbContact').value = ''; document.getElementById('fbDesc').value = '';
-            } catch(e) { showToast("ইন্টারনেট সমস্যা! মেসেজ পাঠানো যায়নি।", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
+                await fetch(API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                    body: JSON.stringify({ 
+                        action: "submitFeedback", 
+                        name: fbName, 
+                        contact: "N/A", 
+                        type: "বিদায়ী বার্তা", 
+                        description: fbDesc 
+                    }) 
+                });
+                safeSetLocal('mft_last_feedback', Date.now().toString()); 
+                showToast("ধন্যবাদ! আপনার বার্তা সফলভাবে আমাদের কাছে পৌঁছেছে।");
+                document.getElementById('fbName').value = ''; 
+                document.getElementById('fbDesc').value = '';
+            } catch(e) { 
+                showToast("ইন্টারনেট সমস্যা! মেসেজ পাঠানো যায়নি।", "error"); 
+            } finally { 
+                btn.innerHTML = ob; 
+                btn.disabled = false; 
+            }
         }
 
         // --- Initialization ---
