@@ -2,208 +2,733 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>মেহেরপুর ফুয়েল ট্র্যাকার | রিয়েল-টাইম আপডেট</title>
-    <meta name="theme-color" content="#0f172a">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title>মেহেরপুর ফুয়েল ট্র্যাকার | প্রিমিয়াম লাইভ আপডেট</title>
+    <meta name="theme-color" content="#ffffff">
+    
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/phosphor-icons/core/main/assets/fill/gas-pump-fill.svg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { 'sans': ['Inter', 'Noto Sans Bengali', 'system-ui', 'sans-serif'] },
-                    animation: { 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'float': 'float 6s ease-in-out infinite' },
-                    keyframes: { 'float': { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-8px)' } } },
-                    boxShadow: { 'glass': '0 8px 32px rgba(0,0,0,0.04)', 'card-hover': '0 20px 35px -12px rgba(0,0,0,0.12)', 'inner-glow': 'inset 0 1px 1px 0 rgba(255,255,255,0.6)' },
-                }
-            }
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    fontFamily: { sans: ['"Noto Sans Bengali"', 'sans-serif'] }, 
+                    boxShadow: { 
+                        'premium': '0 10px 40px -10px rgba(0,0,0,0.06)', 
+                        'premium-hover': '0 20px 40px -10px rgba(16,185,129,0.12)', 
+                        'float': '0 20px 40px -10px rgba(0,0,0,0.1)',
+                        'inner-light': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.3)',
+                    }, 
+                    colors: { 
+                        brand: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 900: '#064e3b' } 
+                    } 
+                } 
+            } 
         }
     </script>
+
     <style>
-        * { -webkit-tap-highlight-color: transparent; }
-        body { 
-            font-family: 'Inter', 'Noto Sans Bengali', sans-serif; 
-            background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.03) 0%, rgba(6, 78, 59, 0.02) 100%), #f9fafc;
-            overflow-x: hidden;
-            overflow-y: auto;
-            height: auto;
-            min-height: 100vh;
-        }
-        /* main content area - natural scrolling */
-        main {
-            overflow: visible;
-            flex: 1;
-        }
-        .glass-panel { background: rgba(255,255,255,0.75); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        .card-modern { 
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); 
-            border-radius: 1.5rem;
-        }
-        .card-modern:hover { transform: translateY(-3px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.12); border-color: rgba(16,185,129,0.3); }
-        .fade-slide { animation: fadeSlideUp 0.4s ease-out forwards; }
-        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .skeleton { background: linear-gradient(110deg, #eceff5 8%, #f5f7fc 18%, #eceff5 33%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; border-radius: 20px; }
-        @keyframes shimmer { to { background-position-x: -200%; } }
-        .modal-backdrop { transition: opacity 0.25s ease, visibility 0.25s; }
-        .modal-content { transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #eef2f6; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #b9c3cf; border-radius: 10px; }
-        .filter-chip-active { background: #0f172a; color: white; border-color: #0f172a; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.2); transform: scale(0.98); }
-        .radio-card { transition: all 0.18s ease; cursor: pointer; }
-        .radio-card input:checked + div { background: #ecfdf5; border-color: #10b981; color: #065f46; box-shadow: 0 2px 6px rgba(16,185,129,0.1); transform: scale(0.98); }
-        .toast-slide { transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s; }
-        /* single column feed like facebook */
-        .feed-container {
-            max-width: 680px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .station-card {
-            margin-bottom: 1.25rem;
-        }
-        /* sticky sidebar on desktop */
-        @media (min-width: 1024px) {
-            .sidebar-sticky {
-                position: sticky;
-                top: 5rem;
-                align-self: start;
-            }
-        }
+        body { font-family: 'Noto Sans Bengali', sans-serif; -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; height: 100vh; height: 100dvh; background-color: #f4f7f6; }
+        .bg-mesh { background-image: radial-gradient(at 0% 0%, hsla(158, 85%, 95%, 0.6) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(210, 85%, 95%, 0.6) 0px, transparent 50%); background-attachment: fixed; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-item.active { color: #10b981; }
+        .nav-item.active .nav-icon { fill: currentColor; transform: translateY(-4px); }
+        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(226, 232, 240, 0.6); }
+        .drag-handle { width: 36px; height: 5px; background-color: #cbd5e1; border-radius: 10px; margin: 0 auto; }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        
+        /* Premium Chips */
+        .f-chip { @apply shrink-0 px-5 py-2.5 rounded-full border border-slate-200/80 bg-white text-[13px] font-semibold text-slate-600 transition-all active:scale-95 cursor-pointer flex items-center gap-2 shadow-sm hover:border-slate-300; }
+        .f-chip.active { @apply bg-slate-900 text-white border-slate-900 shadow-md; }
+        .info-pill { @apply flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-medium text-[12px] bg-slate-50 border border-slate-100 text-slate-600 shadow-sm; }
     </style>
 </head>
-<body class="text-slate-800 antialiased flex flex-col min-h-screen">
+<body class="text-slate-800 antialiased flex flex-col overflow-hidden bg-mesh">
 
-    <!-- premium header -->
-    <header class="sticky top-0 z-30 glass-panel border-b border-slate-200/50 px-5 md:px-8 py-3 flex justify-between items-center shadow-sm backdrop-blur-md">
-        <div onclick="switchView('Home')" class="flex items-center gap-3 cursor-pointer group">
-            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-200/40 transition-all group-hover:scale-105"><i class="ph-fill ph-gas-pump text-white text-2xl"></i></div>
-            <div><h1 class="font-black text-xl md:text-2xl tracking-tight bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">ফুয়েল ট্র্যাকার</h1><p class="text-[11px] font-bold text-emerald-600 flex items-center gap-1"><span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span></span> লাইভ ক্রাউডসোর্সড</p></div>
+    <!-- Premium Header -->
+    <header class="glass-header z-40 shrink-0 px-4 md:px-8 py-3.5 flex justify-between items-center sticky top-0">
+        <div class="flex items-center gap-3.5 group cursor-pointer" onclick="switchView('Home')">
+            <div class="w-11 h-11 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-[0_8px_16px_rgba(16,185,129,0.25)] text-white transform transition-all group-hover:scale-105 shadow-inner-light">
+                <i class="ph-fill ph-gas-pump text-[22px]"></i>
+            </div>
+            <div class="flex flex-col justify-center">
+                <h1 class="font-extrabold text-[19px] md:text-[21px] leading-none tracking-tight text-slate-900">ফুয়েল ট্র্যাকার</h1>
+                <p class="text-[11px] font-bold text-emerald-600 flex items-center gap-1 mt-1 tracking-wide">
+                    <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span></span> 
+                    মেহেরপুর লাইভ
+                </p>
+            </div>
         </div>
-        <div class="hidden md:flex items-center gap-2 bg-white/60 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200/70 shadow-sm">
-            <button onclick="switchView('Home')" id="pcHome" class="pc-nav-btn px-5 py-2 rounded-xl font-bold text-sm bg-slate-900 text-white shadow-sm transition-all flex items-center gap-2"><i class="ph-bold ph-house"></i> হোম</button>
-            <button onclick="switchView('Notice')" id="pcNotice" class="pc-nav-btn px-5 py-2 rounded-xl font-bold text-sm text-slate-600 hover:bg-white/60 transition-all flex items-center gap-2"><i class="ph-bold ph-bell-ringing"></i> নোটিশ <span id="pcNoticeBadge" class="hidden w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span></button>
-            <button onclick="switchView('Feedback')" id="pcFeedback" class="pc-nav-btn px-5 py-2 rounded-xl font-bold text-sm text-slate-600 hover:bg-white/60 transition-all flex items-center gap-2"><i class="ph-bold ph-chat-circle-text"></i> মতামত</button>
-            <button onclick="switchView('About')" id="pcAbout" class="pc-nav-btn px-5 py-2 rounded-xl font-bold text-sm text-slate-600 hover:bg-white/60 transition-all flex items-center gap-2"><i class="ph-bold ph-info"></i> তথ্য</button>
+
+        <div id="topNavLinks" class="hidden md:flex items-center bg-slate-100/60 border border-slate-200/60 p-1.5 rounded-full gap-1 backdrop-blur-md shadow-inner">
+            <button onclick="switchView('Home')" id="navHomePC" class="pc-nav-item bg-white text-emerald-600 shadow-sm px-5 py-2 rounded-full text-[13.5px] font-bold transition-all flex items-center gap-2"><i class="ph-bold ph-squares-four text-[18px]"></i> ড্যাশবোর্ড</button>
+            <button onclick="switchView('Notice')" id="navNoticePC" class="pc-nav-item text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 px-5 py-2 rounded-full text-[13.5px] font-bold transition-all flex items-center gap-2 relative"><i class="ph-bold ph-bell-ringing text-[18px]"></i> নোটিশ বোর্ড <span id="topNavBadge" class="absolute top-1.5 right-2 flex h-2 w-2 hidden"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500 border border-white"></span></span></button>
+            <button onclick="switchView('Feedback')" id="navFeedbackPC" class="pc-nav-item text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 px-5 py-2 rounded-full text-[13.5px] font-bold transition-all flex items-center gap-2"><i class="ph-bold ph-chat-circle-text text-[18px]"></i> মতামত</button>
         </div>
-        <button onclick="refreshData()" class="w-10 h-10 rounded-full bg-white/70 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-sm active:scale-90 transition-all text-slate-700 hover:text-emerald-600"><i id="refreshIcon" class="ph-bold ph-arrows-clockwise text-xl"></i></button>
+
+        <button onclick="loadData()" id="refreshBtn" class="w-10 h-10 bg-white hover:bg-slate-50 rounded-xl flex items-center justify-center transition-all shadow-sm border border-slate-200 active:scale-90 text-slate-600 hover:text-emerald-600"><i class="ph-bold ph-arrows-clockwise text-[20px] transition-transform" id="refreshIcon"></i></button>
     </header>
 
-    <main class="flex-1 px-4 md:px-6 py-5">
-        <!-- HOME VIEW - Facebook style single column -->
-        <div id="homeView" class="max-w-7xl mx-auto fade-slide">
-            <div class="flex flex-col lg:flex-row gap-7">
-                <!-- filter sidebar (sticky) -->
-                <div class="lg:w-80 shrink-0">
-                    <div class="glass-panel rounded-2xl p-5 sidebar-sticky space-y-6 backdrop-blur-md border border-white/50 shadow-sm">
-                        <div class="relative"><i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i><input type="text" id="searchInput" placeholder="পাম্প বা এলাকা খুঁজুন..." class="w-full pl-11 pr-4 py-3.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition-all text-sm font-medium"></div>
-                        <div><label class="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-3"><i class="ph-bold ph-sort-ascending"></i> সাজানোর ক্রম</label><select id="sortSelect" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:border-emerald-400"><option value="recent">সর্বশেষ আপডেট</option><option value="reports">সর্বোচ্চ রিপোর্ট</option><option value="name">নাম অনুযায়ী</option></select></div>
-                        <div><label class="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-3"><i class="ph-bold ph-map-pin"></i> উপজেলা</label><select id="areaFilter" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold"><option value="all">সব এলাকা</option><option value="মেহেরপুর সদর">মেহেরপুর সদর</option><option value="গাংনী">গাংনী উপজেলা</option><option value="মুজিবনগর">মুজিবনগর</option><option value="দামুড়হুদা">দামুড়হুদা রোড</option></select></div>
-                        <div><label class="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-3"><i class="ph-bold ph-funnel"></i> স্ট্যাটাস ফিল্টার</label><div class="grid grid-cols-2 gap-2"><button data-filter="all" class="filter-status active-filter bg-slate-900 text-white border-slate-900 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1">সব পাম্প</button><button data-filter="পর্যাপ্ত" class="filter-status border-emerald-200 text-emerald-700 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> পর্যাপ্ত</button><button data-filter="সীমিত" class="filter-status border-amber-200 text-amber-700 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> সীমিত</button><button data-filter="স্টক নেই" class="filter-status border-rose-200 text-rose-700 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> স্টক নেই</button></div></div>
+    <main class="flex-1 overflow-y-auto relative pb-24 md:pb-10">
+        
+        <!-- View 1: Home Dashboard -->
+        <div id="viewHome" class="w-full max-w-[1200px] mx-auto px-4 md:px-8 pt-6 transition-opacity duration-300">
+            <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                
+                <!-- Professional Sidebar -->
+                <div class="w-full lg:w-[300px] shrink-0">
+                    <div class="bg-white/90 backdrop-blur-xl p-5 md:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 lg:sticky lg:top-6 space-y-6">
+                        
+                        <!-- Search Box -->
+                        <div class="space-y-2.5">
+                            <label class="text-[12px] font-bold text-slate-500 tracking-wide pl-1 flex items-center gap-1.5">পাম্প খুঁজুন</label>
+                            <div class="relative group">
+                                <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400 text-[18px] group-focus-within:text-emerald-500 transition-colors"></i>
+                                <input type="text" id="searchInput" placeholder="নাম বা এলাকা লিখুন..." class="w-full pl-10 pr-4 py-3 bg-slate-50/80 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all text-[13px] font-medium text-slate-800 placeholder-slate-400">
+                            </div>
+                        </div>
+                        
+                        <!-- Filters -->
+                        <div class="space-y-5">
+                            <!-- Sorting -->
+                            <div class="space-y-2.5">
+                                <label class="text-[12px] font-bold text-slate-500 tracking-wide pl-1 flex items-center gap-1.5">তালিকা সাজান</label>
+                                <select id="sortSelect" class="w-full bg-white border border-slate-200 text-slate-700 text-[13px] font-medium rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500 shadow-sm appearance-none pr-10 relative bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[position:right:14px_center] cursor-pointer transition-all">
+                                    <option value="recent">সর্বশেষ আপডেট অনুসারে</option>
+                                    <option value="reports">সর্বোচ্চ রিপোর্ট অনুসারে</option>
+                                    <option value="name">পাম্পের নাম (A-Z)</option>
+                                </select>
+                            </div>
+
+                            <!-- Area -->
+                            <div class="space-y-2.5">
+                                <label class="text-[12px] font-bold text-slate-500 tracking-wide pl-1 flex items-center gap-1.5">উপজেলা নির্বাচন</label>
+                                <div class="flex flex-row lg:flex-col gap-2 overflow-x-auto hide-scroll pb-1">
+                                    <div class="f-chip active !px-4 !py-2.5" onclick="filterArea('all', this)">সব এলাকা</div>
+                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('মেহেরপুর সদর', this)">মেহেরপুর সদর</div>
+                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('গাংনী', this)">গাংনী উপজেলা</div>
+                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('মুজিবনগর', this)">মুজিবনগর এলাকা</div>
+                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('দামুড়হুদা', this)">দামুড়হুদা রোড</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Status -->
+                            <div class="space-y-2.5">
+                                <label class="text-[12px] font-bold text-slate-500 tracking-wide pl-1 flex items-center gap-1.5">তেলের অবস্থা</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="f-chip active justify-center w-full !px-3 !py-2.5" onclick="filterStatus('all', this)">সব পাম্প</div>
+                                    <div class="f-chip justify-center w-full !px-3 !py-2.5 !text-emerald-600" onclick="filterStatus('পর্যাপ্ত', this)"><div class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm"></div> পর্যাপ্ত</div>
+                                    <div class="f-chip justify-center w-full !px-3 !py-2.5 !text-amber-600" onclick="filterStatus('সীমিত', this)"><div class="w-2 h-2 rounded-full bg-amber-500 shadow-sm"></div> সীমিত</div>
+                                    <div class="f-chip justify-center w-full !px-3 !py-2.5 !text-rose-600" onclick="filterStatus('স্টক নেই', this)"><div class="w-2 h-2 rounded-full bg-rose-500 shadow-sm"></div> স্টক নেই</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- station cards feed - single column (Facebook style) -->
-                <div class="flex-1 feed-container">
-                    <div id="stationGrid" class="flex flex-col gap-5"></div>
-                    <div id="skeletonLoader" class="flex flex-col gap-5">
-                        <div class="skeleton h-80 rounded-2xl"></div>
-                        <div class="skeleton h-80 rounded-2xl"></div>
+
+                <!-- Feed Area -->
+                <div class="flex-1 pb-10 w-full lg:mx-auto">
+                    <div class="flex items-center justify-between mb-4 px-1">
+                        <h2 class="text-lg font-extrabold text-slate-800 tracking-tight">পাম্পের তালিকা</h2>
+                        <span id="resultsCount" class="text-[12px] font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100 shadow-sm">০টি পাম্প</span>
                     </div>
+                    <div id="stationListContainer" class="w-full flex flex-col gap-4"></div>
                 </div>
             </div>
         </div>
 
-        <!-- NOTICE VIEW -->
-        <div id="noticeView" class="hidden max-w-4xl mx-auto pt-6 fade-slide"><div class="text-center mb-8"><div class="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-3xl flex items-center justify-center mx-auto shadow-inner"><i class="ph-fill ph-megaphone text-purple-600 text-4xl"></i></div><h2 class="font-black text-3xl mt-5 tracking-tight">লাইভ নোটিশ বোর্ড</h2><p class="text-slate-500 font-medium mt-2">তেল সরবরাহ ও জরুরি ঘোষণা</p></div><button onclick="openNoticeModal()" class="w-full max-w-md mx-auto bg-white/70 backdrop-blur-sm border-2 border-dashed border-indigo-300 rounded-2xl py-4 flex items-center justify-center gap-2 font-bold text-indigo-700 hover:bg-indigo-50 transition-all mb-8">+ নতুন নোটিশ যোগ করুন</button><div id="noticeFeed" class="grid gap-5 md:grid-cols-2"></div></div>
+        <!-- View 2: Notice Board -->
+        <div id="viewNotice" class="hidden w-full max-w-3xl mx-auto px-4 md:px-8 pt-8 pb-10">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-[1rem] flex items-center justify-center mx-auto mb-4 shadow-sm"><i class="ph-fill ph-bell-ringing text-[32px]"></i></div>
+                <h2 class="font-extrabold text-2xl text-slate-900 tracking-tight">লাইভ নোটিশ বোর্ড</h2>
+                <p class="text-[13px] text-slate-500 font-medium mt-1.5">জ্বালানি আসার সম্ভাব্য সময়সূচি এবং জরুরি ঘোষণা</p>
+            </div>
+            <button onclick="openNoticeModal()" class="w-full md:w-[320px] mx-auto bg-white border border-purple-200 rounded-xl p-3.5 flex items-center justify-center gap-2 text-purple-600 font-semibold hover:bg-purple-50 transition-all mb-8 active:scale-95 shadow-sm text-[14px]">
+                <i class="ph-bold ph-plus-circle text-[20px]"></i> নতুন নোটিশ দিন
+            </button>
+            <div id="noticeFeedContainer" class="flex flex-col gap-5 max-w-2xl mx-auto"></div>
+        </div>
 
-        <!-- FEEDBACK VIEW -->
-        <div id="feedbackView" class="hidden max-w-2xl mx-auto pt-8 fade-slide"><div class="glass-panel rounded-3xl p-6 md:p-8"><div class="text-center mb-6"><div class="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mx-auto"><i class="ph-fill ph-envelope-open text-amber-500 text-4xl"></i></div><h3 class="font-black text-2xl mt-4">আপনার মতামত গুরুত্বপূর্ণ</h3></div><div class="space-y-5"><input type="text" id="fbName" placeholder="আপনার নাম (ঐচ্ছিক)" class="w-full px-5 py-4 bg-white/80 border border-slate-200 rounded-xl font-medium"><textarea id="fbDesc" rows="4" placeholder="বিস্তারিত লিখুন..." class="w-full px-5 py-4 bg-white/80 border border-slate-200 rounded-xl resize-none"></textarea><button id="sendFeedbackBtn" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-emerald-700 transition-all active:scale-95 shadow-lg">পাঠিয়ে দিন <i class="ph-bold ph-paper-plane-right"></i></button></div></div></div>
+        <!-- View 3: Feedback -->
+        <div id="viewFeedback" class="hidden w-full max-w-2xl mx-auto px-4 pt-8 pb-10">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-[1rem] flex items-center justify-center mx-auto mb-4 shadow-sm"><i class="ph-fill ph-envelope-open text-[32px]"></i></div>
+                <h2 class="font-extrabold text-2xl text-slate-900 tracking-tight">মতামত ও পরামর্শ</h2>
+                <p class="text-[13px] text-slate-500 font-medium mt-1.5 max-w-sm mx-auto">অ্যাপ সম্পর্কে আপনার কোনো মতামত বা অভিযোগ থাকলে নির্দ্বিধায় জানান।</p>
+            </div>
+            <div class="bg-white rounded-[1.5rem] p-6 md:p-8 shadow-sm border border-slate-100">
+                <div class="space-y-4">
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">আপনার নাম (ঐচ্ছিক)</label><input type="text" id="fbName" placeholder="আপনার নাম লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-[13.5px] text-slate-900 focus:bg-white focus:border-amber-400 focus:outline-none transition-colors"></div>
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">বিস্তারিত মেসেজ (আবশ্যক)</label><textarea id="fbDesc" rows="4" placeholder="আপনার অনুভূতি বা অভিযোগ বিস্তারিত লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-[13.5px] text-slate-900 focus:bg-white focus:border-amber-400 focus:outline-none transition-colors resize-none"></textarea></div>
+                    <button onclick="submitFeedbackForm()" id="submitFeedbackBtn" class="mt-4 w-full py-3.5 bg-slate-900 text-white font-semibold rounded-xl hover:bg-emerald-600 transition-all shadow-md hover:shadow-lg active:scale-95 text-[14.5px] flex items-center justify-center gap-2">মেসেজ পাঠান <i class="ph-bold ph-paper-plane-right text-[18px]"></i></button>
+                </div>
+            </div>
+        </div>
 
-        <!-- ABOUT VIEW -->
-        <div id="aboutView" class="hidden max-w-2xl mx-auto pt-8 fade-slide"><div class="glass-panel rounded-3xl p-8 text-center"><div class="w-28 h-28 rounded-3xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center mx-auto shadow-xl"><i class="ph-fill ph-shield-check text-white text-5xl"></i></div><h2 class="font-black text-3xl mt-6">ফুয়েল ট্র্যাকার</h2><p class="text-slate-500 font-semibold mt-1">ক্রাউডসোর্সড কমিউনিটি প্ল্যাটফর্ম</p><div class="bg-slate-50/80 rounded-2xl p-6 mt-8 text-left"><p class="text-slate-700 leading-relaxed">এই অ্যাপটি সম্পূর্ণ স্বেচ্ছাসেবী উদ্যোগে পরিচালিত। ব্যবহারকারীদের রিয়েল-টাইম রিপোর্টের মাধ্যমে পেট্রোল ও অকটেনের অবস্থা আপডেট হয়।</p></div><div class="mt-10 pt-6 border-t"><a href="https://t.me/Mizan0072" target="_blank" class="inline-flex items-center gap-2 bg-slate-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-sky-600 transition-all"><i class="ph-fill ph-telegram-logo"></i> Mizanur Rahaman</a></div><div id="adminStatsBtnWrap" class="hidden mt-6"><button onclick="openStatsModal()" class="w-full bg-indigo-50 text-indigo-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2"><i class="ph-bold ph-chart-bar"></i> ভিজিটর স্ট্যাটাস</button></div></div></div>
+        <!-- View 4: About / Info -->
+        <div id="viewAbout" class="hidden w-full max-w-3xl mx-auto px-4 md:px-8 pt-8 pb-10">
+            <div class="bg-white rounded-[2rem] p-6 md:p-10 shadow-sm border border-slate-100 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400"></div>
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 shadow-sm transform rotate-3">
+                        <i class="ph-fill ph-info text-[40px] -rotate-3"></i>
+                    </div>
+                    <h2 class="font-extrabold text-2xl md:text-3xl text-slate-900 tracking-tight">অ্যাপ সম্পর্কে তথ্য</h2>
+                    <p class="text-[13.5px] text-slate-500 font-medium mt-2">কীভাবে কাজ করে এবং নিয়মাবলি</p>
+                </div>
+
+                <div class="space-y-5 text-slate-700 text-[13.5px] leading-relaxed">
+                    <div class="bg-slate-50/80 rounded-2xl p-5 border border-slate-100">
+                        <h3 class="font-bold text-slate-900 text-[15px] mb-1.5 flex items-center gap-2"><i class="ph-fill ph-users-three text-emerald-500 text-lg"></i> ক্রাউডসোর্সড প্ল্যাটফর্ম</h3>
+                        <p>এই অ্যাপটি সম্পূর্ণ ব্যবহারকারীদের দেওয়া তথ্যের ওপর ভিত্তি করে কাজ করে। পাম্পের মালিক বা সাধারণ গ্রাহকরা রিয়েল-টাইমে আপডেট দিয়ে অন্যদের সাহায্য করতে পারেন।</p>
+                    </div>
+                    
+                    <div class="bg-slate-50/80 rounded-2xl p-5 border border-slate-100">
+                        <h3 class="font-bold text-slate-900 text-[15px] mb-1.5 flex items-center gap-2"><i class="ph-fill ph-shield-check text-emerald-500 text-lg"></i> বিশ্বাসযোগ্যতা (Verification)</h3>
+                        <p>যেকোনো আপডেট কতটা সঠিক তা বোঝাতে "সঠিক" বাটন দেওয়া হয়েছে। যত বেশি মানুষ নিশ্চিত করবেন, তথ্যটি তত বেশি নির্ভরযোগ্য বলে বিবেচিত হবে।</p>
+                    </div>
+
+                    <div class="bg-rose-50/50 rounded-2xl p-5 border border-rose-100">
+                        <h3 class="font-bold text-rose-800 text-[15px] mb-1.5 flex items-center gap-2"><i class="ph-fill ph-warning-circle text-rose-500 text-lg"></i> সতর্কতা</h3>
+                        <p class="text-rose-700/80">যেহেতু যে কেউ তথ্য আপডেট করতে পারেন, তাই পাম্পে যাওয়ার আগে তথ্যের ওপর নির্ভরশীলতা যাচাই করে নিন। ভুল তথ্য দিলে অন্য মানুষের ভোগান্তি বাড়ে, তাই শুধু সঠিক তথ্যই দিন।</p>
+                    </div>
+                </div>
+
+                <div class="mt-10 pt-8 border-t border-slate-100 text-center">
+                    <p class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">ডেভেলপার</p>
+                    <a href="https://t.me/Mizan0072" target="_blank" class="inline-flex items-center justify-center gap-2.5 bg-slate-900 text-white px-8 py-3.5 rounded-xl font-bold shadow-md hover:bg-emerald-600 transition-all active:scale-95 text-[14px]">
+                        <i class="ph-fill ph-telegram-logo text-[22px] text-sky-400"></i> Mizanur Rahaman
+                    </a>
+                </div>
+
+                <div id="adminStatsBtn" class="hidden mt-6 pt-6 border-t border-slate-100 text-center">
+                    <button onclick="openStatsModal()" class="w-full bg-slate-100 text-slate-700 px-8 py-3.5 rounded-xl font-bold shadow-sm hover:bg-slate-200 transition-all active:scale-95 text-[14px] flex items-center justify-center gap-2.5">
+                        <i class="ph-bold ph-chart-bar text-[20px] text-emerald-600"></i> অ্যাডমিন স্ট্যাটাস
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Footer -->
+        <footer class="w-full mt-8 md:mt-12 pt-6 pb-20 md:pb-12 px-4 md:px-8">
+            <div class="max-w-4xl mx-auto bg-white/60 backdrop-blur-md rounded-[2rem] p-6 md:p-8 border border-slate-200/60 text-center flex flex-col items-center gap-4 shadow-sm">
+                <div class="flex items-center gap-2 text-slate-400 opacity-80">
+                    <i class="ph-fill ph-gas-pump text-2xl"></i>
+                    <span class="font-black text-lg tracking-tight">ফুয়েল ট্র্যাকার</span>
+                </div>
+                <p class="text-[12.5px] font-medium text-slate-500 leading-relaxed max-w-md mx-auto">
+                    সাধারণ মানুষের ভোগান্তি কমাতেই আমাদের এই ক্ষুদ্র প্রয়াস। সবার সম্মিলিত প্রচেষ্টায় সঠিক তথ্য প্রদান করুন।
+                </p>
+                <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[10.5px] font-black text-slate-400 uppercase tracking-widest mt-2">
+                    <span><i class="ph-bold ph-copyright"></i> ২০২৬ সর্বস্বত্ব সংরক্ষিত</span>
+                    <span class="hidden sm:inline">•</span>
+                    <span>ভার্সন ২.১.০ (Premium)</span>
+                </div>
+            </div>
+        </footer>
+
     </main>
 
-    <!-- BOTTOM NAV (MOBILE) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 glass-panel border-t border-slate-200/70 backdrop-blur-xl z-40 pb-safe"><div class="flex justify-around items-center py-2"><button onclick="switchView('Home')" id="mobileHome" class="nav-mobile active flex flex-col items-center gap-0.5 text-emerald-600"><i class="ph-fill ph-house text-2xl"></i><span class="text-[11px] font-extrabold">হোম</span></button><button onclick="switchView('Notice')" id="mobileNotice" class="nav-mobile flex flex-col items-center gap-0.5 text-slate-500"><i class="ph-bold ph-bell-ringing text-2xl"></i><span class="text-[11px] font-extrabold">নোটিশ</span><span id="mobileNoticeDot" class="hidden w-1.5 h-1.5 bg-rose-500 rounded-full -mt-1"></span></button><button onclick="switchView('Feedback')" id="mobileFeedback" class="nav-mobile flex flex-col items-center gap-0.5 text-slate-500"><i class="ph-bold ph-chat-circle-text text-2xl"></i><span class="text-[11px] font-extrabold">মতামত</span></button><button onclick="switchView('About')" id="mobileAbout" class="nav-mobile flex flex-col items-center gap-0.5 text-slate-500"><i class="ph-bold ph-info text-2xl"></i><span class="text-[11px] font-extrabold">তথ্য</span></button></div></nav>
+    <!-- Bottom Nav for Mobile -->
+    <nav class="md:hidden glass-header shadow-[0_-10px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/60 fixed bottom-0 w-full z-40 pb-safe">
+        <div class="max-w-md mx-auto flex justify-between items-center px-4 py-1.5 h-14">
+            <button onclick="switchView('Home')" id="navHome" class="nav-item active flex-1 flex flex-col items-center gap-1 transition-all group"><i class="ph-bold ph-squares-four text-[22px] nav-icon text-slate-400 group-[.active]:text-emerald-500"></i><span class="text-[10px] font-bold tracking-wide">ড্যাশবোর্ড</span></button>
+            <button onclick="switchView('Notice')" id="navNotice" class="nav-item flex-1 flex flex-col items-center gap-1 transition-all group"><div class="relative"><i class="ph-bold ph-bell-ringing text-[22px] nav-icon text-slate-400 group-[.active]:text-emerald-500"></i><span id="bottomNavBadge" class="absolute top-0 -right-1 flex h-2 w-2 hidden"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500 border border-white"></span></span></div><span class="text-[10px] font-bold tracking-wide">নোটিশ</span></button>
+            <button onclick="switchView('Feedback')" id="navFeedback" class="nav-item flex-1 flex flex-col items-center gap-1 transition-all group"><i class="ph-bold ph-chat-circle-text text-[22px] nav-icon text-slate-400 group-[.active]:text-emerald-500"></i><span class="text-[10px] font-bold tracking-wide">মতামত</span></button>
+        </div>
+    </nav>
 
-    <!-- MODALS -->
-    <div id="updateModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-end md:items-center justify-center p-0 md:p-4 transition-all"><div id="updateModalInner" class="bg-white w-full max-w-lg rounded-t-3xl md:rounded-3xl overflow-hidden transform translate-y-full md:translate-y-0 shadow-2xl"><div class="p-5 border-b flex justify-between items-center"><h3 id="modalStationName" class="font-black text-xl">পাম্প আপডেট</h3><button onclick="closeUpdateModal()" class="p-2 rounded-full hover:bg-slate-100"><i class="ph-bold ph-x"></i></button></div><div class="p-5 max-h-[70vh] overflow-y-auto space-y-5"><input id="shortNoteInput" placeholder="ছোট নোট (ঐচ্ছিক)..." class="w-full border rounded-xl p-3 text-sm"><div><label class="font-bold text-sm">কাগজের কড়াকড়ি</label><div class="grid grid-cols-3 gap-2 mt-2"><label class="radio-card"><input type="radio" name="enforcement" value="কড়াকড়ি চলছে" class="hidden"><div class="border rounded-xl py-2 text-center text-sm font-bold">কড়াকড়ি</div></label><label><input type="radio" name="enforcement" value="স্বাভাবিক" class="hidden"><div class="border rounded-xl py-2 text-center text-sm">স্বাভাবিক</div></label><label><input type="radio" name="enforcement" value="অজ্ঞাত" class="hidden"><div class="border rounded-xl py-2 text-center text-sm">অজ্ঞাত</div></label></div></div><div><label class="font-bold text-sm">ভিড়ের পরিমাণ</label><div class="grid grid-cols-4 gap-2 mt-2"><label><input type="radio" name="queue" value="স্বাভাবিক" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">স্বাভাবিক</div></label><label><input type="radio" name="queue" value="মাঝারি ভিড়" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">মাঝারি</div></label><label><input type="radio" name="queue" value="দীর্ঘ লাইন" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">দীর্ঘ লাইন</div></label><label><input type="radio" name="queue" value="অজ্ঞাত" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">অজ্ঞাত</div></label></div></div><div><label class="font-bold text-sm">পেট্রোল</label><div class="grid grid-cols-3 gap-2 mt-2"><label><input type="radio" name="petrol" value="পর্যাপ্ত" class="hidden"><div class="border rounded-xl py-2 text-center">পর্যাপ্ত</div></label><label><input type="radio" name="petrol" value="সীমিত" class="hidden"><div class="border rounded-xl py-2 text-center">সীমিত</div></label><label><input type="radio" name="petrol" value="স্টক নেই" class="hidden"><div class="border rounded-xl py-2 text-center">স্টক নেই</div></label></div></div><div><label class="font-bold text-sm">অকটেন</label><div class="grid grid-cols-3 gap-2 mt-2"><label><input type="radio" name="octane" value="পর্যাপ্ত" class="hidden"><div class="border rounded-xl py-2 text-center">পর্যাপ্ত</div></label><label><input type="radio" name="octane" value="সীমিত" class="hidden"><div class="border rounded-xl py-2 text-center">সীমিত</div></label><label><input type="radio" name="octane" value="স্টক নেই" class="hidden"><div class="border rounded-xl py-2 text-center">স্টক নেই</div></label></div></div><div><label class="font-bold text-sm">বিক্রয় পরিমাণ</label><div class="grid grid-cols-5 gap-1 mt-2"><label><input type="radio" name="amount" value="আনলিমিটেড" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">আনলিমিটেড</div></label><label><input type="radio" name="amount" value="৫০০ টাকা" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">৫০০</div></label><label><input type="radio" name="amount" value="৩০০ টাকা" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">৩০০</div></label><label><input type="radio" name="amount" value="২০০ টাকা" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">২০০</div></label><label><input type="radio" name="amount" value="১০০ টাকা" class="hidden"><div class="border rounded-xl py-2 text-center text-xs">১০০</div></label></div></div><button id="confirmUpdateBtn" class="w-full bg-slate-900 text-white py-3.5 rounded-xl font-bold mt-4">আপডেট নিশ্চিত করুন</button></div></div></div>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 md:top-8 left-1/2 transform -translate-x-1/2 -translate-y-[150%] bg-slate-900/95 backdrop-blur-md text-white px-5 py-3.5 rounded-xl shadow-float transition-transform duration-400 ease-out z-[5000] flex items-center gap-3 min-w-[260px] border border-slate-700/50">
+        <i class="ph-fill ph-check-circle text-[24px]" id="toastIcon"></i>
+        <div class="flex-1"><p class="font-semibold tracking-wide text-[13.5px]" id="toastMsg">সফল হয়েছে!</p></div>
+    </div>
 
-    <div id="noticeModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-end md:items-center justify-center"><div class="bg-white w-full max-w-md rounded-t-3xl md:rounded-3xl p-5"><h3 class="font-black text-xl flex items-center gap-2"><i class="ph-fill ph-megaphone text-purple-600"></i>নতুন নোটিশ</h3><div class="mt-4 space-y-3"><select id="noticeStationSelect" class="w-full border rounded-xl p-3 text-sm"><option value="">স্টেশন নির্বাচন করুন</option></select><input type="date" id="noticeDate" class="w-full border rounded-xl p-3"><input type="time" id="noticeTime" class="w-full border rounded-xl p-3"><select id="noticeAmount" class="w-full border rounded-xl p-3"><option value="">পরিমাণ (ঐচ্ছিক)</option><option>আনলিমিটেড</option><option>৫০০ টাকা</option><option>৩০০ টাকা</option></select><input id="noticeAuthor" placeholder="আপনার নাম" class="w-full border rounded-xl p-3"><button id="publishNoticeBtn" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold">প্রকাশ করুন</button></div><button onclick="closeNoticeModal()" class="mt-3 w-full text-slate-500 text-sm py-2">বাতিল</button></div></div>
+    <!-- Update Station Modal -->
+    <div id="updateModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[4000] hidden items-end md:items-center justify-center p-0 md:p-4 opacity-0 transition-opacity duration-300">
+        <div id="updateModalContent" class="bg-white rounded-t-[1.5rem] md:rounded-[1.5rem] shadow-float w-full max-w-lg overflow-hidden transform translate-y-full md:translate-y-0 md:scale-95 md:opacity-0 transition-all duration-400 ease-out max-h-[92vh] flex flex-col border border-white">
+            <div class="md:hidden pt-3 pb-1 bg-white flex justify-center w-full cursor-grab"><div class="drag-handle"></div></div>
+            <div class="bg-white px-5 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center text-slate-600"><i class="ph-bold ph-pencil-simple text-lg"></i></div>
+                    <div><h3 class="font-extrabold text-[16px] text-slate-900 leading-tight">আপডেট প্যানেল</h3><p id="modalStationName" class="text-[11px] font-semibold text-emerald-600 truncate max-w-[200px]">পাম্পের নাম</p></div>
+                </div>
+                <button onclick="closeUpdateModal()" class="w-9 h-9 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-500 transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto space-y-5 bg-slate-50/50">
+                <!-- Short Note -->
+                <div><label class="block font-bold text-slate-500 text-[11px] uppercase tracking-wide mb-1.5 pl-1">ছোট নোট (ঐচ্ছিক)</label><input type="text" id="shortNoteInput" placeholder="যেমন: শুধু বাইকে দিচ্ছে..." class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 outline-none focus:border-emerald-500 transition-colors shadow-sm"></div>
+                
+                <!-- Fuel Status Grids -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm">
+                        <label class="font-bold text-slate-700 flex items-center gap-1.5 text-[12px] mb-2.5"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div> পেট্রোল স্ট্যাটাস</label>
+                        <div class="grid grid-cols-1 gap-1.5">
+                            <label class="cursor-pointer"><input type="radio" name="petrolStatus" value="পর্যাপ্ত" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-400 peer-checked:text-emerald-700 transition-all text-center text-[12px] font-semibold text-slate-500">পর্যাপ্ত</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="petrolStatus" value="সীমিত" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-400 peer-checked:text-amber-700 transition-all text-center text-[12px] font-semibold text-slate-500">সীমিত</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="petrolStatus" value="স্টক নেই" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-rose-50 peer-checked:border-rose-400 peer-checked:text-rose-700 transition-all text-center text-[12px] font-semibold text-slate-500">স্টক নেই</div></label>
+                        </div>
+                    </div>
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm">
+                        <label class="font-bold text-slate-700 flex items-center gap-1.5 text-[12px] mb-2.5"><div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div> অকটেন স্ট্যাটাস</label>
+                        <div class="grid grid-cols-1 gap-1.5">
+                            <label class="cursor-pointer"><input type="radio" name="octaneStatus" value="পর্যাপ্ত" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-400 peer-checked:text-emerald-700 transition-all text-center text-[12px] font-semibold text-slate-500">পর্যাপ্ত</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="octaneStatus" value="সীমিত" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-400 peer-checked:text-amber-700 transition-all text-center text-[12px] font-semibold text-slate-500">সীমিত</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="octaneStatus" value="স্টক নেই" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-rose-50 peer-checked:border-rose-400 peer-checked:text-rose-700 transition-all text-center text-[12px] font-semibold text-slate-500">স্টক নেই</div></label>
+                        </div>
+                    </div>
+                </div>
 
-    <div id="statsModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center"><div class="bg-white w-80 rounded-3xl p-6 text-center"><h3 class="font-black text-xl">ভিজিটর স্ট্যাটাস</h3><div id="statsData" class="grid grid-cols-2 gap-4 mt-4"><div class="bg-slate-50 p-3 rounded-2xl"><p class="text-xs">আজকে</p><p id="statToday" class="text-2xl font-black">--</p></div><div class="bg-slate-50 p-3 rounded-2xl"><p class="text-xs">গতকাল</p><p id="statYesterday" class="text-2xl font-black">--</p></div><div class="bg-slate-50 p-3 rounded-2xl"><p class="text-xs">এই মাসে</p><p id="statMonth" class="text-2xl font-black">--</p></div><div class="bg-slate-50 p-3 rounded-2xl"><p class="text-xs">সর্বমোট</p><p id="statLifetime" class="text-2xl font-black">--</p></div></div><button onclick="closeStatsModal()" class="mt-5 text-sm bg-slate-100 py-2 px-4 rounded-full">বন্ধ</button></div></div>
+                <!-- Enforcement & Queue -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                    <div>
+                        <label class="font-bold text-slate-700 flex items-center gap-1.5 text-[12px] mb-2.5"><i class="ph-fill ph-police-car text-rose-500 text-[15px]"></i> কাগজের কড়াকড়ি</label>
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <label class="cursor-pointer"><input type="radio" name="enforcementStatus" value="কড়াকড়ি চলছে" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-rose-50 peer-checked:border-rose-400 peer-checked:text-rose-700 transition-all text-center text-[11.5px] font-semibold text-slate-500">চলছে</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="enforcementStatus" value="স্বাভাবিক" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-400 peer-checked:text-emerald-700 transition-all text-center text-[11.5px] font-semibold text-slate-500">স্বাভাবিক</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="enforcementStatus" value="অজ্ঞাত" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-slate-50 peer-checked:border-slate-300 peer-checked:text-slate-700 transition-all text-center text-[11.5px] font-semibold text-slate-500">অজ্ঞাত</div></label>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100">
+                        <label class="font-bold text-slate-700 flex items-center gap-1.5 text-[12px] mb-2.5"><i class="ph-fill ph-users-three text-amber-500 text-[15px]"></i> বর্তমান ভিড়</label>
+                        <div class="grid grid-cols-4 gap-1.5">
+                            <label class="cursor-pointer"><input type="radio" name="queueStatus" value="স্বাভাবিক" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-emerald-50 peer-checked:border-emerald-400 peer-checked:text-emerald-700 transition-all text-center text-[11px] font-semibold text-slate-500">স্বাভাবিক</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="queueStatus" value="মাঝারি ভিড়" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-400 peer-checked:text-amber-700 transition-all text-center text-[11px] font-semibold text-slate-500">মাঝারি</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="queueStatus" value="দীর্ঘ লাইন" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-rose-50 peer-checked:border-rose-400 peer-checked:text-rose-700 transition-all text-center text-[11px] font-semibold text-slate-500">দীর্ঘ লাইন</div></label>
+                            <label class="cursor-pointer"><input type="radio" name="queueStatus" value="অজ্ঞাত" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-slate-50 peer-checked:border-slate-300 peer-checked:text-slate-700 transition-all text-center text-[11px] font-semibold text-slate-500">অজ্ঞাত</div></label>
+                        </div>
+                    </div>
+                </div>
 
-    <div id="toastMsg" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-full shadow-xl flex items-center gap-2 z-[100] transition-all duration-300 translate-y-20 opacity-0 text-sm font-bold pointer-events-none"><i class="ph-fill ph-check-circle text-emerald-400"></i><span id="toastText"></span></div>
+                <!-- Amount -->
+                <div>
+                    <label class="block font-bold text-slate-500 text-[11px] uppercase tracking-wide mb-1.5 pl-1">বিক্রির পরিমাণ</label>
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-1.5">
+                        <label class="cursor-pointer"><input type="radio" name="fuelAmount" value="আনলিমিটেড" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-400 peer-checked:text-indigo-700 transition-all text-center text-[11px] font-semibold text-slate-500">আনলিমিটেড</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="fuelAmount" value="৫০০ টাকা" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-400 peer-checked:text-indigo-700 transition-all text-center text-[11px] font-semibold text-slate-500">৫০০ টাকা</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="fuelAmount" value="৩০০ টাকা" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-400 peer-checked:text-indigo-700 transition-all text-center text-[11px] font-semibold text-slate-500">৩০০ টাকা</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="fuelAmount" value="২০০ টাকা" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-400 peer-checked:text-indigo-700 transition-all text-center text-[11px] font-semibold text-slate-500">২০০ টাকা</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="fuelAmount" value="১০০ টাকা" class="peer sr-only"><div class="py-2 rounded-lg border border-slate-200 peer-checked:bg-indigo-50 peer-checked:border-indigo-400 peer-checked:text-indigo-700 transition-all text-center text-[11px] font-semibold text-slate-500">১০০ টাকা</div></label>
+                    </div>
+                </div>
 
+                <button id="submitUpdateBtn" class="w-full py-3.5 bg-slate-900 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:bg-emerald-600 active:scale-95 transition-all text-[14.5px] flex justify-center items-center gap-2">আপডেট সেভ করুন <i class="ph-bold ph-check-circle text-lg"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Notice Modal -->
+    <div id="addNoticeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[2000] hidden items-end md:items-center justify-center p-0 md:p-4 opacity-0 transition-opacity duration-300">
+        <div id="addNoticeModalContent" class="bg-white rounded-t-[1.5rem] md:rounded-[1.5rem] shadow-float w-full max-w-md overflow-hidden transform translate-y-full md:translate-y-0 md:scale-95 md:opacity-0 transition-all duration-400 ease-out max-h-[90vh] flex flex-col border border-white">
+            <div class="md:hidden pt-3 pb-1 bg-white flex justify-center w-full cursor-grab"><div class="drag-handle"></div></div>
+            <div class="bg-white px-5 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-purple-600"><i class="ph-fill ph-megaphone text-lg"></i></div>
+                    <h3 class="font-extrabold text-[16px] text-slate-900 leading-tight">নতুন নোটিশ</h3>
+                </div>
+                <button onclick="closeNoticeModal()" class="w-9 h-9 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-500 transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-4 bg-slate-50/50">
+                <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন ফুয়েল স্টেশন দিবে:</label><select id="noticeStationSelect" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm appearance-none outline-none focus:border-purple-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[position:right_12px_center]"></select></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কবে দিবে:</label><input type="date" id="noticeDate" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm outline-none focus:border-purple-400"></div>
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন সময়:</label><input type="time" id="noticeTime" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm outline-none focus:border-purple-400"></div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কী পরিমাণে দিবে:</label>
+                    <select id="noticeAmount" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm appearance-none outline-none focus:border-purple-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[position:right_12px_center]"><option value="">পরিমাণ (ঐচ্ছিক)...</option><option value="আনলিমিটেড">আনলিমিটেড</option><option value="৫০০ টাকার">৫০০ টাকার</option><option value="৩০০ টাকার">৩০০ টাকার</option><option value="২০০ টাকার">২০০ টাকার</option><option value="১০০ টাকার">১০০ টাকার</option></select>
+                </div>
+                <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">আপনার নাম:</label><input type="text" id="noticeAuthor" placeholder="আপনার নাম লিখুন" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm outline-none focus:border-purple-400"></div>
+                <button onclick="submitNewNotice()" id="submitNoticeBtn" class="mt-4 w-full py-3.5 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-md hover:shadow-lg active:scale-95 text-[14.5px] flex items-center justify-center gap-2"><i class="ph-bold ph-check-circle text-[18px]"></i> নোটিশ পাবলিশ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Stats Modal -->
+    <div id="statsModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[4000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="statsModalContent" class="bg-white rounded-[2rem] shadow-float w-full max-w-sm overflow-hidden transform scale-95 transition-all duration-400 p-6 md:p-8 relative border border-slate-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-slate-900 font-black text-xl flex items-center gap-2.5"><div class="p-2 bg-blue-50 text-blue-600 rounded-xl"><i class="ph-bold ph-chart-line-up text-[20px]"></i></div> ভিজিটর স্ট্যাটাস</h3>
+                <button onclick="closeStatsModal()" class="text-slate-400 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 p-2.5 rounded-full active:scale-90 transition-colors"><i class="ph-bold ph-x text-[18px]"></i></button>
+            </div>
+            <div id="statsLoading" class="py-10 text-center text-slate-400"><i class="ph-bold ph-spinner animate-spin text-[40px] mb-3"></i><p class="font-extrabold text-[14px]">ডেটা লোড হচ্ছে...</p></div>
+            <div id="statsContainer" class="hidden grid-cols-2 gap-3.5">
+                <div class="bg-blue-50/80 border border-blue-100 p-5 rounded-2xl text-center"><p class="text-[12px] font-extrabold text-slate-500 mb-1.5 uppercase tracking-widest">আজকে</p><h4 class="text-[32px] font-black text-blue-600 leading-none" id="statToday">০</h4></div>
+                <div class="bg-emerald-50/80 border border-emerald-100 p-5 rounded-2xl text-center"><p class="text-[12px] font-extrabold text-slate-500 mb-1.5 uppercase tracking-widest">গতকাল</p><h4 class="text-[32px] font-black text-emerald-600 leading-none" id="statYesterday">০</h4></div>
+                <div class="bg-purple-50/80 border border-purple-100 p-5 rounded-2xl text-center"><p class="text-[12px] font-extrabold text-slate-500 mb-1.5 uppercase tracking-widest">এই মাসে</p><h4 class="text-[32px] font-black text-purple-600 leading-none" id="statMonth">০</h4></div>
+                <div class="bg-amber-50/80 border border-amber-100 p-5 rounded-2xl text-center"><p class="text-[12px] font-extrabold text-slate-500 mb-1.5 uppercase tracking-widest">সর্বমোট</p><h4 class="text-[32px] font-black text-amber-600 leading-none" id="statLifetime">০</h4></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script>
-        // ========== GLOBALS ==========
         const API_URL = "https://script.google.com/macros/s/AKfycbzS6N1exM7m5vJdZav5wncSW-NfHLPjOaM-SpbtCl0M1miQPOGxGLfq59tifsQh0p0N/exec";
-        let stations = [], notices = [], activeFilter = 'all', activeSort = 'recent', activeArea = 'all', searchQuery = '', currentEditId = null;
-        const COOLDOWN = 5 * 60 * 1000;
-        function showToast(msg, isErr=false) { let t = document.getElementById('toastText'); t.innerText = msg; let el = document.getElementById('toastMsg'); el.classList.remove('translate-y-20', 'opacity-0'); setTimeout(() => el.classList.add('translate-y-20', 'opacity-0'), 2600); }
-        function toBn(num) { return num ? num.toString().replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]) : '০'; }
-        function timeAgo(ts) { if(!ts) return "এখনো"; let s = Math.floor((Date.now()-ts)/1000); if(s<60) return "এইমাত্র"; let m = Math.floor(s/60); if(m<60) return `${toBn(m)} মিনিট`; let h = Math.floor(m/60); if(h<24) return `${toBn(h)} ঘণ্টা`; return `${toBn(Math.floor(h/24))} দিন`; }
-        function checkCooldown() { let last = localStorage.getItem('mft_last_update'); if(last && (Date.now()-parseInt(last))<COOLDOWN) { showToast(`আবার ${toBn(Math.ceil((COOLDOWN-(Date.now()-parseInt(last)))/60000))} মিনিট পর আপডেট করুন`); return false; } return true; }
+        const COOLDOWN_KEY = 'mft_v3_cooldown'; const COOLDOWN_TIME = 5 * 60 * 1000; const OUTDATED_TIME = 12 * 60 * 60 * 1000; 
+        let stations = [], activeFilter = 'all', activeSort = 'recent', activeArea = 'all', searchQuery = '', currentEditingId = null;
 
-        async function refreshData() { 
-            document.getElementById('refreshIcon')?.classList.add('animate-spin'); 
+        function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
+        function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
+        function toBn(num) { return num ? num.toString().replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]) : '০'; }
+        function timeAgo(ts) {
+            if(!ts) return "অজানা";
+            const secs = Math.floor((Date.now() - parseInt(ts)) / 1000); if (secs < 60) return "এইমাত্র";
+            const mins = Math.floor(secs / 60); if (mins < 60) return `${toBn(mins)} মিনিট আগে`;
+            const hrs = Math.floor(mins / 60); if (hrs < 24) return `${toBn(hrs)} ঘণ্টা আগে`;
+            return `${toBn(Math.floor(hrs / 24))} দিন আগে`;
+        }
+
+        const uiMap = { 
+            'পর্যাপ্ত': { text: 'text-emerald-700', bg: 'from-emerald-50/50 to-emerald-100/50', border: 'border-emerald-200/50', dot: 'bg-emerald-500' }, 
+            'সীমিত': { text: 'text-amber-700', bg: 'from-amber-50/50 to-amber-100/50', border: 'border-amber-200/50', dot: 'bg-amber-500' }, 
+            'স্টক নেই': { text: 'text-rose-700', bg: 'from-rose-50/50 to-rose-100/50', border: 'border-rose-200/50', dot: 'bg-rose-500' }, 
+            'outdated': { text: 'text-slate-500', bg: 'from-slate-50/50 to-slate-100/50', border: 'border-slate-200/50', dot: 'bg-slate-400' } 
+        };
+
+        async function loadData() {
+            const icon = document.getElementById('refreshIcon'); if(icon) icon.classList.add('animate-spin');
             try { 
-                let res=await fetch(API_URL); 
-                stations=await res.json(); 
-                stations=stations.map(s=>({...s, id:Number(s.id), lastUpdated:Number(s.lastUpdated)||Date.now(), reports:Number(s.reports)||0})); 
-                renderStationGrid(); 
-            } catch(e){ 
-                showToast("ডেটা লোড ব্যর্থ, লোকাল ডাটা দেখানো হচ্ছে"); 
-                if(stations.length===0) stations=sampleStations(); 
-                renderStationGrid(); 
-            } finally{ 
-                document.getElementById('refreshIcon')?.classList.remove('animate-spin'); 
-            } 
+                const res = await fetch(API_URL); 
+                stations = await res.json(); 
+                processUI(); 
+            } catch(e) { showToast("ডেটা লোড ফেইলড!", "error"); } 
+            finally { if(icon) icon.classList.remove('animate-spin'); }
         }
-        function sampleStations(){ return [{id:1,name:"মেহেরপুর পেট্রোল পাম্প",upazila:"মেহেরপুর সদর",petrol:"পর্যাপ্ত",octane:"সীমিত",queueStatus:"স্বাভাবিক",fuelAmount:"আনলিমিটেড",enforcementStatus:"স্বাভাবিক",note:"",lastUpdated:Date.now(),reports:12,verifiedCount:3},{id:2,name:"গাংনী সেন্ট্রাল ফুয়েল",upazila:"গাংনী",petrol:"স্টক নেই",octane:"স্টক নেই",queueStatus:"দীর্ঘ লাইন",fuelAmount:"২০০ টাকা",enforcementStatus:"কড়াকড়ি চলছে",lastUpdated:Date.now()-2e6,reports:45}]}
-        function filterStations(){ let filtered=stations.filter(s=>(s.name.toLowerCase().includes(searchQuery)||s.upazila.toLowerCase().includes(searchQuery)) && (activeArea==='all'||s.upazila===activeArea) && (activeFilter==='all'||s.petrol===activeFilter||s.octane===activeFilter)); if(activeSort==='recent') filtered.sort((a,b)=>b.lastUpdated-a.lastUpdated); else if(activeSort==='reports') filtered.sort((a,b)=>b.reports-a.reports); else filtered.sort((a,b)=>a.name.localeCompare(b.name)); return filtered; }
-        function renderStationGrid(){ 
-            let container=document.getElementById('stationGrid'); if(!container) return; 
-            let data=filterStations(); 
-            if(!data.length){ container.innerHTML=`<div class="text-center py-20 bg-white/60 rounded-2xl"><i class="ph-fill ph-warning-circle text-5xl text-slate-300"></i><p class="font-bold mt-2">কোনো পাম্প খুঁজে পাওয়া যায়নি</p></div>`; return; }
-            container.innerHTML=data.map(s=>{ 
-                let isOld=(Date.now()-s.lastUpdated)>12*3600000; 
-                let pClass=isOld?'text-slate-400 bg-slate-100':s.petrol==='পর্যাপ্ত'?'text-emerald-700 bg-emerald-50':s.petrol==='সীমিত'?'text-amber-700 bg-amber-50':'text-rose-700 bg-rose-50'; 
-                let qClass=s.queueStatus==='দীর্ঘ লাইন'?'bg-rose-100 text-rose-700':s.queueStatus==='মাঝারি ভিড়'?'bg-amber-100 text-amber-700':'bg-emerald-100 text-emerald-700'; 
-                return `<div class="card-modern bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/80 p-5 shadow-sm transition-all">
-                    <div class="flex justify-between"><div><h3 class="font-black text-lg">${s.name}</h3><span class="text-xs bg-slate-100 px-2 py-0.5 rounded-full">${s.upazila}</span></div><div class="text-right"><span class="text-[11px] font-bold text-slate-400">${timeAgo(s.lastUpdated)}</span>${s.verifiedCount>0?`<div class="text-[10px] text-emerald-600"><i class="ph-fill ph-shield-check"></i> ${s.verifiedCount} জন</div>`:''}</div></div>
-                    ${isOld?'<div class="bg-rose-50 text-rose-600 text-xs p-2 rounded-xl mt-2"><i class="ph-fill ph-clock"></i> ১২ ঘণ্টা পুরনো তথ্য</div>':''}
-                    ${s.note?`<div class="bg-sky-50 text-sky-700 p-2 rounded-xl text-xs mt-2"><i class="ph-fill ph-info"></i> ${s.note}</div>`:''}
-                    <div class="grid grid-cols-2 gap-3 mt-3"><div class="rounded-xl ${pClass} p-3 text-center font-black">⛽ পেট্রোল: ${s.petrol}</div><div class="rounded-xl ${pClass} p-3 text-center font-black">⛽ অকটেন: ${s.octane}</div></div>
-                    <div class="flex justify-between items-center mt-3"><div class="text-xs font-bold ${qClass} px-3 py-1.5 rounded-full"><i class="ph-fill ph-users-three"></i> ${s.queueStatus||'অজ্ঞাত'}</div><div class="text-xs bg-slate-100 px-2 py-1 rounded-lg">${s.fuelAmount||'অজানা'}</div></div>
-                    <div class="flex gap-2 mt-4"><button onclick='openUpdateModal(${s.id})' class="flex-1 bg-slate-800 text-white py-2.5 rounded-xl text-sm font-bold shadow-sm">আপডেট</button><button onclick='verifyStation(${s.id})' class="flex-1 border border-emerald-300 text-emerald-700 py-2.5 rounded-xl text-sm font-bold">নিশ্চিত</button><button onclick='shareStation(${s.id})' class="p-2.5 border rounded-xl"><i class="ph-bold ph-share-network"></i></button></div>
-                </div>`; }).join('');
+
+        function processUI() {
+            let filtered = stations.filter(s => {
+                const query = (searchQuery||"").toLowerCase().replace(/\s+/g, ' ').trim();
+                const text = (`${s.name} ${s.upazila}`).toLowerCase().replace(/\s+/g, ' ');
+                const matchSearch = !query || query.split(' ').every(word => text.includes(word));
+                const matchArea = activeArea === 'all' || (s.upazila||"").toLowerCase().includes(activeArea.toLowerCase());
+                const matchStatus = activeFilter === 'all' || s.petrol === activeFilter || s.octane === activeFilter;
+                return matchSearch && matchArea && matchStatus;
+            });
+            
+            filtered.sort((a, b) => {
+                if (activeSort === 'recent') return (parseInt(b.lastUpdated) || 0) - (parseInt(a.lastUpdated) || 0);
+                if (activeSort === 'reports') return (parseInt(b.reports) || 0) - (parseInt(a.reports) || 0);
+                return (a.name || "").localeCompare(b.name || "");
+            });
+
+            const resultsCountEl = document.getElementById('resultsCount');
+            if (resultsCountEl) resultsCountEl.textContent = `${toBn(filtered.length)}টি পাম্প`;
+            
+            renderCards(filtered);
         }
-        async function verifyStation(id){ let timeKey=`verify_${id}`; let last=localStorage.getItem(timeKey); if(last && Date.now()-parseInt(last)<600000) return showToast("১০ মিনিট পর আবার নিশ্চিত করতে পারবেন"); localStorage.setItem(timeKey,Date.now()); let st=stations.find(s=>s.id===id); if(st) st.verifiedCount=(st.verifiedCount||0)+1; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({id,action:'verify'})}); renderStationGrid(); showToast("ধন্যবাদ! তথ্য নিশ্চিত করা হয়েছে"); }
-        function shareStation(id){ let s=stations.find(x=>x.id===id); if(s) navigator.clipboard.writeText(`${s.name} - পেট্রোল:${s.petrol} অকটেন:${s.octane} ভিড়:${s.queueStatus}`); showToast("কপি করা হয়েছে!"); }
-        function openUpdateModal(id){ if(!checkCooldown()) return; currentEditId=id; let s=stations.find(x=>x.id===id); document.getElementById('modalStationName').innerText=s.name; document.querySelectorAll('input[name="petrol"]').forEach(r=>r.checked=(r.value===s.petrol)); document.querySelectorAll('input[name="octane"]').forEach(r=>r.checked=(r.value===s.octane)); document.querySelectorAll('input[name="queue"]').forEach(r=>r.checked=(r.value===s.queueStatus)); document.querySelectorAll('input[name="enforcement"]').forEach(r=>r.checked=(r.value===s.enforcementStatus)); document.querySelectorAll('input[name="amount"]').forEach(r=>r.checked=(r.value===s.fuelAmount)); document.getElementById('shortNoteInput').value=s.note||''; let modal=document.getElementById('updateModal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(()=>{document.getElementById('updateModalInner').classList.remove('translate-y-full');},20); }
-        function closeUpdateModal(){ let modal=document.getElementById('updateModal'); document.getElementById('updateModalInner').classList.add('translate-y-full'); setTimeout(()=>{modal.classList.add('hidden');modal.classList.remove('flex');},300); }
-        document.getElementById('confirmUpdateBtn')?.addEventListener('click',async()=>{ if(!currentEditId||!checkCooldown()) return; let petrol=document.querySelector('input[name="petrol"]:checked')?.value; let octane=document.querySelector('input[name="octane"]:checked')?.value; let queue=document.querySelector('input[name="queue"]:checked')?.value; let enforcement=document.querySelector('input[name="enforcement"]:checked')?.value; let amount=document.querySelector('input[name="amount"]:checked')?.value; let note=document.getElementById('shortNoteInput').value; if(!petrol||!octane) return showToast("পেট্রোল ও অকটেন স্ট্যাটাস নির্বাচন করুন"); let payload={id:currentEditId,petrol,octane,queueStatus:queue,enforcementStatus:enforcement,fuelAmount:amount,note,action:'update'}; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)}); let idx=stations.findIndex(s=>s.id===currentEditId); if(idx!==-1){ stations[idx]={...stations[idx],petrol,octane,queueStatus:queue,enforcementStatus:enforcement,fuelAmount:amount,note,lastUpdated:Date.now(),reports:(stations[idx].reports||0)+1}; } localStorage.setItem('mft_last_update',Date.now().toString()); renderStationGrid(); closeUpdateModal(); showToast("আপডেট সফল!"); });
-        function loadNotices(){ let stored=localStorage.getItem('mft_notices'); if(stored) notices=JSON.parse(stored); else notices=[{id:1,stationName:"মেহেরপুর পাম্প",date:"2025-04-10",time:"10:00",amount:"আনলিমিটেড",author:"জনতা",timestamp:Date.now()}]; renderNoticeFeed(); }
-        function renderNoticeFeed(){ let container=document.getElementById('noticeFeed'); if(!container) return; if(notices.length===0){ container.innerHTML='<div class="col-span-full text-center py-10">কোনো নোটিশ নেই</div>'; return; } container.innerHTML=notices.map(n=>`<div class="bg-white/70 backdrop-blur-sm rounded-2xl p-5 border"><div class="flex justify-between"><h3 class="font-black">${n.stationName}</h3><span class="text-xs text-slate-400">${n.date} ${n.time}</span></div><p class="text-sm mt-1">পরিমাণ: ${n.amount||'N/A'}</p><p class="text-xs text-slate-500 mt-2">প্রকাশক: ${n.author||'অজ্ঞাত'}</p></div>`).join(''); }
-        function submitNewNotice(){ let stationSelect=document.getElementById('noticeStationSelect'); let stationName=stationSelect.value; let date=document.getElementById('noticeDate').value; let time=document.getElementById('noticeTime').value; let amount=document.getElementById('noticeAmount').value; let author=document.getElementById('noticeAuthor').value; if(!stationName||!date) return showToast("স্টেশন ও তারিখ প্রয়োজন"); let newNotice={id:Date.now(),stationName,date,time,amount,author,timestamp:Date.now()}; notices.unshift(newNotice); localStorage.setItem('mft_notices',JSON.stringify(notices)); renderNoticeFeed(); closeNoticeModal(); showToast("নোটিশ প্রকাশিত"); }
-        function openNoticeModal(){ document.getElementById('noticeModal').classList.remove('hidden'); document.getElementById('noticeModal').classList.add('flex'); let select=document.getElementById('noticeStationSelect'); select.innerHTML='<option value="">স্টেশন নির্বাচন করুন</option>'+stations.map(s=>`<option value="${s.name}">${s.name} (${s.upazila})</option>`).join(''); }
-        function closeNoticeModal(){ document.getElementById('noticeModal').classList.add('hidden'); document.getElementById('noticeModal').classList.remove('flex'); }
-        document.getElementById('publishNoticeBtn')?.addEventListener('click',submitNewNotice);
-        async function submitFeedbackForm(){ let name=document.getElementById('fbName').value; let desc=document.getElementById('fbDesc').value; if(!desc.trim()) return showToast("মতামত লিখুন"); let last=localStorage.getItem('fb_cooldown'); if(last && Date.now()-parseInt(last)<10800000) return showToast("৩ ঘণ্টা পর আবার পাঠান"); await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({action:'submitFeedback',name,description:desc})}); localStorage.setItem('fb_cooldown',Date.now().toString()); document.getElementById('fbDesc').value=''; showToast("মতামত পাঠানোর জন্য ধন্যবাদ!"); }
-        document.getElementById('sendFeedbackBtn')?.addEventListener('click',submitFeedbackForm);
-        function openStatsModal(){ document.getElementById('statsModal').classList.remove('hidden'); document.getElementById('statsModal').classList.add('flex'); let stats={today:24,yesterday:38,month:520,total:1840}; document.getElementById('statToday').innerText=stats.today; document.getElementById('statYesterday').innerText=stats.yesterday; document.getElementById('statMonth').innerText=stats.month; document.getElementById('statLifetime').innerText=stats.total; }
-        function closeStatsModal(){ document.getElementById('statsModal').classList.add('hidden'); document.getElementById('statsModal').classList.remove('flex'); }
-        function switchView(view){ document.querySelectorAll('#homeView,#noticeView,#feedbackView,#aboutView').forEach(v=>v.classList.add('hidden')); document.getElementById(`${view.toLowerCase()}View`).classList.remove('hidden'); document.querySelectorAll('.nav-mobile').forEach(n=>n.classList.remove('text-emerald-600','ph-fill','ph-bold')); document.querySelectorAll('.pc-nav-btn').forEach(b=>b.classList.remove('bg-slate-900','text-white','shadow')); if(view==='Home'){ document.getElementById('mobileHome')?.classList.add('text-emerald-600'); document.getElementById('pcHome')?.classList.add('bg-slate-900','text-white'); } else if(view==='Notice'){ loadNotices(); document.getElementById('pcNotice')?.classList.add('bg-slate-900','text-white'); } else if(view==='Feedback') document.getElementById('pcFeedback')?.classList.add('bg-slate-900','text-white'); else if(view==='About') document.getElementById('pcAbout')?.classList.add('bg-slate-900','text-white'); }
-        if(localStorage.getItem('mft_admin')==='true') document.getElementById('adminStatsBtnWrap')?.classList.remove('hidden');
-        document.getElementById('searchInput')?.addEventListener('input',e=>{searchQuery=e.target.value.toLowerCase();renderStationGrid();});
-        document.getElementById('areaFilter')?.addEventListener('change',e=>{activeArea=e.target.value;renderStationGrid();});
-        document.getElementById('sortSelect')?.addEventListener('change',e=>{activeSort=e.target.value;renderStationGrid();});
-        document.querySelectorAll('.filter-status').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.filter-status').forEach(b=>b.classList.remove('active-filter','bg-slate-900','text-white')); btn.classList.add('active-filter','bg-slate-900','text-white'); activeFilter=btn.dataset.filter; renderStationGrid();});});
-        refreshData(); loadNotices(); 
-        window.openUpdateModal=openUpdateModal; window.verifyStation=verifyStation; window.shareStation=shareStation; window.switchView=switchView; window.openNoticeModal=openNoticeModal; window.closeNoticeModal=closeNoticeModal; window.openStatsModal=openStatsModal; window.closeStatsModal=closeStatsModal; window.refreshData=refreshData; window.closeUpdateModal=closeUpdateModal;
+
+        function renderCards(data) {
+            const container = document.getElementById('stationListContainer'); if(!container) return;
+            container.innerHTML = '';
+            
+            if(data.length === 0) { 
+                container.innerHTML = `<div class="py-16 text-center text-slate-400 fade-in bg-white rounded-[1.5rem] border border-slate-200 shadow-sm"><i class="ph-duotone ph-magnifying-glass text-[56px] mb-3 opacity-40"></i><p class="font-medium text-[14px]">কোনো পাম্প পাওয়া যায়নি</p></div>`; 
+                return; 
+            }
+
+            data.forEach(s => {
+                const isOut = !s.lastUpdated || (Date.now() - parseInt(s.lastUpdated)) > OUTDATED_TIME;
+                const pt = isOut ? uiMap.outdated : (uiMap[s.petrol] || uiMap['স্টক নেই']);
+                const ot = isOut ? uiMap.outdated : (uiMap[s.octane] || uiMap['স্টক নেই']);
+                const vCount = parseInt(s.verifiedCount) || 0;
+                const isStockOut = s.petrol === 'স্টক নেই' && s.octane === 'স্টক নেই';
+
+                const outWarn = isOut ? `<div class="w-full bg-rose-50/80 text-rose-600 text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center gap-1.5 mb-2"><i class="ph-fill ph-warning-circle text-[14px]"></i> ১২ ঘণ্টার বেশি পুরোনো তথ্য</div>` : '';
+                const noteHtml = (s.note && s.note.trim() !== "") ? `<div class="mb-2 bg-sky-50/60 border border-sky-100 p-2 rounded-lg flex items-start gap-1.5 text-[11.5px] text-sky-800 font-medium leading-snug"><i class="ph-fill ph-info text-sky-500 text-[14px] mt-0.5 shrink-0"></i> <span>${s.note}</span></div>` : '';
+                
+                let enfIcon = "ph-police-car text-slate-400", enfText = "চেকিং অজ্ঞাত";
+                if (!(isStockOut && s.enforcementStatus === 'স্বাভাবিক')) {
+                    if (s.enforcementStatus === 'কড়াকড়ি চলছে' && !isOut) { enfIcon = "ph-police-car text-rose-500 animate-pulse"; enfText = "কড়াকড়ি চলছে"; }
+                    else if (s.enforcementStatus === 'স্বাভাবিক' && !isOut) { enfIcon = "ph-shield-check text-emerald-500"; enfText = "চেকিং স্বাভাবিক"; }
+                }
+
+                const lastVTime = safeGetLocal(`mft_v_time_${s.id}`);
+                const diff = lastVTime ? Date.now() - parseInt(lastVTime) : Infinity;
+                const canVerify = diff > (10 * 60 * 1000); 
+                
+                let verifyBtnHtml = canVerify && !isOut
+                    ? `<button onclick="verifyItem(${s.id}, 'station', this)" class="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white rounded-lg text-[11px] font-bold transition-colors border border-emerald-100 shadow-sm"><i class="ph-bold ph-check-circle text-[14px]"></i> সঠিক</button>`
+                    : `<div class="flex items-center gap-1 px-2.5 py-1.5 bg-slate-50 text-emerald-500 rounded-lg text-[11px] font-bold border border-slate-100"><i class="ph-fill ph-check-circle text-[14px]"></i> নিশ্চিত</div>`;
+
+                let verifyBadgeTop = vCount > 0 ? `<span class="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-emerald-100/50" title="${toBn(vCount)} জন নিশ্চিত করেছেন"><i class="ph-fill ph-shield-check text-[12px]"></i> ${toBn(vCount)} জন নিশ্চিত করেছেন</span>` : '';
+
+                container.innerHTML += `
+                <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-300 fade-in flex flex-col h-full relative overflow-hidden group">
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${pt.bg} opacity-80"></div>
+                    
+                    <div class="flex justify-between items-start mb-2.5 pl-2">
+                        <div>
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 mb-1">
+                                <h3 class="font-extrabold text-[16px] md:text-[18px] text-slate-800 tracking-tight group-hover:text-emerald-600 transition-colors leading-none">${s.name}</h3>
+                                ${verifyBadgeTop}
+                            </div>
+                            <div class="flex items-center gap-2 mt-1.5">
+                                <span class="text-[11px] font-semibold text-slate-500 flex items-center gap-1"><i class="ph-fill ph-map-pin"></i> ${s.upazila}</span>
+                                <span class="text-slate-300 text-[10px]">|</span>
+                                <span class="text-[10px] font-bold text-sky-500 flex items-center gap-1"><i class="ph-fill ph-clock"></i> ${timeAgo(s.lastUpdated)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pl-1">${outWarn} ${noteHtml}</div>
+                    
+                    <div class="grid grid-cols-2 gap-2.5 mb-3 pl-1">
+                        <div class="bg-gradient-to-r ${pt.bg} border ${pt.border} rounded-xl p-2.5 flex items-center justify-between shadow-sm relative overflow-hidden">
+                            <div class="flex items-center gap-1.5 z-10">
+                                <div class="w-6 h-6 rounded-full bg-white/60 flex items-center justify-center shadow-sm"><i class="ph-fill ph-gas-pump ${pt.text} text-[12px]"></i></div>
+                                <span class="text-[11px] font-bold text-slate-600">পেট্রোল</span>
+                            </div>
+                            <span class="text-[14px] font-black ${pt.text} z-10">${s.petrol}</span>
+                            <div class="absolute -right-2 -bottom-2 w-8 h-8 rounded-full ${pt.dot} opacity-10"></div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r ${ot.bg} border ${ot.border} rounded-xl p-2.5 flex items-center justify-between shadow-sm relative overflow-hidden">
+                            <div class="flex items-center gap-1.5 z-10">
+                                <div class="w-6 h-6 rounded-full bg-white/60 flex items-center justify-center shadow-sm"><i class="ph-fill ph-gas-pump ${ot.text} text-[12px]"></i></div>
+                                <span class="text-[11px] font-bold text-slate-600">অকটেন</span>
+                            </div>
+                            <span class="text-[14px] font-black ${ot.text} z-10">${s.octane}</span>
+                            <div class="absolute -right-2 -bottom-2 w-8 h-8 rounded-full ${ot.dot} opacity-10"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-3 pl-1">
+                        <div class="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-600"><i class="ph-fill ph-users text-amber-500 text-[13px]"></i> ${s.queueStatus || 'ভিড় অজ্ঞাত'}</div>
+                        <div class="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-600"><i class="ph-fill ${enfIcon} text-[13px]"></i> ${enfText}</div>
+                        <div class="flex items-center gap-1 px-2 py-1 rounded-lg bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-600"><i class="ph-fill ph-funnel text-indigo-500 text-[13px]"></i> ${s.fuelAmount || 'অজানা'}</div>
+                    </div>
+
+                    <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between pl-1">
+                        ${verifyBtnHtml}
+                        <div class="flex items-center gap-2">
+                            <button onclick="shareStation(${s.id})" class="text-slate-400 hover:text-slate-600 px-2 py-1.5 rounded flex items-center justify-center transition-colors active:scale-90" title="শেয়ার করুন"><i class="ph-bold ph-share-network text-[18px]"></i></button>
+                            <button onclick="openUpdateModal(${s.id})" class="px-4 py-2 rounded-xl bg-slate-900 text-white flex items-center gap-1.5 hover:bg-emerald-600 transition-all active:scale-95 font-semibold text-[12.5px] shadow-sm"><i class="ph-bold ph-pencil-simple text-[14px]"></i> আপডেট</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function showToast(m, type = "success") { 
+            const el = document.getElementById('toast'); 
+            const msgEl = document.getElementById('toastMsg');
+            const iconEl = document.getElementById('toastIcon');
+            if(!el || !msgEl || !iconEl) return;
+            iconEl.className = type === "error" ? "ph-fill ph-warning-circle text-rose-400 text-[24px]" : "ph-fill ph-check-circle text-emerald-400 text-[24px]";
+            msgEl.textContent = m; 
+            el.classList.remove('-translate-y-[150%]'); 
+            setTimeout(() => el.classList.add('-translate-y-[150%]'), 3000); 
+        }
+
+        function switchView(viewName) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const mobNav = document.getElementById(`nav${viewName}`); if(mobNav) mobNav.classList.add('active');
+            
+            document.querySelectorAll('.pc-nav-item').forEach(el => { 
+                el.classList.remove('bg-white', 'text-emerald-600', 'shadow-sm'); 
+                el.classList.add('text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-200/50'); 
+            });
+            const pcNav = document.getElementById(`nav${viewName}PC`); 
+            if(pcNav) { 
+                pcNav.classList.remove('text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-200/50'); 
+                pcNav.classList.add('bg-white', 'text-emerald-600', 'shadow-sm'); 
+            }
+            
+            ['Home', 'Notice', 'Feedback', 'About'].forEach(v => { const el = document.getElementById(`view${v}`); if(el) el.classList.add('hidden'); });
+            const target = document.getElementById(`view${viewName}`); if(target) target.classList.remove('hidden');
+            
+            if(viewName === 'Notice') renderNoticeFeed();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderNoticeFeed() {
+            const container = document.getElementById('noticeFeedContainer'); if(!container) return;
+            container.innerHTML = '';
+            const notices = stations.filter(s => s.announcement && s.announcement.trim() !== "").sort((a,b) => (b.lastUpdated||0) - (a.lastUpdated||0));
+            if(notices.length === 0) { container.innerHTML = `<div class="py-16 text-center text-slate-400 fade-in bg-white rounded-[1.5rem] border border-slate-200 shadow-sm"><i class="ph-fill ph-bell-slash text-[64px] mb-4 opacity-40"></i><p class="font-extrabold text-[16px]">কোনো লাইভ নোটিশ নেই</p></div>`; return; }
+            
+            notices.forEach(s => {
+                const isAdmin = safeGetLocal('mft_admin') === 'true';
+                const lastNVTime = safeGetLocal(`mft_nv_time_${s.id}`);
+                let canVerifyNotice = true;
+                if (!isAdmin && lastNVTime) { const diff = Date.now() - parseInt(lastNVTime); if (diff < 10 * 60 * 1000) canVerifyNotice = false; }
+                const nvCount = parseInt(s.noticeVerifiedCount) || 0;
+                
+                let verifyBadge = nvCount > 0 ? `<div class="mt-4 inline-flex items-center gap-1.5 px-4 py-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[13px] font-bold rounded-xl shadow-sm"><i class="ph-fill ph-shield-check text-[18px] text-emerald-600"></i> ${toBn(nvCount)} জন নিশ্চিত করেছেন (${timeAgo(s.noticeLastVerified)})</div>` : '';
+                let verifyBtn = canVerifyNotice ? `<button onclick="verifyItem(${s.id}, 'notice', this)" class="mt-4 w-full md:w-auto px-6 py-3.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center gap-1.5 hover:bg-emerald-500 hover:text-white transition-all active:scale-95 font-bold text-[14px] shadow-sm"><i class="ph-bold ph-check-circle text-[18px]"></i> হ্যাঁ, নোটিশটি সঠিক</button>` : '';
+
+                container.innerHTML += `
+                <div class="bg-white rounded-[1.5rem] border border-purple-200 shadow-sm relative overflow-hidden fade-in">
+                    <div class="absolute top-0 left-0 w-2 h-full bg-purple-500"></div>
+                    <div class="p-6 md:p-8 pl-6 md:pl-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div><h4 class="font-black tracking-tight text-slate-900 text-[18px] md:text-[20px] leading-tight mb-1.5">${s.name}</h4><p class="text-[12px] text-slate-500 font-extrabold flex items-center gap-1.5"><i class="ph-fill ph-map-pin text-[16px] text-slate-400"></i> ${s.upazila}</p></div>
+                        </div>
+                        <div class="bg-purple-50 rounded-2xl p-5 text-[15px] font-bold text-slate-800 flex items-start gap-3.5 border border-purple-100 leading-relaxed shadow-sm"><i class="ph-fill ph-megaphone text-purple-500 text-[26px] shrink-0 mt-0.5"></i><div class="w-full">${s.announcement}</div></div>
+                        ${verifyBadge} ${verifyBtn}
+                    </div>
+                </div>`;
+            });
+        }
+
+        function shareStation(id) {
+            const st = stations.find(s => parseInt(s.id) === parseInt(id)); if(!st) return;
+            let fAmt = st.fuelAmount || 'অজানা'; if(fAmt === 'Unknown') fAmt = 'অজানা'; if(fAmt === 'Unlimited') fAmt = 'আনলিমিটেড'; if(fAmt === '500 TK') fAmt = '৫০০ টাকা'; if(fAmt === '300 TK') fAmt = '৩০০ টাকা'; if(fAmt === '200 TK') fAmt = '২০০ টাকা'; if(fAmt === '100 TK') fAmt = '১০০ টাকা';
+            let enfText = st.enforcementStatus || 'অজ্ঞাত';
+            const text = `⛽ ${st.name}-এ এখন তেলের অবস্থা:\n\n🔴 পেট্রোল: ${st.petrol}\n🔵 অকটেন: ${st.octane}\n👥 ভিড়: ${st.queueStatus || 'অজ্ঞাত'}\n⛽ পরিমাণ: ${fAmt}\n🚨 চেকিং: ${enfText}\n⏱️ আপডেট: ${timeAgo(st.lastUpdated)}\n\n🔗 বিস্তারিত: https://mfueltracker.pages.dev/\n- মেহেরপুর ফুয়েল ট্র্যাকার`;
+            const textArea = document.createElement("textarea"); textArea.value = text; document.body.appendChild(textArea); textArea.select();
+            try { document.execCommand('copy'); showToast("তথ্য কপি করা হয়েছে!"); } catch (err) { showToast("কপি করতে সমস্যা", "error"); } document.body.removeChild(textArea);
+        }
+
+        async function verifyItem(id, type, btnEl) {
+            const timeKey = type === 'notice' ? `mft_nv_time_${id}` : `mft_v_time_${id}`; 
+            const ob = btnEl.innerHTML; btnEl.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[16px]"></i>`; btnEl.disabled = true;
+            
+            const st = stations.find(s => parseInt(s.id) === parseInt(id));
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ id, action: type === 'notice' ? 'verifyNotice' : 'verify' }) });
+                if (type === 'notice') { st.noticeVerifiedCount = (parseInt(st.noticeVerifiedCount)||0) + 1; st.noticeLastVerified = Date.now(); } 
+                else { st.verifiedCount = (parseInt(st.verifiedCount)||0) + 1; st.lastVerified = Date.now(); }
+                
+                safeSetLocal(timeKey, Date.now().toString()); 
+                processUI(); 
+                showToast("ধন্যবাদ! তথ্য নিশ্চিত করা হয়েছে।");
+            } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); btnEl.innerHTML = ob; btnEl.disabled = false; }
+        }
+
+        function populateNoticeDropdown() { const sel = document.getElementById('noticeStationSelect'); if(!sel) return; sel.innerHTML = '<option value="">পাম্প সিলেক্ট করুন...</option>'; stations.forEach(s => { sel.innerHTML += `<option value="${s.id}">${s.name} (${s.upazila})</option>`; }); }
+        function openNoticeModal() { populateNoticeDropdown(); const m = document.getElementById('addNoticeModal'); const c = document.getElementById('addNoticeModalContent'); if(!m||!c) return; m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); if(window.innerWidth < 768) { c.classList.remove('translate-y-full'); } else { c.classList.remove('md:scale-95', 'md:opacity-0'); } }, 10); }
+        function closeNoticeModal() { const m = document.getElementById('addNoticeModal'); const c = document.getElementById('addNoticeModalContent'); if(!m||!c) return; m.classList.add('opacity-0'); if(window.innerWidth < 768) { c.classList.add('translate-y-full'); } else { c.classList.add('md:scale-95', 'md:opacity-0'); } setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 400); }
+
+        async function submitNewNotice() {
+            const lr = safeGetLocal(COOLDOWN_KEY); 
+            if (lr && (Date.now() - parseInt(lr)) < COOLDOWN_TIME) return showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - (Date.now() - parseInt(lr)))/60000))} মিনিট পর চেষ্টা করুন।`, "error");
+            
+            const id = document.getElementById('noticeStationSelect')?.value; const dV = document.getElementById('noticeDate')?.value; const tV = document.getElementById('noticeTime')?.value;
+            const amt = document.getElementById('noticeAmount')?.value.trim(); const auth = document.getElementById('noticeAuthor')?.value.trim() || 'অজ্ঞাত';
+            if(!id || !dV || !tV) return showToast("পাম্প, তারিখ ও সময় আবশ্যক!", "error");
+            
+            const dateObj = new Date(dV); const fD = dateObj.toLocaleDateString('bn-BD', { day: 'numeric', month: 'long' }); let [h, m] = tV.split(':'); h = parseInt(h); const ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; const fT = `${toBn(h)}:${toBn(m)} ${ampm}`; const now = new Date(); const addedTime = now.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' }) + ', ' + now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+            const annStr = `<div class="mb-3 flex items-start gap-2"><span class="bg-white text-purple-800 px-3 py-1.5 rounded-lg text-[10px] uppercase font-black tracking-widest mt-0.5 shadow-sm border border-purple-200"><i class="ph-bold ph-calendar-blank"></i> সময়</span> <span class="pt-0.5 text-slate-800">${fD}, <span class="font-black text-purple-700">${fT}</span></span></div>${amt ? '<div class="mb-3 flex items-start gap-2"><span class="bg-white text-purple-800 px-3 py-1.5 rounded-lg text-[10px] uppercase font-black tracking-widest mt-0.5 shadow-sm border border-purple-200"><i class="ph-bold ph-funnel"></i> পরিমাণ</span> <span class="pt-0.5 text-slate-800 font-black">'+amt+'</span></div>' : ''}<div class="pt-3 mt-3 border-t border-purple-200/80 flex justify-between text-[12px] font-bold text-purple-600"><span class="flex items-center gap-1.5"><i class="ph-fill ph-user text-[16px]"></i> ${auth}</span><span class="flex items-center gap-1.5"><i class="ph-fill ph-clock text-[16px]"></i> ${addedTime}</span></div>`;
+            
+            const btn = document.getElementById('submitNoticeBtn'); const ob = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[20px]"></i> সেভ হচ্ছে...`; btn.disabled = true;
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ id, announcement: annStr, action: "updateNotice" }) });
+                const idx = stations.findIndex(s => parseInt(s.id) === parseInt(id));
+                if (idx !== -1) { stations[idx].announcement = annStr; stations[idx].noticeVerifiedCount = 0; stations[idx].noticeLastVerified = ""; }
+                safeSetLocal(COOLDOWN_KEY, Date.now().toString()); showToast("সফলভাবে সেভ হয়েছে!");
+                closeNoticeModal(); switchView('Notice');
+            } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
+        }
+
+        async function openStatsModal() {
+            const m = document.getElementById('statsModal'); const c = document.getElementById('statsModalContent'); if(!m||!c) return;
+            m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); c.classList.remove('scale-95'); }, 10); 
+            document.getElementById('statsLoading').classList.remove('hidden'); document.getElementById('statsContainer').classList.add('hidden'); document.getElementById('statsContainer').classList.remove('grid');
+            try { const res = await fetch(API_URL + "?action=getStats"); const stats = await res.json(); document.getElementById('statToday').textContent = toBn(stats.today); document.getElementById('statYesterday').textContent = toBn(stats.yesterday); document.getElementById('statMonth').textContent = toBn(stats.month); document.getElementById('statLifetime').textContent = toBn(stats.lifetime); document.getElementById('statsLoading').classList.add('hidden'); document.getElementById('statsContainer').classList.remove('hidden'); document.getElementById('statsContainer').classList.add('grid'); } catch(e) { showToast("স্ট্যাটাস লোড ফেইলড!", "error"); closeStatsModal(); }
+        }
+        function closeStatsModal() { const m = document.getElementById('statsModal'); const c = document.getElementById('statsModalContent'); if(!m||!c) return; m.classList.add('opacity-0'); c.classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300); }
+
+        function openUpdateModal(id) {
+            currentEditingId = parseInt(id); const st = stations.find(s => parseInt(s.id) === currentEditingId); document.getElementById('modalStationName').textContent = st.name;
+            ['petrolStatus', 'octaneStatus', 'fuelAmount', 'queueStatus', 'enforcementStatus'].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+            const pR = document.querySelector(`input[name="petrolStatus"][value="${st.petrol}"]`); if(pR) pR.checked = true;
+            const oR = document.querySelector(`input[name="octaneStatus"][value="${st.octane}"]`); if(oR) oR.checked = true;
+            let curAmt = st.fuelAmount || 'অজানা'; if(curAmt === 'Unknown') curAmt = 'অজানা'; if(curAmt === 'Unlimited') curAmt = 'আনলিমিটেড'; if(curAmt === '500 TK') curAmt = '৫০০ টাকা'; if(curAmt === '300 TK') curAmt = '৩০০ টাকা'; if(curAmt === '200 TK') curAmt = '২০০ টাকা'; if(curAmt === '100 TK') curAmt = '১০০ টাকা';
+            const aR = document.querySelector(`input[name="fuelAmount"][value="${curAmt}"]`); if(aR) aR.checked = true;
+            const qR = document.querySelector(`input[name="queueStatus"][value="${st.queueStatus||'অজ্ঞাত'}"]`); if(qR) qR.checked = true;
+            const eR = document.querySelector(`input[name="enforcementStatus"][value="${st.enforcementStatus||'অজ্ঞাত'}"]`); if(eR) eR.checked = true;
+            
+            const noteInput = document.getElementById('shortNoteInput');
+            if(noteInput) noteInput.value = st.note || ""; 
+            const m = document.getElementById('updateModal'); const c = document.getElementById('updateModalContent'); m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); if(window.innerWidth < 768) { c.classList.remove('translate-y-full'); } else { c.classList.remove('md:scale-95', 'md:opacity-0'); } }, 10);
+        }
+        
+        function closeUpdateModal() { const m = document.getElementById('updateModal'); const c = document.getElementById('updateModalContent'); m.classList.add('opacity-0'); if(window.innerWidth < 768) { c.classList.add('translate-y-full'); } else { c.classList.add('md:scale-95', 'md:opacity-0'); } setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); currentEditingId=null; }, 400); }
+
+        async function sendDataToAPI(payload, btnId) {
+            const btn = document.getElementById(btnId); const ob = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[20px]"></i> সেভ হচ্ছে...`; btn.disabled = true;
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+                const idx = stations.findIndex(s => parseInt(s.id) === parseInt(payload.id));
+                if (idx !== -1) {
+                    stations[idx].petrol = payload.petrol; stations[idx].octane = payload.octane; stations[idx].fuelAmount = payload.fuelAmount; 
+                    stations[idx].queueStatus = payload.queueStatus; stations[idx].note = payload.note; stations[idx].enforcementStatus = payload.enforcementStatus;
+                    stations[idx].verifiedCount = 0; stations[idx].lastVerified = ""; stations[idx].lastUpdated = Date.now(); stations[idx].reports = (parseInt(stations[idx].reports)||0) + 1; 
+                    processUI();
+                }
+                safeSetLocal(COOLDOWN_KEY, Date.now().toString()); showToast("সফলভাবে সেভ হয়েছে!");
+            } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
+        }
+
+        async function submitFeedbackForm() {
+            const fbName = document.getElementById('fbName')?.value.trim() || 'অজ্ঞাত'; const fbDesc = document.getElementById('fbDesc')?.value.trim();
+            if (!fbDesc || fbDesc.length < 5) return showToast("দয়া করে বিস্তারিত অংশে কিছু লিখুন!", "error");
+            const lastMsg = safeGetLocal('mft_last_feedback'); if (lastMsg && (Date.now() - parseInt(lastMsg)) < 3 * 60 * 60 * 1000) { return showToast("আপনি ইতিমধ্যে একটি মেসেজ পাঠিয়েছেন। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।", "error"); }
+            
+            const btn = document.getElementById('submitFeedbackBtn'); const ob = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[20px]"></i> পাঠানো হচ্ছে...`; btn.disabled = true;
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: "submitFeedback", name: fbName, contact: "N/A", type: "ফিডব্যাক", description: fbDesc }) });
+                safeSetLocal('mft_last_feedback', Date.now().toString()); showToast("ধন্যবাদ! আপনার বার্তা পৌঁছেছে।");
+                if(document.getElementById('fbName')) document.getElementById('fbName').value = ''; 
+                if(document.getElementById('fbDesc')) document.getElementById('fbDesc').value = '';
+            } catch(e) { showToast("ইন্টারনেট সমস্যা!", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
+        }
+
+        function initApp() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.addEventListener('input', e => { searchQuery = e.target.value; processUI(); });
+            
+            const sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) sortSelect.addEventListener('change', e => { activeSort = e.target.value; processUI(); });
+            
+            document.querySelectorAll('.drag-handle').forEach(h => {
+                if(h && h.parentElement) {
+                    h.parentElement.addEventListener('click', function() { 
+                        if(this.closest('#updateModalContent')) closeUpdateModal(); 
+                        if(this.closest('#addNoticeModalContent')) closeNoticeModal();
+                    });
+                }
+            });
+            
+            const updateBtn = document.getElementById('submitUpdateBtn');
+            if (updateBtn) {
+                updateBtn.addEventListener('click', async () => {
+                    const lr = safeGetLocal(COOLDOWN_KEY); 
+                    if (lr && (Date.now() - parseInt(lr)) < COOLDOWN_TIME) return showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - (Date.now() - parseInt(lr)))/60000))} মিনিট পর চেষ্টা করুন।`, "error");
+                    
+                    if(!currentEditingId) return;
+                    const pR = document.querySelector('input[name="petrolStatus"]:checked'); const oR = document.querySelector('input[name="octaneStatus"]:checked'); const aR = document.querySelector('input[name="fuelAmount"]:checked'); const qR = document.querySelector('input[name="queueStatus"]:checked'); const eR = document.querySelector('input[name="enforcementStatus"]:checked'); 
+                    if (!pR || !oR || !qR || !eR) return showToast("সকল তথ্য নির্বাচন করুন!", "error");
+                    
+                    const shortNoteInput = document.getElementById('shortNoteInput');
+                    const noteText = shortNoteInput ? shortNoteInput.value.trim() : "";
+                    await sendDataToAPI({ id: currentEditingId, petrol: pR.value, octane: oR.value, fuelAmount: aR?aR.value:"অজানা", queueStatus: qR.value, enforcementStatus: eR.value, note: noteText, action: "update" }, 'submitUpdateBtn'); closeUpdateModal();
+                });
+            }
+
+            const adminBtn = document.getElementById('adminStatsBtn');
+            if (adminBtn) { if (safeGetLocal('mft_admin') === 'true') adminBtn.classList.remove('hidden'); else adminBtn.classList.add('hidden'); }
+            
+            loadData();
+        }
+        
+        function filterArea(area, el) { activeArea = area; el.parentElement.querySelectorAll('.f-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); processUI(); }
+        function filterStatus(status, el) { activeFilter = status; el.parentElement.querySelectorAll('.f-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); processUI(); }
+        
+        window.onload = initApp;
     </script>
 </body>
 </html>
