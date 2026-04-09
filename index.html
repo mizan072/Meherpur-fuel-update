@@ -47,8 +47,6 @@
         .drag-handle { width: 36px; height: 5px; background-color: #cbd5e1; border-radius: 10px; margin: 0 auto; }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
         
-        .f-chip { @apply shrink-0 px-5 py-2.5 rounded-full border border-slate-200/80 bg-white text-[13px] font-semibold text-slate-600 transition-all active:scale-95 cursor-pointer flex items-center gap-2 shadow-sm hover:border-slate-300; }
-        .f-chip.active { @apply bg-slate-900 text-white border-slate-900 shadow-md; }
         .info-pill { @apply flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-medium text-[12px] bg-slate-50 border border-slate-100 text-slate-600 shadow-sm; }
         
         .rank-1 { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border-color: #fde68a; }
@@ -78,6 +76,7 @@
             <button onclick="switchView('Notice')" id="navNoticePC" class="pc-nav-item text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 px-5 py-2 rounded-full text-[13.5px] font-bold transition-all flex items-center gap-2 relative"><i class="ph-bold ph-bell-ringing text-[18px]"></i> নোটিশ বোর্ড</button>
             <button onclick="switchView('Leaderboard')" id="navLeaderboardPC" class="pc-nav-item text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 px-5 py-2 rounded-full text-[13.5px] font-bold transition-all flex items-center gap-2"><i class="ph-bold ph-trophy text-[18px]"></i> লিডারবোর্ড</button>
             <button onclick="switchView('Feedback')" id="navFeedbackPC" class="pc-nav-item text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 px-5 py-2 rounded-full text-[13.5px] font-bold transition-all flex items-center gap-2"><i class="ph-bold ph-chat-circle-text text-[18px]"></i> মতামত</button>
+            <button onclick="switchView('About')" id="navAboutPC" class="pc-nav-item text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 px-5 py-2 rounded-full text-[13.5px] font-bold transition-all flex items-center gap-2"><i class="ph-bold ph-info text-[18px]"></i> তথ্য</button>
         </div>
 
         <button onclick="loadData()" id="refreshBtn" class="w-10 h-10 bg-white hover:bg-slate-50 rounded-xl flex items-center justify-center transition-all shadow-sm border border-slate-200 active:scale-90 text-slate-600 hover:text-emerald-600"><i class="ph-bold ph-arrows-clockwise text-[20px] transition-transform" id="refreshIcon"></i></button>
@@ -117,22 +116,32 @@
 
                             <div class="space-y-2.5">
                                 <label class="text-[12px] font-bold text-slate-500 tracking-wide pl-1 flex items-center gap-1.5">উপজেলা নির্বাচন</label>
-                                <div class="flex flex-row lg:flex-col gap-2 overflow-x-auto hide-scroll pb-1">
-                                    <div class="f-chip active !px-4 !py-2.5" onclick="filterArea('all', this)">সব এলাকা</div>
-                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('মেহেরপুর সদর', this)">মেহেরপুর সদর</div>
-                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('গাংনী', this)">গাংনী উপজেলা</div>
-                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('মুজিবনগর', this)">মুজিবনগর এলাকা</div>
-                                    <div class="f-chip !px-4 !py-2.5" onclick="filterArea('দামুড়হুদা', this)">দামুড়হুদা রোড</div>
+                                <div class="relative group">
+                                    <select id="areaFilter" class="w-full bg-slate-50/80 border border-slate-200 text-slate-800 text-[13px] font-bold rounded-xl pl-4 pr-10 py-3.5 focus:outline-none focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 shadow-sm appearance-none cursor-pointer transition-all">
+                                        <option value="all">সব এলাকা</option>
+                                        <option value="মেহেরপুর সদর">মেহেরপুর সদর</option>
+                                        <option value="গাংনী">গাংনী উপজেলা</option>
+                                        <option value="মুজিবনগর">মুজিবনগর এলাকা</option>
+                                        <option value="দামুড়হুদা">দামুড়হুদা রোড</option>
+                                    </select>
+                                    <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                                        <i class="ph-bold ph-caret-down text-[16px]"></i>
+                                    </div>
                                 </div>
                             </div>
                             
                             <div class="space-y-2.5">
                                 <label class="text-[12px] font-bold text-slate-500 tracking-wide pl-1 flex items-center gap-1.5">তেলের অবস্থা</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div class="f-chip active justify-center w-full !px-3 !py-2.5" onclick="filterStatus('all', this)">সব পাম্প</div>
-                                    <div class="f-chip justify-center w-full !px-3 !py-2.5 !text-emerald-600" onclick="filterStatus('পর্যাপ্ত', this)"><div class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm"></div> পর্যাপ্ত</div>
-                                    <div class="f-chip justify-center w-full !px-3 !py-2.5 !text-amber-600" onclick="filterStatus('সীমিত', this)"><div class="w-2 h-2 rounded-full bg-amber-500 shadow-sm"></div> সীমিত</div>
-                                    <div class="f-chip justify-center w-full !px-3 !py-2.5 !text-rose-600" onclick="filterStatus('স্টক নেই', this)"><div class="w-2 h-2 rounded-full bg-rose-500 shadow-sm"></div> স্টক নেই</div>
+                                <div class="relative group">
+                                    <select id="statusFilter" class="w-full bg-slate-50/80 border border-slate-200 text-slate-800 text-[13px] font-bold rounded-xl pl-4 pr-10 py-3.5 focus:outline-none focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 shadow-sm appearance-none cursor-pointer transition-all">
+                                        <option value="all">সব পাম্প</option>
+                                        <option value="পর্যাপ্ত">পর্যাপ্ত</option>
+                                        <option value="সীমিত">সীমিত</option>
+                                        <option value="স্টক নেই">স্টক নেই</option>
+                                    </select>
+                                    <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                                        <i class="ph-bold ph-caret-down text-[16px]"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -379,8 +388,8 @@
                 <div>
                     <label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন ফুয়েল স্টেশন দিবে:</label>
                     <div class="relative group">
-                        <select id="noticeStationSelect" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13.5px] text-slate-800 shadow-sm appearance-none outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all cursor-pointer"></select>
-                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
+                        <select id="noticeStationSelect" class="w-full bg-slate-50/80 border border-slate-200 text-slate-800 text-[13px] font-bold rounded-xl pl-4 pr-10 py-3.5 focus:outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 shadow-sm appearance-none cursor-pointer transition-all"></select>
+                        <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
@@ -390,10 +399,10 @@
                 <div>
                     <label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কী পরিমাণে দিবে:</label>
                     <div class="relative group">
-                        <select id="noticeAmount" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13.5px] text-slate-800 shadow-sm appearance-none outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all cursor-pointer">
+                        <select id="noticeAmount" class="w-full bg-slate-50/80 border border-slate-200 text-slate-800 text-[13px] font-bold rounded-xl pl-4 pr-10 py-3.5 focus:outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 shadow-sm appearance-none cursor-pointer transition-all">
                             <option value="">পরিমাণ (ঐচ্ছিক)...</option><option value="আনলিমিটেড">আনলিমিটেড</option><option value="৫০০ টাকার">৫০০ টাকার</option><option value="৩০০ টাকার">৩০০ টাকার</option><option value="২০০ টাকার">২০০ টাকার</option><option value="১০০ টাকার">১০০ টাকার</option>
                         </select>
-                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
+                        <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
                     </div>
                 </div>
                 <button onclick="submitNewNotice()" id="submitNoticeBtn" class="mt-4 w-full py-3.5 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-md hover:shadow-lg active:scale-95 text-[14.5px] flex items-center justify-center gap-2"><i class="ph-bold ph-check-circle text-[18px]"></i> নোটিশ পাবলিশ করুন</button>
@@ -739,8 +748,9 @@
         function closeNoticeModal() { const m = document.getElementById('addNoticeModal'); const c = document.getElementById('addNoticeModalContent'); if(!m||!c) return; m.classList.add('opacity-0'); if(window.innerWidth < 768) { c.classList.add('translate-y-full'); } else { c.classList.add('md:scale-95', 'md:opacity-0'); } setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 400); }
 
         async function submitNewNotice() {
+            const isAdmin = safeGetLocal('mft_admin') === 'true';
             const lr = safeGetLocal(COOLDOWN_KEY); 
-            if (lr && (Date.now() - parseInt(lr)) < COOLDOWN_TIME) return showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - (Date.now() - parseInt(lr)))/60000))} মিনিট পর চেষ্টা করুন।`, "error");
+            if (!isAdmin && lr && (Date.now() - parseInt(lr)) < COOLDOWN_TIME) return showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - (Date.now() - parseInt(lr)))/60000))} মিনিট পর চেষ্টা করুন।`, "error");
             
             const { uid, uname } = getUserIdentity();
             const id = document.getElementById('noticeStationSelect')?.value; const dV = document.getElementById('noticeDate')?.value; const tV = document.getElementById('noticeTime')?.value;
@@ -819,10 +829,34 @@
 
         function initApp() {
             const searchInput = document.getElementById('searchInput');
-            if (searchInput) searchInput.addEventListener('input', e => { searchQuery = e.target.value; processUI(); });
+            if (searchInput) {
+                searchInput.addEventListener('input', e => { 
+                    const val = e.target.value;
+                    if (val === '*admin*') {
+                        safeSetLocal('mft_admin', 'true');
+                        showToast("অ্যাডমিন মোড চালু হয়েছে!");
+                        e.target.value = '';
+                        searchQuery = '';
+                    } else if (val === '*user*') {
+                        safeSetLocal('mft_admin', 'false');
+                        showToast("অ্যাডমিন মোড বন্ধ হয়েছে!", "error");
+                        e.target.value = '';
+                        searchQuery = '';
+                    } else {
+                        searchQuery = val; 
+                    }
+                    processUI(); 
+                });
+            }
             
             const sortSelect = document.getElementById('sortSelect');
             if (sortSelect) sortSelect.addEventListener('change', e => { activeSort = e.target.value; processUI(); });
+
+            const areaFilter = document.getElementById('areaFilter');
+            if (areaFilter) areaFilter.addEventListener('change', e => { activeArea = e.target.value; processUI(); });
+
+            const statusFilter = document.getElementById('statusFilter');
+            if (statusFilter) statusFilter.addEventListener('change', e => { activeFilter = e.target.value; processUI(); });
             
             document.querySelectorAll('.drag-handle').forEach(h => {
                 if(h && h.parentElement) {
@@ -836,8 +870,9 @@
             const updateBtn = document.getElementById('submitUpdateBtn');
             if (updateBtn) {
                 updateBtn.addEventListener('click', async () => {
+                    const isAdmin = safeGetLocal('mft_admin') === 'true';
                     const lr = safeGetLocal(COOLDOWN_KEY); 
-                    if (lr && (Date.now() - parseInt(lr)) < COOLDOWN_TIME) return showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - (Date.now() - parseInt(lr)))/60000))} মিনিট পর চেষ্টা করুন।`, "error");
+                    if (!isAdmin && lr && (Date.now() - parseInt(lr)) < COOLDOWN_TIME) return showToast(`দয়া করে ${toBn(Math.ceil((COOLDOWN_TIME - (Date.now() - parseInt(lr)))/60000))} মিনিট পর চেষ্টা করুন।`, "error");
                     
                     if(!currentEditingId) return;
                     const pR = document.querySelector('input[name="petrolStatus"]:checked'); const oR = document.querySelector('input[name="octaneStatus"]:checked'); const aR = document.querySelector('input[name="fuelAmount"]:checked'); const qR = document.querySelector('input[name="queueStatus"]:checked'); const eR = document.querySelector('input[name="enforcementStatus"]:checked'); 
@@ -854,9 +889,6 @@
             
             loadData();
         }
-        
-        function filterArea(area, el) { activeArea = area; el.parentElement.querySelectorAll('.f-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); processUI(); }
-        function filterStatus(status, el) { activeFilter = status; el.parentElement.querySelectorAll('.f-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); processUI(); }
         
         window.onload = initApp;
     </script>
