@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>মেহেরপুর ফুয়েল ট্র্যাকার | রিয়েল-টাইম আপডেট</title>
     <meta name="theme-color" content="#0f172a">
     <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/phosphor-icons/core/main/assets/fill/gas-pump-fill.svg">
@@ -16,20 +16,34 @@
                     fontFamily: { 'sans': ['Inter', 'Noto Sans Bengali', 'system-ui', 'sans-serif'] },
                     animation: { 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'float': 'float 6s ease-in-out infinite' },
                     keyframes: { 'float': { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-8px)' } } },
-                    boxShadow: { 'glass': '0 8px 32px rgba(0,0,0,0.04)', 'card-hover': '0 24px 48px -12px rgba(0,0,0,0.15)', 'inner-glow': 'inset 0 1px 1px 0 rgba(255,255,255,0.6)' },
-                    backdropBlur: { xs: '2px' }
+                    boxShadow: { 'glass': '0 8px 32px rgba(0,0,0,0.04)', 'card-hover': '0 20px 35px -12px rgba(0,0,0,0.12)', 'inner-glow': 'inset 0 1px 1px 0 rgba(255,255,255,0.6)' },
                 }
             }
         }
     </script>
     <style>
         * { -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', 'Noto Sans Bengali', sans-serif; background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.03) 0%, rgba(6, 78, 59, 0.02) 100%), #f9fafc; scroll-behavior: smooth; }
+        body { 
+            font-family: 'Inter', 'Noto Sans Bengali', sans-serif; 
+            background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.03) 0%, rgba(6, 78, 59, 0.02) 100%), #f9fafc;
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: auto;
+            min-height: 100vh;
+        }
+        /* main content area - natural scrolling */
+        main {
+            overflow: visible;
+            flex: 1;
+        }
         .glass-panel { background: rgba(255,255,255,0.75); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
-        .card-modern { transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
-        .card-modern:hover { transform: translateY(-4px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.12); border-color: rgba(16,185,129,0.3); }
-        .fade-slide { animation: fadeSlideUp 0.5s ease-out forwards; }
-        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        .card-modern { 
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); 
+            border-radius: 1.5rem;
+        }
+        .card-modern:hover { transform: translateY(-3px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.12); border-color: rgba(16,185,129,0.3); }
+        .fade-slide { animation: fadeSlideUp 0.4s ease-out forwards; }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .skeleton { background: linear-gradient(110deg, #eceff5 8%, #f5f7fc 18%, #eceff5 33%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; border-radius: 20px; }
         @keyframes shimmer { to { background-position-x: -200%; } }
         .modal-backdrop { transition: opacity 0.25s ease, visibility 0.25s; }
@@ -37,14 +51,30 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #eef2f6; border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #b9c3cf; border-radius: 10px; }
-        .status-badge { transition: all 0.2s; }
-        .filter-chip-active { background: #0f172a; color: white; border-color: #0f172a; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.2); transform: scale(0.97); }
+        .filter-chip-active { background: #0f172a; color: white; border-color: #0f172a; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.2); transform: scale(0.98); }
         .radio-card { transition: all 0.18s ease; cursor: pointer; }
         .radio-card input:checked + div { background: #ecfdf5; border-color: #10b981; color: #065f46; box-shadow: 0 2px 6px rgba(16,185,129,0.1); transform: scale(0.98); }
         .toast-slide { transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.25s; }
+        /* single column feed like facebook */
+        .feed-container {
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .station-card {
+            margin-bottom: 1.25rem;
+        }
+        /* sticky sidebar on desktop */
+        @media (min-width: 1024px) {
+            .sidebar-sticky {
+                position: sticky;
+                top: 5rem;
+                align-self: start;
+            }
+        }
     </style>
 </head>
-<body class="text-slate-800 antialiased flex flex-col min-h-screen overflow-hidden">
+<body class="text-slate-800 antialiased flex flex-col min-h-screen">
 
     <!-- premium header -->
     <header class="sticky top-0 z-30 glass-panel border-b border-slate-200/50 px-5 md:px-8 py-3 flex justify-between items-center shadow-sm backdrop-blur-md">
@@ -61,21 +91,27 @@
         <button onclick="refreshData()" class="w-10 h-10 rounded-full bg-white/70 backdrop-blur-sm border border-slate-200 flex items-center justify-center shadow-sm active:scale-90 transition-all text-slate-700 hover:text-emerald-600"><i id="refreshIcon" class="ph-bold ph-arrows-clockwise text-xl"></i></button>
     </header>
 
-    <main class="flex-1 overflow-y-auto pb-28 md:pb-12 px-4 md:px-6">
-        <!-- HOME VIEW -->
-        <div id="homeView" class="max-w-7xl mx-auto pt-5 md:pt-7 fade-slide">
+    <main class="flex-1 px-4 md:px-6 py-5">
+        <!-- HOME VIEW - Facebook style single column -->
+        <div id="homeView" class="max-w-7xl mx-auto fade-slide">
             <div class="flex flex-col lg:flex-row gap-7">
-                <!-- filter sidebar -->
+                <!-- filter sidebar (sticky) -->
                 <div class="lg:w-80 shrink-0">
-                    <div class="glass-panel rounded-2xl p-5 sticky top-24 space-y-6 backdrop-blur-md border border-white/50 shadow-sm">
+                    <div class="glass-panel rounded-2xl p-5 sidebar-sticky space-y-6 backdrop-blur-md border border-white/50 shadow-sm">
                         <div class="relative"><i class="ph-bold ph-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i><input type="text" id="searchInput" placeholder="পাম্প বা এলাকা খুঁজুন..." class="w-full pl-11 pr-4 py-3.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition-all text-sm font-medium"></div>
                         <div><label class="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-3"><i class="ph-bold ph-sort-ascending"></i> সাজানোর ক্রম</label><select id="sortSelect" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold focus:border-emerald-400"><option value="recent">সর্বশেষ আপডেট</option><option value="reports">সর্বোচ্চ রিপোর্ট</option><option value="name">নাম অনুযায়ী</option></select></div>
                         <div><label class="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-3"><i class="ph-bold ph-map-pin"></i> উপজেলা</label><select id="areaFilter" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold"><option value="all">সব এলাকা</option><option value="মেহেরপুর সদর">মেহেরপুর সদর</option><option value="গাংনী">গাংনী উপজেলা</option><option value="মুজিবনগর">মুজিবনগর</option><option value="দামুড়হুদা">দামুড়হুদা রোড</option></select></div>
-                        <div><label class="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-3"><i class="ph-bold ph-funnel"></i> স্ট্যাটাস ফিল্টার</label><div class="grid grid-cols-2 gap-2"><button data-filter="all" class="filter-status active-filter bg-slate-900 text-white border-slate-900">সব পাম্প</button><button data-filter="পর্যাপ্ত" class="filter-status border-emerald-200 text-emerald-700"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> পর্যাপ্ত</button><button data-filter="সীমিত" class="filter-status border-amber-200 text-amber-700"><span class="w-2 h-2 rounded-full bg-amber-500"></span> সীমিত</button><button data-filter="স্টক নেই" class="filter-status border-rose-200 text-rose-700"><span class="w-2 h-2 rounded-full bg-rose-500"></span> স্টক নেই</button></div></div>
+                        <div><label class="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1 mb-3"><i class="ph-bold ph-funnel"></i> স্ট্যাটাস ফিল্টার</label><div class="grid grid-cols-2 gap-2"><button data-filter="all" class="filter-status active-filter bg-slate-900 text-white border-slate-900 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1">সব পাম্প</button><button data-filter="পর্যাপ্ত" class="filter-status border-emerald-200 text-emerald-700 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> পর্যাপ্ত</button><button data-filter="সীমিত" class="filter-status border-amber-200 text-amber-700 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> সীমিত</button><button data-filter="স্টক নেই" class="filter-status border-rose-200 text-rose-700 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> স্টক নেই</button></div></div>
                     </div>
                 </div>
-                <!-- station cards grid -->
-                <div class="flex-1"><div id="stationGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5 auto-rows-fr"></div><div id="skeletonLoader" class="grid grid-cols-1 md:grid-cols-2 gap-5"><div class="skeleton h-80 rounded-2xl"></div><div class="skeleton h-80 rounded-2xl"></div></div></div>
+                <!-- station cards feed - single column (Facebook style) -->
+                <div class="flex-1 feed-container">
+                    <div id="stationGrid" class="flex flex-col gap-5"></div>
+                    <div id="skeletonLoader" class="flex flex-col gap-5">
+                        <div class="skeleton h-80 rounded-2xl"></div>
+                        <div class="skeleton h-80 rounded-2xl"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -111,18 +147,45 @@
         function timeAgo(ts) { if(!ts) return "এখনো"; let s = Math.floor((Date.now()-ts)/1000); if(s<60) return "এইমাত্র"; let m = Math.floor(s/60); if(m<60) return `${toBn(m)} মিনিট`; let h = Math.floor(m/60); if(h<24) return `${toBn(h)} ঘণ্টা`; return `${toBn(Math.floor(h/24))} দিন`; }
         function checkCooldown() { let last = localStorage.getItem('mft_last_update'); if(last && (Date.now()-parseInt(last))<COOLDOWN) { showToast(`আবার ${toBn(Math.ceil((COOLDOWN-(Date.now()-parseInt(last)))/60000))} মিনিট পর আপডেট করুন`); return false; } return true; }
 
-        // fetch stations
-        async function refreshData() { document.getElementById('refreshIcon')?.classList.add('animate-spin'); try { let res=await fetch(API_URL); stations=await res.json(); stations=stations.map(s=>({...s, id:Number(s.id), lastUpdated:Number(s.lastUpdated)||Date.now(), reports:Number(s.reports)||0})); renderStationGrid(); } catch(e){ showToast("ডেটা লোড ব্যর্থ, লোকাল ডাটা দেখানো হচ্ছে"); if(stations.length===0) stations=sampleStations(); renderStationGrid(); } finally{ document.getElementById('refreshIcon')?.classList.remove('animate-spin'); } }
+        async function refreshData() { 
+            document.getElementById('refreshIcon')?.classList.add('animate-spin'); 
+            try { 
+                let res=await fetch(API_URL); 
+                stations=await res.json(); 
+                stations=stations.map(s=>({...s, id:Number(s.id), lastUpdated:Number(s.lastUpdated)||Date.now(), reports:Number(s.reports)||0})); 
+                renderStationGrid(); 
+            } catch(e){ 
+                showToast("ডেটা লোড ব্যর্থ, লোকাল ডাটা দেখানো হচ্ছে"); 
+                if(stations.length===0) stations=sampleStations(); 
+                renderStationGrid(); 
+            } finally{ 
+                document.getElementById('refreshIcon')?.classList.remove('animate-spin'); 
+            } 
+        }
         function sampleStations(){ return [{id:1,name:"মেহেরপুর পেট্রোল পাম্প",upazila:"মেহেরপুর সদর",petrol:"পর্যাপ্ত",octane:"সীমিত",queueStatus:"স্বাভাবিক",fuelAmount:"আনলিমিটেড",enforcementStatus:"স্বাভাবিক",note:"",lastUpdated:Date.now(),reports:12,verifiedCount:3},{id:2,name:"গাংনী সেন্ট্রাল ফুয়েল",upazila:"গাংনী",petrol:"স্টক নেই",octane:"স্টক নেই",queueStatus:"দীর্ঘ লাইন",fuelAmount:"২০০ টাকা",enforcementStatus:"কড়াকড়ি চলছে",lastUpdated:Date.now()-2e6,reports:45}]}
         function filterStations(){ let filtered=stations.filter(s=>(s.name.toLowerCase().includes(searchQuery)||s.upazila.toLowerCase().includes(searchQuery)) && (activeArea==='all'||s.upazila===activeArea) && (activeFilter==='all'||s.petrol===activeFilter||s.octane===activeFilter)); if(activeSort==='recent') filtered.sort((a,b)=>b.lastUpdated-a.lastUpdated); else if(activeSort==='reports') filtered.sort((a,b)=>b.reports-a.reports); else filtered.sort((a,b)=>a.name.localeCompare(b.name)); return filtered; }
-        function renderStationGrid(){ let container=document.getElementById('stationGrid'); if(!container) return; let data=filterStations(); if(!data.length){ container.innerHTML=`<div class="col-span-full text-center py-20 bg-white/60 rounded-2xl"><i class="ph-fill ph-warning-circle text-5xl text-slate-300"></i><p class="font-bold mt-2">কোনো পাম্প খুঁজে পাওয়া যায়নি</p></div>`; return; }
-        container.innerHTML=data.map(s=>{ let isOld=(Date.now()-s.lastUpdated)>12*3600000; let pClass=isOld?'text-slate-400 bg-slate-100':s.petrol==='পর্যাপ্ত'?'text-emerald-700 bg-emerald-50':s.petrol==='সীমিত'?'text-amber-700 bg-amber-50':'text-rose-700 bg-rose-50'; let qClass=s.queueStatus==='দীর্ঘ লাইন'?'bg-rose-100 text-rose-700':s.queueStatus==='মাঝারি ভিড়'?'bg-amber-100 text-amber-700':'bg-emerald-100 text-emerald-700'; return `<div class="card-modern bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/80 p-5 shadow-sm transition-all"><div class="flex justify-between"><div><h3 class="font-black text-lg">${s.name}</h3><span class="text-xs bg-slate-100 px-2 py-0.5 rounded-full">${s.upazila}</span></div><div class="text-right"><span class="text-[11px] font-bold text-slate-400">${timeAgo(s.lastUpdated)}</span>${s.verifiedCount>0?`<div class="text-[10px] text-emerald-600"><i class="ph-fill ph-shield-check"></i> ${s.verifiedCount} জন</div>`:''}</div></div>${isOld?'<div class="bg-rose-50 text-rose-600 text-xs p-2 rounded-xl mt-2"><i class="ph-fill ph-clock"></i> ১২ ঘণ্টা পুরনো তথ্য</div>':''}${s.note?`<div class="bg-sky-50 text-sky-700 p-2 rounded-xl text-xs mt-2"><i class="ph-fill ph-info"></i> ${s.note}</div>`:''}<div class="grid grid-cols-2 gap-3 mt-3"><div class="rounded-xl ${pClass} p-3 text-center font-black">⛽ পেট্রোল: ${s.petrol}</div><div class="rounded-xl ${pClass} p-3 text-center font-black">⛽ অকটেন: ${s.octane}</div></div><div class="flex justify-between items-center mt-3"><div class="text-xs font-bold ${qClass} px-3 py-1.5 rounded-full"><i class="ph-fill ph-users-three"></i> ${s.queueStatus||'অজ্ঞাত'}</div><div class="text-xs bg-slate-100 px-2 py-1 rounded-lg">${s.fuelAmount||'অজানা'}</div></div><div class="flex gap-2 mt-4"><button onclick='openUpdateModal(${s.id})' class="flex-1 bg-slate-800 text-white py-2 rounded-xl text-sm font-bold shadow-sm">আপডেট</button><button onclick='verifyStation(${s.id})' class="flex-1 border border-emerald-300 text-emerald-700 py-2 rounded-xl text-sm font-bold">নিশ্চিত</button><button onclick='shareStation(${s.id})' class="p-2 border rounded-xl"><i class="ph-bold ph-share-network"></i></button></div></div>`; }).join(''); }
+        function renderStationGrid(){ 
+            let container=document.getElementById('stationGrid'); if(!container) return; 
+            let data=filterStations(); 
+            if(!data.length){ container.innerHTML=`<div class="text-center py-20 bg-white/60 rounded-2xl"><i class="ph-fill ph-warning-circle text-5xl text-slate-300"></i><p class="font-bold mt-2">কোনো পাম্প খুঁজে পাওয়া যায়নি</p></div>`; return; }
+            container.innerHTML=data.map(s=>{ 
+                let isOld=(Date.now()-s.lastUpdated)>12*3600000; 
+                let pClass=isOld?'text-slate-400 bg-slate-100':s.petrol==='পর্যাপ্ত'?'text-emerald-700 bg-emerald-50':s.petrol==='সীমিত'?'text-amber-700 bg-amber-50':'text-rose-700 bg-rose-50'; 
+                let qClass=s.queueStatus==='দীর্ঘ লাইন'?'bg-rose-100 text-rose-700':s.queueStatus==='মাঝারি ভিড়'?'bg-amber-100 text-amber-700':'bg-emerald-100 text-emerald-700'; 
+                return `<div class="card-modern bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/80 p-5 shadow-sm transition-all">
+                    <div class="flex justify-between"><div><h3 class="font-black text-lg">${s.name}</h3><span class="text-xs bg-slate-100 px-2 py-0.5 rounded-full">${s.upazila}</span></div><div class="text-right"><span class="text-[11px] font-bold text-slate-400">${timeAgo(s.lastUpdated)}</span>${s.verifiedCount>0?`<div class="text-[10px] text-emerald-600"><i class="ph-fill ph-shield-check"></i> ${s.verifiedCount} জন</div>`:''}</div></div>
+                    ${isOld?'<div class="bg-rose-50 text-rose-600 text-xs p-2 rounded-xl mt-2"><i class="ph-fill ph-clock"></i> ১২ ঘণ্টা পুরনো তথ্য</div>':''}
+                    ${s.note?`<div class="bg-sky-50 text-sky-700 p-2 rounded-xl text-xs mt-2"><i class="ph-fill ph-info"></i> ${s.note}</div>`:''}
+                    <div class="grid grid-cols-2 gap-3 mt-3"><div class="rounded-xl ${pClass} p-3 text-center font-black">⛽ পেট্রোল: ${s.petrol}</div><div class="rounded-xl ${pClass} p-3 text-center font-black">⛽ অকটেন: ${s.octane}</div></div>
+                    <div class="flex justify-between items-center mt-3"><div class="text-xs font-bold ${qClass} px-3 py-1.5 rounded-full"><i class="ph-fill ph-users-three"></i> ${s.queueStatus||'অজ্ঞাত'}</div><div class="text-xs bg-slate-100 px-2 py-1 rounded-lg">${s.fuelAmount||'অজানা'}</div></div>
+                    <div class="flex gap-2 mt-4"><button onclick='openUpdateModal(${s.id})' class="flex-1 bg-slate-800 text-white py-2.5 rounded-xl text-sm font-bold shadow-sm">আপডেট</button><button onclick='verifyStation(${s.id})' class="flex-1 border border-emerald-300 text-emerald-700 py-2.5 rounded-xl text-sm font-bold">নিশ্চিত</button><button onclick='shareStation(${s.id})' class="p-2.5 border rounded-xl"><i class="ph-bold ph-share-network"></i></button></div>
+                </div>`; }).join('');
+        }
         async function verifyStation(id){ let timeKey=`verify_${id}`; let last=localStorage.getItem(timeKey); if(last && Date.now()-parseInt(last)<600000) return showToast("১০ মিনিট পর আবার নিশ্চিত করতে পারবেন"); localStorage.setItem(timeKey,Date.now()); let st=stations.find(s=>s.id===id); if(st) st.verifiedCount=(st.verifiedCount||0)+1; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({id,action:'verify'})}); renderStationGrid(); showToast("ধন্যবাদ! তথ্য নিশ্চিত করা হয়েছে"); }
-        function shareStation(id){ let s=stations.find(x=>x.id===id); if(s) navigator.clipboard.writeText(`${s.name} - পেট্রোল:${s.petrol} অকটেন:${s.octene} ভিড়:${s.queueStatus}`); showToast("কপি করা হয়েছে!"); }
+        function shareStation(id){ let s=stations.find(x=>x.id===id); if(s) navigator.clipboard.writeText(`${s.name} - পেট্রোল:${s.petrol} অকটেন:${s.octane} ভিড়:${s.queueStatus}`); showToast("কপি করা হয়েছে!"); }
         function openUpdateModal(id){ if(!checkCooldown()) return; currentEditId=id; let s=stations.find(x=>x.id===id); document.getElementById('modalStationName').innerText=s.name; document.querySelectorAll('input[name="petrol"]').forEach(r=>r.checked=(r.value===s.petrol)); document.querySelectorAll('input[name="octane"]').forEach(r=>r.checked=(r.value===s.octane)); document.querySelectorAll('input[name="queue"]').forEach(r=>r.checked=(r.value===s.queueStatus)); document.querySelectorAll('input[name="enforcement"]').forEach(r=>r.checked=(r.value===s.enforcementStatus)); document.querySelectorAll('input[name="amount"]').forEach(r=>r.checked=(r.value===s.fuelAmount)); document.getElementById('shortNoteInput').value=s.note||''; let modal=document.getElementById('updateModal'); modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(()=>{document.getElementById('updateModalInner').classList.remove('translate-y-full');},20); }
         function closeUpdateModal(){ let modal=document.getElementById('updateModal'); document.getElementById('updateModalInner').classList.add('translate-y-full'); setTimeout(()=>{modal.classList.add('hidden');modal.classList.remove('flex');},300); }
         document.getElementById('confirmUpdateBtn')?.addEventListener('click',async()=>{ if(!currentEditId||!checkCooldown()) return; let petrol=document.querySelector('input[name="petrol"]:checked')?.value; let octane=document.querySelector('input[name="octane"]:checked')?.value; let queue=document.querySelector('input[name="queue"]:checked')?.value; let enforcement=document.querySelector('input[name="enforcement"]:checked')?.value; let amount=document.querySelector('input[name="amount"]:checked')?.value; let note=document.getElementById('shortNoteInput').value; if(!petrol||!octane) return showToast("পেট্রোল ও অকটেন স্ট্যাটাস নির্বাচন করুন"); let payload={id:currentEditId,petrol,octane,queueStatus:queue,enforcementStatus:enforcement,fuelAmount:amount,note,action:'update'}; await fetch(API_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)}); let idx=stations.findIndex(s=>s.id===currentEditId); if(idx!==-1){ stations[idx]={...stations[idx],petrol,octane,queueStatus:queue,enforcementStatus:enforcement,fuelAmount:amount,note,lastUpdated:Date.now(),reports:(stations[idx].reports||0)+1}; } localStorage.setItem('mft_last_update',Date.now().toString()); renderStationGrid(); closeUpdateModal(); showToast("আপডেট সফল!"); });
-        // Notices (localstorage demo)
         function loadNotices(){ let stored=localStorage.getItem('mft_notices'); if(stored) notices=JSON.parse(stored); else notices=[{id:1,stationName:"মেহেরপুর পাম্প",date:"2025-04-10",time:"10:00",amount:"আনলিমিটেড",author:"জনতা",timestamp:Date.now()}]; renderNoticeFeed(); }
         function renderNoticeFeed(){ let container=document.getElementById('noticeFeed'); if(!container) return; if(notices.length===0){ container.innerHTML='<div class="col-span-full text-center py-10">কোনো নোটিশ নেই</div>'; return; } container.innerHTML=notices.map(n=>`<div class="bg-white/70 backdrop-blur-sm rounded-2xl p-5 border"><div class="flex justify-between"><h3 class="font-black">${n.stationName}</h3><span class="text-xs text-slate-400">${n.date} ${n.time}</span></div><p class="text-sm mt-1">পরিমাণ: ${n.amount||'N/A'}</p><p class="text-xs text-slate-500 mt-2">প্রকাশক: ${n.author||'অজ্ঞাত'}</p></div>`).join(''); }
         function submitNewNotice(){ let stationSelect=document.getElementById('noticeStationSelect'); let stationName=stationSelect.value; let date=document.getElementById('noticeDate').value; let time=document.getElementById('noticeTime').value; let amount=document.getElementById('noticeAmount').value; let author=document.getElementById('noticeAuthor').value; if(!stationName||!date) return showToast("স্টেশন ও তারিখ প্রয়োজন"); let newNotice={id:Date.now(),stationName,date,time,amount,author,timestamp:Date.now()}; notices.unshift(newNotice); localStorage.setItem('mft_notices',JSON.stringify(notices)); renderNoticeFeed(); closeNoticeModal(); showToast("নোটিশ প্রকাশিত"); }
@@ -134,14 +197,13 @@
         function openStatsModal(){ document.getElementById('statsModal').classList.remove('hidden'); document.getElementById('statsModal').classList.add('flex'); let stats={today:24,yesterday:38,month:520,total:1840}; document.getElementById('statToday').innerText=stats.today; document.getElementById('statYesterday').innerText=stats.yesterday; document.getElementById('statMonth').innerText=stats.month; document.getElementById('statLifetime').innerText=stats.total; }
         function closeStatsModal(){ document.getElementById('statsModal').classList.add('hidden'); document.getElementById('statsModal').classList.remove('flex'); }
         function switchView(view){ document.querySelectorAll('#homeView,#noticeView,#feedbackView,#aboutView').forEach(v=>v.classList.add('hidden')); document.getElementById(`${view.toLowerCase()}View`).classList.remove('hidden'); document.querySelectorAll('.nav-mobile').forEach(n=>n.classList.remove('text-emerald-600','ph-fill','ph-bold')); document.querySelectorAll('.pc-nav-btn').forEach(b=>b.classList.remove('bg-slate-900','text-white','shadow')); if(view==='Home'){ document.getElementById('mobileHome')?.classList.add('text-emerald-600'); document.getElementById('pcHome')?.classList.add('bg-slate-900','text-white'); } else if(view==='Notice'){ loadNotices(); document.getElementById('pcNotice')?.classList.add('bg-slate-900','text-white'); } else if(view==='Feedback') document.getElementById('pcFeedback')?.classList.add('bg-slate-900','text-white'); else if(view==='About') document.getElementById('pcAbout')?.classList.add('bg-slate-900','text-white'); }
-        // admin check
         if(localStorage.getItem('mft_admin')==='true') document.getElementById('adminStatsBtnWrap')?.classList.remove('hidden');
-        // event listeners
         document.getElementById('searchInput')?.addEventListener('input',e=>{searchQuery=e.target.value.toLowerCase();renderStationGrid();});
         document.getElementById('areaFilter')?.addEventListener('change',e=>{activeArea=e.target.value;renderStationGrid();});
         document.getElementById('sortSelect')?.addEventListener('change',e=>{activeSort=e.target.value;renderStationGrid();});
         document.querySelectorAll('.filter-status').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.filter-status').forEach(b=>b.classList.remove('active-filter','bg-slate-900','text-white')); btn.classList.add('active-filter','bg-slate-900','text-white'); activeFilter=btn.dataset.filter; renderStationGrid();});});
-        refreshData(); loadNotices(); window.openUpdateModal=openUpdateModal; window.verifyStation=verifyStation; window.shareStation=shareStation; window.switchView=switchView; window.openNoticeModal=openNoticeModal; window.closeNoticeModal=closeNoticeModal; window.openStatsModal=openStatsModal; window.closeStatsModal=closeStatsModal; window.refreshData=refreshData; window.closeUpdateModal=closeUpdateModal;
+        refreshData(); loadNotices(); 
+        window.openUpdateModal=openUpdateModal; window.verifyStation=verifyStation; window.shareStation=shareStation; window.switchView=switchView; window.openNoticeModal=openNoticeModal; window.closeNoticeModal=closeNoticeModal; window.openStatsModal=openStatsModal; window.closeStatsModal=closeStatsModal; window.refreshData=refreshData; window.closeUpdateModal=closeUpdateModal;
     </script>
 </body>
 </html>
