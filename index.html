@@ -58,6 +58,7 @@
 </head>
 <body class="text-slate-800 antialiased flex flex-col overflow-hidden bg-mesh">
 
+    <!-- Premium Header -->
     <header class="glass-header z-40 shrink-0 px-4 md:px-8 py-3.5 flex justify-between items-center sticky top-0">
         <div class="flex items-center gap-3.5 group cursor-pointer" onclick="switchView('Home')">
             <div class="w-11 h-11 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-[0_8px_16px_rgba(16,185,129,0.25)] text-white transform transition-all group-hover:scale-105 shadow-inner-light">
@@ -84,9 +85,11 @@
 
     <main class="flex-1 overflow-y-auto relative pb-24 md:pb-10">
         
+        <!-- View 1: Home Dashboard -->
         <div id="viewHome" class="w-full max-w-[1200px] mx-auto px-4 md:px-8 pt-6 transition-opacity duration-300">
             <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
                 
+                <!-- Sidebar -->
                 <div class="w-full lg:w-[300px] shrink-0">
                     <div class="bg-white/90 backdrop-blur-xl p-5 md:p-6 rounded-[1.5rem] shadow-sm border border-slate-100 lg:sticky lg:top-6 space-y-6">
                         <div class="space-y-2.5">
@@ -100,11 +103,16 @@
                         <div class="space-y-5">
                             <div class="space-y-2.5">
                                 <label class="text-[12px] font-bold text-slate-500 tracking-wide pl-1 flex items-center gap-1.5">তালিকা সাজান</label>
-                                <select id="sortSelect" class="w-full bg-white border border-slate-200 text-slate-700 text-[13px] font-medium rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500 shadow-sm appearance-none pr-10 relative bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[position:right:14px_center] cursor-pointer transition-all">
-                                    <option value="recent">সর্বশেষ আপডেট অনুসারে</option>
-                                    <option value="reports">সর্বোচ্চ রিপোর্ট অনুসারে</option>
-                                    <option value="name">পাম্পের নাম (A-Z)</option>
-                                </select>
+                                <div class="relative group">
+                                    <select id="sortSelect" class="w-full bg-slate-50/80 border border-slate-200 text-slate-800 text-[13px] font-bold rounded-xl pl-4 pr-10 py-3.5 focus:outline-none focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 shadow-sm appearance-none cursor-pointer transition-all">
+                                        <option value="recent">সর্বশেষ আপডেট অনুসারে</option>
+                                        <option value="reports">সর্বোচ্চ রিপোর্ট অনুসারে</option>
+                                        <option value="name">পাম্পের নাম (A-Z)</option>
+                                    </select>
+                                    <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+                                        <i class="ph-bold ph-caret-down text-[16px]"></i>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="space-y-2.5">
@@ -131,6 +139,7 @@
                     </div>
                 </div>
 
+                <!-- Feed Area -->
                 <div class="flex-1 pb-10 w-full lg:mx-auto">
                     <div class="flex items-center justify-between mb-4 px-1">
                         <h2 class="text-lg font-extrabold text-slate-800 tracking-tight">পাম্পের তালিকা</h2>
@@ -141,6 +150,7 @@
             </div>
         </div>
 
+        <!-- View 2: Notice Board -->
         <div id="viewNotice" class="hidden w-full max-w-3xl mx-auto px-4 md:px-8 pt-8 pb-10">
             <div class="text-center mb-8">
                 <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-[1rem] flex items-center justify-center mx-auto mb-4 shadow-sm"><i class="ph-fill ph-bell-ringing text-[32px]"></i></div>
@@ -153,11 +163,16 @@
             <div id="noticeFeedContainer" class="flex flex-col gap-5 max-w-2xl mx-auto"></div>
         </div>
 
+        <!-- View 3: Leaderboard (New) -->
         <div id="viewLeaderboard" class="hidden w-full max-w-2xl mx-auto px-4 pt-8 pb-10">
             <div class="text-center mb-8">
                 <div class="w-16 h-16 bg-yellow-50 text-yellow-500 rounded-[1rem] flex items-center justify-center mx-auto mb-4 shadow-sm"><i class="ph-fill ph-trophy text-[32px]"></i></div>
                 <h2 class="font-extrabold text-2xl text-slate-900 tracking-tight">টপ কন্ট্রিবিউটর</h2>
                 <p class="text-[13px] text-slate-500 font-medium mt-1.5 max-w-sm mx-auto">যাঁরা সবচেয়ে বেশিবার সঠিক তথ্য দিয়ে অন্যদের সাহায্য করেছেন তাদের তালিকা।</p>
+                <div class="mt-3.5 inline-flex items-center gap-1.5 px-3 py-2 bg-amber-50/80 border border-amber-100 text-amber-700 rounded-xl text-[11.5px] font-bold shadow-sm">
+                    <i class="ph-fill ph-info text-[15px]"></i>
+                    ১০ এপ্রিল, ২০২৫ থেকে তথ্য প্রদানের হিসাব শুরু হয়েছে
+                </div>
             </div>
             
             <div class="bg-white rounded-[1.5rem] p-5 md:p-8 shadow-sm border border-slate-100">
@@ -171,6 +186,7 @@
             </div>
         </div>
 
+        <!-- View 4: Feedback -->
         <div id="viewFeedback" class="hidden w-full max-w-2xl mx-auto px-4 pt-8 pb-10">
             <div class="text-center mb-8">
                 <div class="w-16 h-16 bg-sky-50 text-sky-500 rounded-[1rem] flex items-center justify-center mx-auto mb-4 shadow-sm"><i class="ph-fill ph-envelope-open text-[32px]"></i></div>
@@ -179,13 +195,14 @@
             </div>
             <div class="bg-white rounded-[1.5rem] p-6 md:p-8 shadow-sm border border-slate-100">
                 <div class="space-y-4">
-                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">আপনার নাম (ঐচ্ছিক)</label><input type="text" id="fbName" placeholder="আপনার নাম লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-[13.5px] text-slate-900 focus:bg-white focus:border-sky-400 focus:outline-none transition-colors"></div>
-                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">বিস্তারিত মেসেজ (আবশ্যক)</label><textarea id="fbDesc" rows="4" placeholder="আপনার অনুভূতি বা অভিযোগ বিস্তারিত লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-[13.5px] text-slate-900 focus:bg-white focus:border-sky-400 focus:outline-none transition-colors resize-none"></textarea></div>
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">আপনার নাম (ঐচ্ছিক)</label><input type="text" id="fbName" placeholder="আপনার নাম লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13.5px] text-slate-900 focus:bg-white focus:border-sky-400 focus:ring-4 focus:ring-sky-400/10 focus:outline-none transition-all"></div>
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">বিস্তারিত মেসেজ (আবশ্যক)</label><textarea id="fbDesc" rows="4" placeholder="আপনার অনুভূতি বা অভিযোগ বিস্তারিত লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13.5px] text-slate-900 focus:bg-white focus:border-sky-400 focus:ring-4 focus:ring-sky-400/10 focus:outline-none transition-all resize-none"></textarea></div>
                     <button onclick="submitFeedbackForm()" id="submitFeedbackBtn" class="mt-4 w-full py-3.5 bg-slate-900 text-white font-semibold rounded-xl hover:bg-sky-600 transition-all shadow-md hover:shadow-lg active:scale-95 text-[14.5px] flex items-center justify-center gap-2">মেসেজ পাঠান <i class="ph-bold ph-paper-plane-right text-[18px]"></i></button>
                 </div>
             </div>
         </div>
 
+        <!-- View 5: About / Info -->
         <div id="viewAbout" class="hidden w-full max-w-3xl mx-auto px-4 md:px-8 pt-8 pb-10">
             <div class="bg-white rounded-[2rem] p-6 md:p-10 shadow-sm border border-slate-100 relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400"></div>
@@ -223,6 +240,7 @@
             </div>
         </div>
 
+        <!-- Premium Footer -->
         <footer class="w-full mt-8 md:mt-12 pt-6 pb-20 md:pb-12 px-4 md:px-8">
             <div class="max-w-4xl mx-auto bg-white/60 backdrop-blur-md rounded-[2rem] p-6 md:p-8 border border-slate-200/60 text-center flex flex-col items-center gap-4 shadow-sm">
                 <div class="flex items-center gap-2 text-slate-400 opacity-80">
@@ -235,13 +253,14 @@
                 <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[10.5px] font-black text-slate-400 uppercase tracking-widest mt-2">
                     <span><i class="ph-bold ph-copyright"></i> ২০২৬ সর্বস্বত্ব সংরক্ষিত</span>
                     <span class="hidden sm:inline">•</span>
-                    <span>ভার্সন ২.৫.০ (Gamified)</span>
+                    <span>ভার্সন ২.৫.১ (Gamified)</span>
                 </div>
             </div>
         </footer>
 
     </main>
 
+    <!-- Bottom Nav for Mobile -->
     <nav class="md:hidden glass-header shadow-[0_-10px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/60 fixed bottom-0 w-full z-40 pb-safe">
         <div class="max-w-md mx-auto flex justify-between items-center px-2 py-1.5 h-14">
             <button onclick="switchView('Home')" id="navHome" class="nav-item active flex-1 flex flex-col items-center gap-1 transition-all group"><i class="ph-bold ph-squares-four text-[22px] nav-icon text-slate-400 group-[.active]:text-emerald-500"></i><span class="text-[10px] font-bold tracking-wide">ড্যাশবোর্ড</span></button>
@@ -252,6 +271,7 @@
         </div>
     </nav>
 
+    <!-- Name Setup Modal -->
     <div id="nameSetupModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[6000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div id="nameSetupModalContent" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-all duration-400 p-6 md:p-8 text-center relative border border-slate-100 flex flex-col">
             <button onclick="closeNameSetup()" class="absolute top-4 right-4 w-8 h-8 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-500 transition-colors"><i class="ph-bold ph-x text-lg"></i></button>
@@ -262,17 +282,19 @@
             <p class="text-slate-500 text-[13px] font-medium mb-6">তথ্য আপডেট করার আগে অনুগ্রহ করে আপনার নাম লিখুন। আপনার দেওয়া তথ্যের ওপর ভিত্তি করে লিডারবোর্ডে আপনার র‍্যাংক তৈরি হবে।</p>
             
             <div class="space-y-4 text-left">
-                <div><input type="text" id="setupNameInput" placeholder="আপনার পুরো নাম লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[14px] text-slate-900 focus:bg-white focus:border-emerald-400 focus:outline-none transition-colors text-center"></div>
+                <div><input type="text" id="setupNameInput" placeholder="আপনার পুরো নাম লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[14px] text-slate-900 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 focus:outline-none transition-all text-center"></div>
                 <button onclick="saveNameAndProceed()" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95 text-[14.5px]">নাম সেভ করুন</button>
             </div>
         </div>
     </div>
 
+    <!-- Toast Notification -->
     <div id="toast" class="fixed top-5 md:top-8 left-1/2 transform -translate-x-1/2 -translate-y-[150%] bg-slate-900/95 backdrop-blur-md text-white px-5 py-3.5 rounded-xl shadow-float transition-transform duration-400 ease-out z-[5000] flex items-center gap-3 min-w-[260px] border border-slate-700/50">
         <i class="ph-fill ph-check-circle text-[24px]" id="toastIcon"></i>
         <div class="flex-1"><p class="font-semibold tracking-wide text-[13.5px]" id="toastMsg">সফল হয়েছে!</p></div>
     </div>
 
+    <!-- Update Station Modal -->
     <div id="updateModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[4000] hidden items-end md:items-center justify-center p-0 md:p-4 opacity-0 transition-opacity duration-300">
         <div id="updateModalContent" class="bg-white rounded-t-[1.5rem] md:rounded-[1.5rem] shadow-float w-full max-w-lg overflow-hidden transform translate-y-full md:translate-y-0 md:scale-95 md:opacity-0 transition-all duration-400 ease-out max-h-[90vh] flex flex-col border border-white">
             <div class="md:hidden pt-3 pb-1 bg-white flex justify-center w-full cursor-grab"><div class="drag-handle"></div></div>
@@ -285,7 +307,7 @@
             </div>
             
             <div class="p-5 overflow-y-auto space-y-5 bg-slate-50/50">
-                <div><label class="block font-bold text-slate-500 text-[11px] uppercase tracking-wide mb-1.5 pl-1">ছোট নোট (ঐচ্ছিক)</label><input type="text" id="shortNoteInput" placeholder="যেমন: শুধু বাইকে দিচ্ছে..." class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 outline-none focus:border-emerald-500 transition-colors shadow-sm"></div>
+                <div><label class="block font-bold text-slate-500 text-[11px] uppercase tracking-wide mb-1.5 pl-1">ছোট নোট (ঐচ্ছিক)</label><input type="text" id="shortNoteInput" placeholder="যেমন: শুধু বাইকে দিচ্ছে..." class="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl font-bold text-[13px] text-slate-800 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 transition-all shadow-sm"></div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm">
@@ -342,6 +364,7 @@
         </div>
     </div>
 
+    <!-- Add Notice Modal -->
     <div id="addNoticeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[2000] hidden items-end md:items-center justify-center p-0 md:p-4 opacity-0 transition-opacity duration-300">
         <div id="addNoticeModalContent" class="bg-white rounded-t-[1.5rem] md:rounded-[1.5rem] shadow-float w-full max-w-md overflow-hidden transform translate-y-full md:translate-y-0 md:scale-95 md:opacity-0 transition-all duration-400 ease-out max-h-[90vh] flex flex-col border border-white">
             <div class="md:hidden pt-3 pb-1 bg-white flex justify-center w-full cursor-grab"><div class="drag-handle"></div></div>
@@ -353,20 +376,32 @@
                 <button onclick="closeNoticeModal()" class="w-9 h-9 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-500 transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
             </div>
             <div class="p-5 overflow-y-auto space-y-4 bg-slate-50/50">
-                <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন ফুয়েল স্টেশন দিবে:</label><select id="noticeStationSelect" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm appearance-none outline-none focus:border-purple-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[position:right_12px_center]"></select></div>
+                <div>
+                    <label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন ফুয়েল স্টেশন দিবে:</label>
+                    <div class="relative group">
+                        <select id="noticeStationSelect" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13.5px] text-slate-800 shadow-sm appearance-none outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all cursor-pointer"></select>
+                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
+                    </div>
+                </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কবে দিবে:</label><input type="date" id="noticeDate" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm outline-none focus:border-purple-400"></div>
-                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন সময়:</label><input type="time" id="noticeTime" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm outline-none focus:border-purple-400"></div>
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কবে দিবে:</label><input type="date" id="noticeDate" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13px] text-slate-800 shadow-sm outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all"></div>
+                    <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন সময়:</label><input type="time" id="noticeTime" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13px] text-slate-800 shadow-sm outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all"></div>
                 </div>
                 <div>
                     <label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কী পরিমাণে দিবে:</label>
-                    <select id="noticeAmount" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-medium text-[13px] text-slate-800 shadow-sm appearance-none outline-none focus:border-purple-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2364748B%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-no-repeat bg-[position:right_12px_center]"><option value="">পরিমাণ (ঐচ্ছিক)...</option><option value="আনলিমিটেড">আনলিমিটেড</option><option value="৫০০ টাকার">৫০০ টাকার</option><option value="৩০০ টাকার">৩০০ টাকার</option><option value="২০০ টাকার">২০০ টাকার</option><option value="১০০ টাকার">১০০ টাকার</option></select>
+                    <div class="relative group">
+                        <select id="noticeAmount" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[13.5px] text-slate-800 shadow-sm appearance-none outline-none focus:bg-white focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all cursor-pointer">
+                            <option value="">পরিমাণ (ঐচ্ছিক)...</option><option value="আনলিমিটেড">আনলিমিটেড</option><option value="৫০০ টাকার">৫০০ টাকার</option><option value="৩০০ টাকার">৩০০ টাকার</option><option value="২০০ টাকার">২০০ টাকার</option><option value="১০০ টাকার">১০০ টাকার</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
+                    </div>
                 </div>
-                <button onclick="submitNewNotice()" id="submitNoticeBtn" class="mt-6 w-full py-3.5 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-md hover:shadow-lg active:scale-95 text-[14.5px] flex items-center justify-center gap-2"><i class="ph-bold ph-check-circle text-[18px]"></i> নোটিশ পাবলিশ করুন</button>
+                <button onclick="submitNewNotice()" id="submitNoticeBtn" class="mt-4 w-full py-3.5 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-md hover:shadow-lg active:scale-95 text-[14.5px] flex items-center justify-center gap-2"><i class="ph-bold ph-check-circle text-[18px]"></i> নোটিশ পাবলিশ করুন</button>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzS6N1exM7m5vJdZav5wncSW-NfHLPjOaM-SpbtCl0M1miQPOGxGLfq59tifsQh0p0N/exec";
         const COOLDOWN_KEY = 'mft_v3_cooldown'; const COOLDOWN_TIME = 5 * 60 * 1000; const OUTDATED_TIME = 12 * 60 * 60 * 1000; 
@@ -456,6 +491,18 @@
                     : `<div class="flex items-center gap-1 px-2.5 py-1.5 bg-slate-50 text-emerald-500 rounded-lg text-[11px] font-bold border border-slate-100"><i class="ph-fill ph-check-circle text-[14px]"></i> নিশ্চিত</div>`;
 
                 let verifyBadgeTop = vCount > 0 ? `<span class="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-emerald-100/50" title="${toBn(vCount)} জন নিশ্চিত করেছেন"><i class="ph-fill ph-shield-check text-[12px]"></i> ${toBn(vCount)} জন নিশ্চিত করেছেন</span>` : '';
+
+                const verifyZone = `
+                <div class="mt-3 bg-slate-50/80 border border-slate-100 rounded-xl p-3 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm"><i class="ph-fill ph-users-three text-[16px]"></i></div>
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">বিশ্বাসযোগ্যতা</p>
+                            <p class="text-[12px] font-medium text-slate-600">${vCount > 0 ? `<span class="text-emerald-600 font-semibold">${toBn(vCount)} জন</span> নিশ্চিত করেছেন` : 'কেউ নিশ্চিত করেননি'}</p>
+                        </div>
+                    </div>
+                    ${!isOut ? verifyBtnHtml : ''}
+                </div>`;
 
                 container.innerHTML += `
                 <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-300 fade-in flex flex-col h-full relative overflow-hidden group">
@@ -713,6 +760,14 @@
             } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
         }
 
+        async function openStatsModal() {
+            const m = document.getElementById('statsModal'); const c = document.getElementById('statsModalContent'); if(!m||!c) return;
+            m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); c.classList.remove('scale-95'); }, 10); 
+            document.getElementById('statsLoading').classList.remove('hidden'); document.getElementById('statsContainer').classList.add('hidden'); document.getElementById('statsContainer').classList.remove('grid');
+            try { const res = await fetch(API_URL + "?action=getStats"); const stats = await res.json(); document.getElementById('statToday').textContent = toBn(stats.today); document.getElementById('statYesterday').textContent = toBn(stats.yesterday); document.getElementById('statMonth').textContent = toBn(stats.month); document.getElementById('statLifetime').textContent = toBn(stats.lifetime); document.getElementById('statsLoading').classList.add('hidden'); document.getElementById('statsContainer').classList.remove('hidden'); document.getElementById('statsContainer').classList.add('grid'); } catch(e) { showToast("স্ট্যাটাস লোড ফেইলড!", "error"); closeStatsModal(); }
+        }
+        function closeStatsModal() { const m = document.getElementById('statsModal'); const c = document.getElementById('statsModalContent'); if(!m||!c) return; m.classList.add('opacity-0'); c.classList.add('scale-95'); setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300); }
+
         function openUpdateModal(id) {
             currentEditingId = parseInt(id); const st = stations.find(s => parseInt(s.id) === currentEditingId); document.getElementById('modalStationName').textContent = st.name;
             ['petrolStatus', 'octaneStatus', 'fuelAmount', 'queueStatus', 'enforcementStatus'].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
@@ -793,6 +848,9 @@
                     await sendDataToAPI({ id: currentEditingId, petrol: pR.value, octane: oR.value, fuelAmount: aR?aR.value:"অজানা", queueStatus: qR.value, enforcementStatus: eR.value, note: noteText, action: "update" }, 'submitUpdateBtn'); closeUpdateModal();
                 });
             }
+
+            const adminBtn = document.getElementById('adminStatsBtn');
+            if (adminBtn) { if (safeGetLocal('mft_admin') === 'true') adminBtn.classList.remove('hidden'); else adminBtn.classList.add('hidden'); }
             
             loadData();
         }
