@@ -238,7 +238,7 @@
                     <i class="ph-fill ph-gas-pump text-2xl"></i>
                     <span class="font-black text-lg tracking-tight">ফুয়েল ট্র্যাকার</span>
                 </div>
-                <p class="text-[12.5px] font-medium text-slate-500 leading-relaxed max-w-md mx-auto">সাধারণ মানুষের ভোগান্তি কমাতেই আমাদের এই ক্ষুদ্র প্রয়াস। সবার সম্মিলিত প্রচেষ্টায় সঠিক তথ্য প্রদান করুন।</p>
+                <p class="text-[12.5px] font-medium text-slate-500 leading-relaxed max-w-md mx-auto">সাধারণ মানুষের ভোগান্তি কমাতেই আমাদের এই ক্ষুদ্র প্রয়াস। সবার সম্মিলিত প্রচেষ্টায় সঠিক তথ্য প্রদান করুন.</p>
                 <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[10.5px] font-black text-slate-400 uppercase tracking-widest mt-2">
                     <span><i class="ph-bold ph-copyright"></i> ২০২৬ সর্বস্বত্ব সংরক্ষিত</span>
                     <span class="hidden sm:inline">•</span>
@@ -295,7 +295,6 @@
             <div class="p-5 overflow-y-auto space-y-5 bg-slate-50/50">
                 <div><label class="block font-bold text-slate-500 text-[11px] uppercase tracking-wide mb-1.5 pl-1">ছোট নোট (ঐচ্ছিক)</label><input type="text" id="shortNoteInput" placeholder="যেমন: শুধু বাইকে দিচ্ছে..." class="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl font-bold text-[13px] text-slate-800 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 transition-all shadow-sm"></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Petrol/Octane inputs (same as before) -->
                     <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm">
                         <label class="font-bold text-slate-700 flex items-center gap-1.5 text-[12px] mb-2.5"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div> পেট্রোল স্ট্যাটাস</label>
                         <div class="grid grid-cols-1 gap-1.5">
@@ -443,7 +442,7 @@
         }
 
         function processUI() {
-            // সাধারণ নোটিশ (ID: 0) মেইন লিস্টে দেখানোর দরকার নেই, তাই সেটি বাদ দেওয়া হলো
+            // সাধারণ নোটিশ (ID: 0) মেইন লিস্টে দেখানোর দরকার নেই
             let filtered = stations.filter(s => s.id && String(s.id) !== "0");
 
             const query = (searchQuery || "").trim();
@@ -518,18 +517,6 @@
 
                 let verifyBadgeTop = vCount > 0 ? `<span class="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-emerald-100/50" title="${toBn(vCount)} জন নিশ্চিত করেছেন"><i class="ph-fill ph-shield-check text-[12px]"></i> ${toBn(vCount)} জন নিশ্চিত করেছেন</span>` : '';
 
-                const verifyZone = `
-                <div class="mt-3 bg-slate-50/80 border border-slate-100 rounded-xl p-3 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm"><i class="ph-fill ph-users-three text-[16px]"></i></div>
-                        <div>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">বিশ্বাসযোগ্যতা</p>
-                            <p class="text-[12px] font-medium text-slate-600">${vCount > 0 ? `<span class="text-emerald-600 font-semibold">${toBn(vCount)} জন</span> নিশ্চিত করেছেন` : 'কেউ নিশ্চিত করেননি'}</p>
-                        </div>
-                    </div>
-                    ${!isOut ? verifyBtnHtml : ''}
-                </div>`;
-
                 container.innerHTML += `
                 <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-md border border-slate-100 transition-all duration-300 fade-in flex flex-col h-full relative overflow-hidden group">
                     <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${pt.bg} opacity-80"></div>
@@ -597,7 +584,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 🚀 উন্নত নোটিশ বোর্ড রেন্ডার
+        // --- Notice Logic ---
         function renderNoticeFeed() {
             const container = document.getElementById('noticeFeedContainer'); if(!container) return;
             container.innerHTML = '';
@@ -620,7 +607,7 @@
                 let deleteBtn = isAdmin ? `<button onclick="deleteNoticeAdmin(${s.id})" class="ml-2 w-10 h-10 bg-rose-50 border border-rose-100 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl flex items-center justify-center transition-all shadow-sm active:scale-90" title="নোটিশ ডিলিট করুন"><i class="ph-bold ph-trash text-[18px]"></i></button>` : '';
                 
                 // সাধারণ নোটিশ চেনার উপায়
-                const isGeneral = String(s.id) === "0" || s.name === "সাধারণ নোটিশ";
+                const isGeneral = String(s.id) === "0" || s.name === "সাধারণ নোটিশ" || s.name === "মেহেরপুর সাধারণ নোটিশ";
                 const bgHeader = isGeneral ? "bg-sky-500" : "bg-purple-500";
                 const iconColor = isGeneral ? "text-sky-500" : "text-purple-500";
                 const boxBg = isGeneral ? "bg-sky-50 border-sky-100" : "bg-purple-50 border-purple-100";
@@ -745,6 +732,55 @@
             } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); }
         }
 
+        // --- General App Logic ---
+        function shareStation(id) {
+            const st = stations.find(s => parseInt(s.id) === parseInt(id)); if(!st) return;
+            let fAmt = st.fuelAmount || 'অজানা'; if(fAmt === 'Unknown') fAmt = 'অজানা'; if(fAmt === 'Unlimited') fAmt = 'আনলিমিটেড'; if(fAmt === '500 TK') fAmt = '৫০০ টাকা'; if(fAmt === '300 TK') fAmt = '৩০০ টাকা'; if(fAmt === '200 TK') fAmt = '২০০ টাকা'; if(fAmt === '100 TK') fAmt = '১০০ টাকা';
+            let enfText = st.enforcementStatus || 'অজ্ঞাত';
+            const text = `⛽ ${st.name}-এ এখন তেলের অবস্থা:\n\n🔴 পেট্রোল: ${st.petrol}\n🔵 অকটেন: ${st.octane}\n👥 ভিড়: ${st.queueStatus || 'অজ্ঞাত'}\n⛽ পরিমাণ: ${fAmt}\n🚨 চেকিং: ${enfText}\n⏱️ আপডেট: ${timeAgo(st.lastUpdated)}\n\n🔗 বিস্তারিত: https://mfueltracker.pages.dev/\n- মেহেরপুর ফুয়েল ট্র্যাকার`;
+            
+            const textArea = document.createElement("textarea"); 
+            textArea.value = text; 
+            textArea.setAttribute('readonly', '');
+            textArea.style.position = "absolute"; 
+            textArea.style.left = "-9999px"; 
+            document.body.appendChild(textArea); 
+            
+            if (navigator.userAgent.match(/ipad|iphone/i)) {
+                const range = document.createRange();
+                range.selectNodeContents(textArea);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                textArea.setSelectionRange(0, 999999);
+            } else {
+                textArea.select();
+            }
+
+            try { document.execCommand('copy'); showToast("তথ্য কপি করা হয়েছে!"); } catch (err) { showToast("কপি করতে সমস্যা", "error"); } 
+            document.body.removeChild(textArea);
+        }
+
+        async function verifyItem(id, type, btnEl) {
+            if(!btnEl) return;
+            const timeKey = type === 'notice' ? `mft_nv_time_${id}` : `mft_v_time_${id}`; 
+            const ob = btnEl.innerHTML; btnEl.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[16px]"></i>`; btnEl.disabled = true;
+            
+            const { uid, uname } = getUserIdentity();
+            const st = stations.find(s => parseInt(s.id) === parseInt(id));
+            
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ id, action: type === 'notice' ? 'verifyNotice' : 'verify', uid: uid, uname: uname }) });
+                if (type === 'notice') { st.noticeVerifiedCount = (parseInt(st.noticeVerifiedCount)||0) + 1; st.noticeLastVerified = Date.now(); } 
+                else { st.verifiedCount = (parseInt(st.verifiedCount)||0) + 1; st.lastVerified = Date.now(); }
+                
+                safeSetLocal(timeKey, Date.now().toString()); 
+                processUI(); 
+                if(type === 'notice') renderNoticeFeed();
+                showToast("ধন্যবাদ! তথ্য নিশ্চিত করা হয়েছে।");
+            } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); btnEl.innerHTML = ob; btnEl.disabled = false; }
+        }
+
         function getUserIdentity() {
             let uid = safeGetLocal('mft_uid'); let uname = safeGetLocal('mft_uname');
             if(!uid) { uid = 'user_' + Math.random().toString(36).substr(2, 9); safeSetLocal('mft_uid', uid); }
@@ -781,6 +817,23 @@
             else if(actionType === 'verify_station') verifyItem(stationId, 'station', btnEl);
             else if(actionType === 'verify_notice') verifyItem(stationId, 'notice', btnEl);
         }
+
+        function openUpdateModal(id) {
+            currentEditingId = parseInt(id); const st = stations.find(s => parseInt(s.id) === currentEditingId); document.getElementById('modalStationName').textContent = st.name;
+            ['petrolStatus', 'octaneStatus', 'fuelAmount', 'queueStatus', 'enforcementStatus'].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+            const pR = document.querySelector(`input[name="petrolStatus"][value="${st.petrol}"]`); if(pR) pR.checked = true;
+            const oR = document.querySelector(`input[name="octaneStatus"][value="${st.octane}"]`); if(oR) oR.checked = true;
+            let curAmt = st.fuelAmount || 'অজানা'; if(curAmt === 'Unknown') curAmt = 'অজানা'; if(curAmt === 'Unlimited') curAmt = 'আনলিমিটেড'; if(curAmt === '500 TK') curAmt = '৫০০ টাকা'; if(curAmt === '300 TK') curAmt = '৩০০ টাকা'; if(curAmt === '200 TK') curAmt = '২০০ টাকা'; if(curAmt === '100 TK') curAmt = '১০০ টাকা';
+            const aR = document.querySelector(`input[name="fuelAmount"][value="${curAmt}"]`); if(aR) aR.checked = true;
+            const qR = document.querySelector(`input[name="queueStatus"][value="${st.queueStatus||'অজ্ঞাত'}"]`); if(qR) qR.checked = true;
+            const eR = document.querySelector(`input[name="enforcementStatus"][value="${st.enforcementStatus||'অজ্ঞাত'}"]`); if(eR) eR.checked = true;
+            
+            const noteInput = document.getElementById('shortNoteInput');
+            if(noteInput) noteInput.value = st.note || ""; 
+            const m = document.getElementById('updateModal'); const c = document.getElementById('updateModalContent'); m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); if(window.innerWidth < 768) { c.classList.remove('translate-y-full'); } else { c.classList.remove('md:scale-95', 'md:opacity-0'); } }, 10);
+        }
+        
+        function closeUpdateModal() { const m = document.getElementById('updateModal'); const c = document.getElementById('updateModalContent'); m.classList.add('opacity-0'); if(window.innerWidth < 768) { c.classList.add('translate-y-full'); } else { c.classList.add('md:scale-95', 'md:opacity-0'); } setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); currentEditingId=null; }, 400); }
 
         async function loadLeaderboard() {
             const container = document.getElementById('leaderboardContainer'); if(!container) return;
@@ -830,7 +883,25 @@
                     const pR = document.querySelector('input[name="petrolStatus"]:checked'); const oR = document.querySelector('input[name="octaneStatus"]:checked'); const aR = document.querySelector('input[name="fuelAmount"]:checked'); const qR = document.querySelector('input[name="queueStatus"]:checked'); const eR = document.querySelector('input[name="enforcementStatus"]:checked'); 
                     if (!pR || !oR || !qR || !eR) return showToast("সকল তথ্য নির্বাচন করুন!", "error");
                     const noteText = document.getElementById('shortNoteInput')?.value.trim() || "";
-                    await sendDataToAPI({ id: currentEditingId, petrol: pR.value, octane: oR.value, fuelAmount: aR?aR.value:"অজানা", queueStatus: qR.value, enforcementStatus: eR.value, note: noteText, action: "update" }, 'submitUpdateBtn'); closeUpdateModal();
+                    
+                    const btnId = 'submitUpdateBtn';
+                    const btn = document.getElementById(btnId); const ob = btn.innerHTML; btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[20px]"></i> সেভ হচ্ছে...`; btn.disabled = true;
+                    
+                    const { uid, uname } = getUserIdentity();
+                    let payload = { id: currentEditingId, petrol: pR.value, octane: oR.value, fuelAmount: aR?aR.value:"অজানা", queueStatus: qR.value, enforcementStatus: eR.value, note: noteText, action: "update", uid: uid, uname: uname };
+                    
+                    try {
+                        await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+                        const idx = stations.findIndex(s => parseInt(s.id) === parseInt(payload.id));
+                        if (idx !== -1) {
+                            stations[idx].petrol = payload.petrol; stations[idx].octane = payload.octane; stations[idx].fuelAmount = payload.fuelAmount; 
+                            stations[idx].queueStatus = payload.queueStatus; stations[idx].note = payload.note; stations[idx].enforcementStatus = payload.enforcementStatus;
+                            stations[idx].verifiedCount = 0; stations[idx].lastVerified = ""; stations[idx].lastUpdated = Date.now(); stations[idx].reports = (parseInt(stations[idx].reports)||0) + 1; 
+                            processUI();
+                        }
+                        safeSetLocal(COOLDOWN_KEY, Date.now().toString()); showToast("সফলভাবে সেভ হয়েছে!");
+                        closeUpdateModal();
+                    } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
                 });
             }
             loadData();
