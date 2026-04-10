@@ -90,13 +90,16 @@
         <!-- View 1: Home Dashboard -->
         <div id="viewHome" class="w-full max-w-[1200px] mx-auto px-4 md:px-8 pt-6 transition-opacity duration-300">
             
+            <!-- 📢 ঘোষণা / স্বাগতম ব্যানার (এখান থেকে লেখা পরিবর্তন করুন) -->
             <div id="welcomeBanner" class="mb-6 md:mb-8 bg-emerald-50/80 border border-emerald-200 rounded-[1.5rem] p-4 md:p-5 shadow-sm flex items-start gap-3.5 relative overflow-hidden fade-in transition-all duration-300">
                 <div class="absolute -right-4 -top-6 opacity-5 transform rotate-12 pointer-events-none text-emerald-700"><i class="ph-fill ph-heart text-[120px]"></i></div>
                 <div class="bg-emerald-100/80 p-2.5 rounded-xl shrink-0 border border-emerald-200/50 mt-0.5"><i class="ph-fill ph-hands-clapping text-[24px] text-emerald-600"></i></div>
+                
                 <div class="relative z-10 pt-0.5 pr-6">
                     <h3 class="font-extrabold text-[15px] md:text-[17px] text-emerald-800 mb-1.5 leading-tight">আপনাদের ভালোবাসায় আমরা আবারও ফিরে এসেছি!</h3>
                     <p class="text-[12px] md:text-[13px] font-semibold text-emerald-700/80 leading-relaxed max-w-3xl">আমাদের এই ক্ষুদ্র উদ্যোগে আপনাদের বিপুল সমর্থন ও স্বতঃস্ফূর্ত অংশগ্রহণ পেয়ে আমরা সত্যিই মুগ্ধ এবং গভীরভাবে কৃতজ্ঞ। আপনাদের সুবিধার জন্যই অ্যাপটি নতুন ও উন্নত ফিচারের সাথে পুনরায় চালু করা হলো। চলুন, একসাথে সঠিক তথ্য শেয়ার করি।</p>
                 </div>
+
                 <button onclick="document.getElementById('welcomeBanner').style.display='none'" class="absolute top-3.5 right-3.5 w-8 h-8 flex items-center justify-center rounded-full bg-emerald-100/50 hover:bg-emerald-200 text-emerald-600 transition-colors active:scale-90" title="বন্ধ করুন"><i class="ph-bold ph-x text-[16px]"></i></button>
             </div>
 
@@ -252,7 +255,7 @@
                 <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[10.5px] font-black text-slate-400 uppercase tracking-widest mt-2">
                     <span><i class="ph-bold ph-copyright"></i> ২০২৬ সর্বস্বত্ব সংরক্ষিত</span>
                     <span class="hidden sm:inline">•</span>
-                    <span>ভার্সন ২.৭.০ (Dispute Pro)</span>
+                    <span>ভার্সন ২.৭.২ (Pro)</span>
                 </div>
             </div>
         </footer>
@@ -356,6 +359,67 @@
         </div>
     </div>
 
+    <!-- Advanced Add Notice Modal (Dual Mode) -->
+    <div id="addNoticeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[2000] hidden items-end md:items-center justify-center p-0 md:p-4 opacity-0 transition-opacity duration-300">
+        <div id="addNoticeModalContent" class="bg-white rounded-t-[1.5rem] md:rounded-[1.5rem] shadow-float w-full max-w-md overflow-hidden transform translate-y-full md:translate-y-0 md:scale-95 md:opacity-0 transition-all duration-400 ease-out max-h-[90vh] flex flex-col border border-white">
+            <div class="md:hidden pt-3 pb-1 bg-white flex justify-center w-full cursor-grab"><div class="drag-handle"></div></div>
+            <div class="bg-white px-5 py-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full bg-purple-50 flex items-center justify-center text-purple-600"><i class="ph-fill ph-megaphone text-lg"></i></div>
+                    <h3 class="font-extrabold text-[16px] text-slate-900 leading-tight">নতুন নোটিশ তৈরি করুন</h3>
+                </div>
+                <button onclick="closeNoticeModal()" class="w-9 h-9 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-500 transition-colors active:scale-90"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-4 bg-slate-50/50">
+                
+                <!-- Notice Type Switcher -->
+                <div class="grid grid-cols-2 gap-2 p-1.5 bg-slate-200/50 rounded-xl mb-2">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="noticeType" value="fuel" class="peer sr-only" checked onchange="toggleNoticeForm()">
+                        <div class="py-2.5 text-center text-[12.5px] font-bold rounded-lg peer-checked:bg-white peer-checked:text-purple-600 peer-checked:shadow-sm text-slate-500 transition-all">তেল আসার খবর</div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="noticeType" value="general" class="peer sr-only" onchange="toggleNoticeForm()">
+                        <div class="py-2.5 text-center text-[12.5px] font-bold rounded-lg peer-checked:bg-white peer-checked:text-purple-600 peer-checked:shadow-sm text-slate-500 transition-all">সাধারণ নোটিশ</div>
+                    </label>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">স্থান / পাম্প নির্বাচন করুন:</label>
+                    <div class="relative group">
+                        <select id="noticeStationSelect" class="w-full bg-white border border-slate-200 text-slate-800 text-[13px] font-bold rounded-xl pl-4 pr-10 py-3.5 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 shadow-sm appearance-none cursor-pointer transition-all"></select>
+                        <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
+                    </div>
+                </div>
+
+                <!-- Fuel Specific Fields -->
+                <div id="fuelNoticeFields" class="space-y-4 fade-in">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কবে দিবে:</label><input type="date" id="noticeDate" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-bold text-[13px] text-slate-800 shadow-sm outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all"></div>
+                        <div><label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কোন সময়:</label><input type="time" id="noticeTime" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-bold text-[13px] text-slate-800 shadow-sm outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 transition-all"></div>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">কী পরিমাণে দিবে:</label>
+                        <div class="relative group">
+                            <select id="noticeAmount" class="w-full bg-white border border-slate-200 text-slate-800 text-[13px] font-bold rounded-xl pl-4 pr-10 py-3.5 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 shadow-sm appearance-none cursor-pointer transition-all">
+                                <option value="">পরিমাণ (ঐচ্ছিক)...</option><option value="আনলিমিটেড">আনলিমিটেড</option><option value="৫০০ টাকার">৫০০ টাকার</option><option value="৩০০ টাকার">৩০০ টাকার</option><option value="২০০ টাকার">২০০ টাকার</option><option value="১০০ টাকার">১০০ টাকার</option>
+                            </select>
+                            <div class="absolute right-3.5 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors"><i class="ph-bold ph-caret-down text-[16px]"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Message Field (For Both) -->
+                <div>
+                    <label id="noticeMessageLabel" class="block font-bold text-slate-600 text-[12px] mb-1.5 pl-1">অতিরিক্ত তথ্য (ঐচ্ছিক):</label>
+                    <textarea id="noticeMessage" rows="3" placeholder="যেমন: শুধু বাইকে দেওয়া হবে..." class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl font-bold text-[13.5px] text-slate-800 shadow-sm focus:border-purple-400 focus:ring-4 focus:ring-purple-400/10 outline-none transition-all resize-none"></textarea>
+                </div>
+
+                <button onclick="submitNewNotice()" id="submitNoticeBtn" class="mt-4 w-full py-3.5 bg-purple-600 text-white font-semibold rounded-xl hover:bg-purple-700 transition-all shadow-md hover:shadow-lg active:scale-95 text-[14.5px] flex items-center justify-center gap-2"><i class="ph-bold ph-paper-plane-right text-[18px]"></i> নোটিশ পাবলিশ করুন</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzS6N1exM7m5vJdZav5wncSW-NfHLPjOaM-SpbtCl0M1miQPOGxGLfq59tifsQh0p0N/exec";
@@ -439,8 +503,8 @@
                 const pt = isOut ? uiMap.outdated : (uiMap[s.petrol] || uiMap['স্টক নেই']);
                 const ot = isOut ? uiMap.outdated : (uiMap[s.octane] || uiMap['স্টক নেই']);
                 const vCount = parseInt(s.verifiedCount) || 0;
-                const dCount = parseInt(s.disputeCount) || 0; // 🆕 Dispute count
-                const isDisputed = dCount >= 2; // 🆕 2+ reports makes it disputed
+                const dCount = parseInt(s.disputeCount) || 0; 
+                const isDisputed = dCount >= 2; 
                 const isStockOut = s.petrol === 'স্টক নেই' && s.octane === 'স্টক নেই';
 
                 const outWarn = isOut ? `<div class="w-full bg-rose-50/80 text-rose-600 text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center gap-1.5 mb-2"><i class="ph-fill ph-warning-circle text-[14px]"></i> ১২ ঘণ্টার বেশি পুরোনো তথ্য</div>` : '';
@@ -455,7 +519,6 @@
                 const lastVTime = safeGetLocal(`mft_v_time_${s.id}`);
                 const canVerify = !lastVTime || (Date.now() - parseInt(lastVTime)) > (10 * 60 * 1000); 
                 
-                // 🆕 Added Dispute Button
                 let actionBtnsHtml = '';
                 if (canVerify && !isOut) {
                     actionBtnsHtml = `
@@ -467,8 +530,8 @@
                     actionBtnsHtml = `<div class="flex items-center gap-1 px-2.5 py-1.5 bg-slate-50 text-slate-500 rounded-lg text-[11px] font-bold border border-slate-100"><i class="ph-fill ph-check-circle text-[14px]"></i> রেসপন্স রেকর্ড করা হয়েছে</div>`;
                 }
 
-                // 🆕 Displaying Verify and Dispute Badges Together
-                let verifyBadgeTop = vCount > 0 ? `<span class="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-emerald-100/50" title="${toBn(vCount)} জন নিশ্চিত করেছেন"><i class="ph-fill ph-shield-check text-[12px]"></i> ${toBn(vCount)} জন নিশ্চিত</span>` : '';
+                // 🌟 Timer added here
+                let verifyBadgeTop = vCount > 0 ? `<span class="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-emerald-100/50" title="${toBn(vCount)} জন নিশ্চিত করেছেন"><i class="ph-fill ph-shield-check text-[12px]"></i> ${toBn(vCount)} জন নিশ্চিত (সর্বশেষ ${timeAgo(s.lastVerified)})</span>` : '';
                 let disputeBadgeTop = isDisputed && !isOut ? `<span class="flex items-center gap-1 text-rose-700 bg-rose-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-rose-100/50 animate-pulse" title="${toBn(dCount)} জন ভুল বলেছেন"><i class="ph-fill ph-warning text-[12px]"></i> সন্দেহজনক তথ্য</span>` : '';
 
                 container.innerHTML += `
@@ -478,7 +541,7 @@
                         <div>
                             <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2 mb-1">
                                 <h3 class="font-extrabold text-[16px] md:text-[18px] text-slate-800 tracking-tight group-hover:text-emerald-600 transition-colors leading-none">${s.name}</h3>
-                                <div class="flex items-center gap-1.5">${verifyBadgeTop} ${disputeBadgeTop}</div>
+                                <div class="flex flex-wrap items-center gap-1.5">${verifyBadgeTop} ${disputeBadgeTop}</div>
                             </div>
                             <div class="flex items-center gap-2 mt-1.5">
                                 <span class="text-[11px] font-semibold text-slate-500 flex items-center gap-1"><i class="ph-fill ph-map-pin"></i> ${s.upazila}</span>
@@ -552,7 +615,8 @@
                 const canVerifyNotice = !lastNVTime || (Date.now() - parseInt(lastNVTime)) > (10 * 60 * 1000);
                 const nvCount = parseInt(s.noticeVerifiedCount) || 0;
                 
-                let verifyBadge = nvCount > 0 ? `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-100 text-emerald-700 text-[12px] font-bold rounded-xl shadow-sm"><i class="ph-fill ph-shield-check text-[16px] text-emerald-500"></i> ${toBn(nvCount)} জন সঠিক বলেছেন</div>` : '';
+                // 🌟 Timer added here
+                let verifyBadge = nvCount > 0 ? `<div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-100 text-emerald-700 text-[12px] font-bold rounded-xl shadow-sm"><i class="ph-fill ph-shield-check text-[16px] text-emerald-500"></i> ${toBn(nvCount)} জন সঠিক বলেছেন (সর্বশেষ ${timeAgo(s.noticeLastVerified)})</div>` : '';
                 let verifyBtn = canVerifyNotice ? `<button onclick="handleActionClick('verify_notice', ${s.id}, this)" class="flex-1 px-4 py-2.5 rounded-xl bg-purple-50 text-purple-700 border border-purple-200 flex items-center justify-center gap-1.5 hover:bg-purple-600 hover:text-white transition-all active:scale-95 font-bold text-[13px] shadow-sm"><i class="ph-bold ph-check-circle text-[16px]"></i> সঠিক তথ্য</button>` : `<div class="flex-1 px-4 py-2.5 bg-slate-50 text-purple-400 rounded-xl text-[13px] font-bold border border-slate-100 text-center"><i class="ph-fill ph-check-circle text-[16px]"></i> আপনি নিশ্চিত করেছেন</div>`;
                 let deleteBtn = isAdmin ? `<button onclick="deleteNoticeAdmin(${s.id})" class="ml-2 w-10 h-10 bg-rose-50 border border-rose-100 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl flex items-center justify-center transition-all shadow-sm active:scale-90" title="নোটিশ ডিলিট করুন"><i class="ph-bold ph-trash text-[18px]"></i></button>` : '';
                 
@@ -650,7 +714,6 @@
             else if(actionType === 'verify_station' || actionType === 'dispute_station' || actionType === 'verify_notice') submitReaction(stationId, actionType, btnEl);
         }
 
-        // 🆕 Unified Reaction Function (Verify & Dispute)
         async function submitReaction(id, actionType, btnEl) {
             if(!btnEl) return;
             const timeKey = actionType.includes('notice') ? `mft_nv_time_${id}` : `mft_v_time_${id}`; 
@@ -828,7 +891,7 @@
                             stations[idx].petrol = payload.petrol; stations[idx].octane = payload.octane; stations[idx].fuelAmount = payload.fuelAmount; 
                             stations[idx].queueStatus = payload.queueStatus; stations[idx].note = payload.note; stations[idx].enforcementStatus = payload.enforcementStatus;
                             stations[idx].verifiedCount = 0; stations[idx].lastVerified = ""; 
-                            stations[idx].disputeCount = 0; // 🆕 Reset disputes on new update
+                            stations[idx].disputeCount = 0; 
                             stations[idx].lastUpdated = Date.now(); stations[idx].reports = (parseInt(stations[idx].reports)||0) + 1; 
                             processUI();
                         }
