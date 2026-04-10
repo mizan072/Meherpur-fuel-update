@@ -90,19 +90,42 @@
         <!-- View 1: Home Dashboard -->
         <div id="viewHome" class="w-full max-w-[1200px] mx-auto px-4 md:px-8 pt-6 transition-opacity duration-300">
             
-            <!-- 💖 Welcome Back / Gratitude Banner -->
-            <div class="mb-6 md:mb-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-[1.5rem] p-4 md:p-6 shadow-md text-white flex items-start gap-4 relative overflow-hidden fade-in">
-                <div class="absolute -right-4 -top-6 opacity-10 transform rotate-12 pointer-events-none">
+            <!-- ========================================================= -->
+            <!-- 📢 ঘোষণা / স্বাগতম ব্যানার (এখান থেকে লেখা পরিবর্তন করুন) -->
+            <!-- ========================================================= -->
+            <div id="welcomeBanner" class="mb-6 md:mb-8 bg-emerald-50/80 border border-emerald-200 rounded-[1.5rem] p-4 md:p-5 shadow-sm flex items-start gap-3.5 relative overflow-hidden fade-in transition-all duration-300">
+                
+                <!-- পেছনের জলছাপ আইকন -->
+                <div class="absolute -right-4 -top-6 opacity-5 transform rotate-12 pointer-events-none text-emerald-700">
                     <i class="ph-fill ph-heart text-[120px]"></i>
                 </div>
-                <div class="bg-white/20 p-2.5 md:p-3 rounded-xl shrink-0 backdrop-blur-sm shadow-sm">
-                    <i class="ph-fill ph-hands-clapping text-[24px] md:text-[28px] text-white"></i>
+
+                <!-- বাম পাশের আইকন -->
+                <div class="bg-emerald-100/80 p-2.5 rounded-xl shrink-0 border border-emerald-200/50 mt-0.5">
+                    <i class="ph-fill ph-hands-clapping text-[24px] text-emerald-600"></i>
                 </div>
-                <div class="relative z-10 pt-0.5">
-                    <h3 class="font-extrabold text-[15px] md:text-[18px] mb-1.5 drop-shadow-sm leading-tight">আপনাদের ভালোবাসায় আমরা আবারও ফিরে এসেছি!</h3>
-                    <p class="text-[12px] md:text-[13.5px] font-medium text-emerald-50 leading-relaxed max-w-3xl opacity-90">আমাদের এই ক্ষুদ্র উদ্যোগে আপনাদের বিপুল সমর্থন ও স্বতঃস্ফূর্ত অংশগ্রহণ পেয়ে আমরা সত্যিই মুগ্ধ এবং গভীরভাবে কৃতজ্ঞ। আপনাদের সুবিধার জন্যই অ্যাপটি নতুন ও উন্নত ফিচারের সাথে পুনরায় চালু করা হলো। চলুন, একসাথে সঠিক তথ্য শেয়ার করি।</p>
+
+                <!-- ✏️ ব্যানারের লেখা (নিচের লাইনগুলো আপনার ইচ্ছামতো পরিবর্তন করুন) -->
+                <div class="relative z-10 pt-0.5 pr-6">
+                    <!-- ব্যানারের টাইটেল -->
+                    <h3 class="font-extrabold text-[15px] md:text-[17px] text-emerald-800 mb-1.5 leading-tight">
+                        আপনাদের ভালোবাসায় আমরা আবারও ফিরে এসেছি!
+                    </h3>
+                    
+                    <!-- ব্যানারের বিস্তারিত লেখা -->
+                    <p class="text-[12px] md:text-[13px] font-semibold text-emerald-700/80 leading-relaxed max-w-3xl">
+                        আমাদের এই ক্ষুদ্র উদ্যোগে আপনাদের বিপুল সমর্থন ও স্বতঃস্ফূর্ত অংশগ্রহণ পেয়ে আমরা সত্যিই মুগ্ধ এবং গভীরভাবে কৃতজ্ঞ। আপনাদের সুবিধার জন্যই অ্যাপটি নতুন ও উন্নত ফিচারের সাথে পুনরায় চালু করা হলো। চলুন, একসাথে সঠিক তথ্য শেয়ার করি।
+                    </p>
                 </div>
+
+                <!-- ❌ ক্লোজ (Cross) বাটন -->
+                <button onclick="document.getElementById('welcomeBanner').style.display='none'" class="absolute top-3.5 right-3.5 w-8 h-8 flex items-center justify-center rounded-full bg-emerald-100/50 hover:bg-emerald-200 text-emerald-600 transition-colors active:scale-90" title="বন্ধ করুন">
+                    <i class="ph-bold ph-x text-[16px]"></i>
+                </button>
             </div>
+            <!-- ========================================================= -->
+            <!-- ব্যানার সেকশন শেষ -->
+            <!-- ========================================================= -->
 
             <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
                 <!-- Sidebar -->
