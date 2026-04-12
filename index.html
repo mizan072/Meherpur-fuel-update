@@ -91,14 +91,14 @@
         <!-- View 1: Home Dashboard -->
         <div id="viewHome" class="w-full max-w-[1200px] mx-auto px-4 md:px-8 pt-6 transition-opacity duration-300">
             
-            <div id="welcomeBanner" class="mb-6 md:mb-8 bg-indigo-50/80 border border-indigo-200 rounded-[1.5rem] p-4 md:p-5 shadow-sm flex items-start gap-3.5 relative overflow-hidden fade-in transition-all duration-300">
+            <div id="welcomeBanner" class="mb-6 md:mb-8 bg-indigo-50/80 border border-indigo-200 rounded-[1.5rem] p-4 md:p-5 shadow-sm flex items-start gap-3.5 relative overflow-hidden fade-in transition-opacity duration-500">
                 <div class="absolute -right-4 -top-6 opacity-5 transform rotate-12 pointer-events-none text-indigo-700"><i class="ph-fill ph-heart text-[120px]"></i></div>
                 <div class="bg-indigo-100/80 p-2.5 rounded-xl shrink-0 border border-indigo-200/50 mt-0.5"><i class="ph-fill ph-hands-clapping text-[24px] text-indigo-600"></i></div>
                 <div class="relative z-10 pt-0.5 pr-6">
                     <h3 class="font-extrabold text-[15px] md:text-[17px] text-indigo-800 mb-1.5 leading-tight">প্রতিটি পাম্পের জন্য ডেডিকেটেড কমেন্ট সেকশন!</h3>
                     <p class="text-[12px] md:text-[13px] font-semibold text-indigo-700/80 leading-relaxed max-w-3xl">এখন থেকে যেকোনো পাম্পের কার্ডের নিচে <b>"কমেন্ট"</b> বাটনে ক্লিক করে ওই পাম্প সম্পর্কিত রিয়েল-টাইম প্রশ্ন বা আপডেট সবার সাথে শেয়ার করতে পারবেন।</p>
                 </div>
-                <button onclick="document.getElementById('welcomeBanner').style.display='none'" class="absolute top-3.5 right-3.5 w-8 h-8 flex items-center justify-center rounded-full bg-indigo-100/50 hover:bg-indigo-200 text-indigo-600 transition-colors active:scale-90" title="বন্ধ করুন"><i class="ph-bold ph-x text-[16px]"></i></button>
+                <button onclick="hideBanner()" class="absolute top-3.5 right-3.5 w-8 h-8 flex items-center justify-center rounded-full bg-indigo-100/50 hover:bg-indigo-200 text-indigo-600 transition-colors active:scale-90" title="বন্ধ করুন"><i class="ph-bold ph-x text-[16px]"></i></button>
             </div>
 
             <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
@@ -251,7 +251,7 @@
                 <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[10.5px] font-black text-slate-400 uppercase tracking-widest mt-2">
                     <span><i class="ph-bold ph-copyright"></i> ২০২৬ সর্বস্বত্ব সংরক্ষিত</span>
                     <span class="hidden sm:inline">•</span>
-                    <span>ভার্সন ৩.১.০ (Station Chat)</span>
+                    <span>ভার্সন ৩.১.১ (Bug Fixed)</span>
                 </div>
             </div>
         </footer>
@@ -301,6 +301,34 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Bottom Nav & Modals -->
+    <nav class="md:hidden glass-header shadow-[0_-10px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/60 fixed bottom-0 w-full z-40 pb-safe">
+        <div class="max-w-md mx-auto flex justify-between items-center px-2 py-1.5 h-[56px]">
+            <button onclick="switchView('Home')" id="navHome" class="nav-item active flex-1 flex flex-col items-center gap-1 transition-all group"><i class="ph-bold ph-squares-four text-[22px] nav-icon text-slate-400 group-[.active]:text-indigo-500"></i><span class="text-[10px] font-bold tracking-wide">ড্যাশবোর্ড</span></button>
+            <button onclick="switchView('Discussion')" id="navDiscussion" class="nav-item flex-1 flex flex-col items-center gap-1 transition-all group relative"><i class="ph-bold ph-chats-circle text-[22px] nav-icon text-slate-400 group-[.active]:text-indigo-500"></i><span class="absolute top-1 right-[25%] w-2 h-2 bg-rose-500 rounded-full animate-pulse border border-white"></span><span class="text-[10px] font-bold tracking-wide">আলোচনা</span></button>
+            <button onclick="switchView('Leaderboard')" id="navLeaderboard" class="nav-item flex-1 flex flex-col items-center gap-1 transition-all group"><i class="ph-bold ph-trophy text-[22px] nav-icon text-slate-400 group-[.active]:text-indigo-500"></i><span class="text-[10px] font-bold tracking-wide">র‍্যাংকিং</span></button>
+            <button onclick="switchView('Feedback')" id="navFeedback" class="nav-item flex-1 flex flex-col items-center gap-1 transition-all group"><i class="ph-bold ph-chat-circle-text text-[22px] nav-icon text-slate-400 group-[.active]:text-indigo-500"></i><span class="text-[10px] font-bold tracking-wide">মতামত</span></button>
+            <button onclick="switchView('About')" id="navAbout" class="nav-item flex-1 flex flex-col items-center gap-1 transition-all group"><i class="ph-bold ph-info text-[22px] nav-icon text-slate-400 group-[.active]:text-indigo-500"></i><span class="text-[10px] font-bold tracking-wide">তথ্য</span></button>
+        </div>
+    </nav>
+    
+    <div id="nameSetupModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[6000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div id="nameSetupModalContent" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-all duration-400 p-6 md:p-8 text-center relative border border-slate-100 flex flex-col">
+            <button onclick="closeNameSetup()" class="absolute top-4 right-4 w-8 h-8 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-500 transition-colors"><i class="ph-bold ph-x text-lg"></i></button>
+            <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner"><i class="ph-fill ph-user-circle-plus text-4xl"></i></div>
+            <h2 class="text-slate-900 font-extrabold text-xl mb-2">আপনার পরিচয় দিন</h2>
+            <p class="text-slate-500 text-[13px] font-medium mb-6">তথ্য আপডেট বা চ্যাট করার আগে অনুগ্রহ করে আপনার নাম লিখুন। আপনার দেওয়া তথ্যের ওপর ভিত্তি করে লিডারবোর্ডে আপনার র‍্যাংক তৈরি হবে।</p>
+            <div class="space-y-4 text-left">
+                <div><input type="text" id="setupNameInput" placeholder="আপনার পুরো নাম লিখুন..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-[14px] text-slate-900 focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-400/10 focus:outline-none transition-all text-center"></div>
+                <button onclick="saveNameAndProceed()" class="w-full bg-slate-900 hover:bg-indigo-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-95 text-[14.5px]">নাম সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed top-5 md:top-8 left-1/2 transform -translate-x-1/2 -translate-y-[150%] bg-slate-900/95 backdrop-blur-md text-white px-5 py-3.5 rounded-xl shadow-float transition-transform duration-400 ease-out z-[5000] flex items-center gap-3 min-w-[260px] border border-slate-700/50">
+        <i class="ph-fill ph-check-circle text-[24px]" id="toastIcon"></i><div class="flex-1"><p class="font-semibold tracking-wide text-[13.5px]" id="toastMsg">সফল হয়েছে!</p></div>
     </div>
 
     <!-- Update Station Modal -->
@@ -369,17 +397,6 @@
         </div>
     </div>
 
-    <!-- Bottom Nav & Modals -->
-    <nav class="md:hidden glass-header shadow-[0_-10px_20px_rgba(0,0,0,0.03)] border-t border-slate-200/60 fixed bottom-0 w-full z-40 pb-safe">
-        <!-- Re-included from above for structure logic -->
-    </nav>
-    <div id="nameSetupModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[6000] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <!-- Re-included from above -->
-    </div>
-    <div id="toast" class="fixed top-5 md:top-8 left-1/2 transform -translate-x-1/2 -translate-y-[150%] bg-slate-900/95 backdrop-blur-md text-white px-5 py-3.5 rounded-xl shadow-float transition-transform duration-400 ease-out z-[5000] flex items-center gap-3 min-w-[260px] border border-slate-700/50">
-        <i class="ph-fill ph-check-circle text-[24px]" id="toastIcon"></i><div class="flex-1"><p class="font-semibold tracking-wide text-[13.5px]" id="toastMsg">সফল হয়েছে!</p></div>
-    </div>
-
     <!-- Scripts -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzS6N1exM7m5vJdZav5wncSW-NfHLPjOaM-SpbtCl0M1miQPOGxGLfq59tifsQh0p0N/exec";
@@ -387,14 +404,19 @@
         let stations = [], activeFilter = 'all', activeSort = 'recent', activeArea = 'all', searchQuery = '';
         let currentEditingId = null, pendingAction = null, pendingStationId = null;
         let chatsData = [], replyingToId = 0, chatRefreshInterval = null;
-        let activeCommentStationId = 0, scReplyingToId = 0; // 🆕 Tracker for specific station comments
+        let activeCommentStationId = 0, scReplyingToId = 0; 
 
         function safeGetLocal(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
         function safeSetLocal(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
         function toBn(num) { return num ? num.toString().replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[d]) : '০'; }
+        
         function timeAgo(ts) {
             if(!ts) return "অজানা";
-            const secs = Math.floor((Date.now() - parseInt(ts)) / 1000); if (secs < 60) return "এইমাত্র";
+            const parsedTs = parseInt(ts);
+            if(isNaN(parsedTs)) return "অজানা";
+            const secs = Math.floor((Date.now() - parsedTs) / 1000); 
+            if (secs < 0) return "অজানা";
+            if (secs < 60) return "এইমাত্র";
             const mins = Math.floor(secs / 60); if (mins < 60) return `${toBn(mins)} মি. আগে`;
             const hrs = Math.floor(mins / 60); if (hrs < 24) return `${toBn(hrs)} ঘণ্টা আগে`;
             return `${toBn(Math.floor(hrs / 24))} দিন আগে`;
@@ -413,7 +435,7 @@
             try { 
                 const res = await fetch(API_URL + "?t=" + Date.now(), { cache: 'no-store' }); 
                 stations = await res.json();
-                await loadChats(true); // 🆕 Load chats before processing UI to show counts
+                await loadChats(true); 
                 processUI(); 
             } catch(e) { showToast("ডেটা লোড ফেইলড!", "error"); } 
             finally { if(icon) icon.classList.remove('animate-spin'); }
@@ -467,7 +489,6 @@
 
                 const outWarn = isOut ? `<div class="w-full bg-rose-50/80 text-rose-600 text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center gap-1.5 mb-2"><i class="ph-fill ph-warning-circle text-[14px]"></i> ১২ ঘণ্টার বেশি পুরোনো তথ্য</div>` : '';
                 
-                // 🆕 Fetching Comments for this station
                 const stChats = chatsData.filter(c => String(c.stationId) === String(s.id));
                 const chatCount = stChats.length;
                 let latestChatHtml = '';
@@ -490,7 +511,7 @@
                 const lastVTime = safeGetLocal(`mft_v_time_${s.id}`);
                 const canVerify = !lastVTime || (Date.now() - parseInt(lastVTime)) > (10 * 60 * 1000); 
                 
-                let verifyBadgeTop = vCount > 0 ? `<span class="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-emerald-100/50" title="${toBn(vCount)} জন নিশ্চিত করেছেন"><i class="ph-fill ph-shield-check text-[12px]"></i> ${toBn(vCount)} জন নিশ্চিত</span>` : '';
+                let verifyBadgeTop = vCount > 0 ? `<span class="flex items-center gap-1 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-emerald-100/50" title="${toBn(vCount)} জন নিশ্চিত করেছেন"><i class="ph-fill ph-shield-check text-[12px]"></i> ${toBn(vCount)} জন নিশ্চিত ${s.lastVerified ? `(সর্বশেষ ${timeAgo(s.lastVerified)})` : ''}</span>` : '';
                 let disputeBadgeTop = isDisputed && !isOut ? `<span class="flex items-center gap-1 text-rose-700 bg-rose-50/80 px-2 py-0.5 rounded-md text-[10px] font-bold shadow-sm border border-rose-100/50 animate-pulse"><i class="ph-fill ph-warning text-[12px]"></i> সন্দেহজনক</span>` : '';
 
                 container.innerHTML += `
@@ -517,13 +538,52 @@
                             ${canVerify && !isOut ? `<button onclick="handleActionClick('verify_station', ${s.id}, this)" class="w-9 h-9 flex items-center justify-center bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white rounded-xl transition-colors border border-emerald-100 shadow-sm active:scale-95" title="সঠিক"><i class="ph-bold ph-check text-[18px]"></i></button><button onclick="handleActionClick('dispute_station', ${s.id}, this)" class="w-9 h-9 flex items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl transition-colors border border-rose-100 shadow-sm active:scale-95" title="ভুল তথ্য"><i class="ph-bold ph-warning text-[18px]"></i></button>` : `<div class="w-9 h-9 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl border border-slate-100"><i class="ph-bold ph-check"></i></div>`}
                         </div>
                         <div class="flex items-center gap-2 shrink-0">
-                            <!-- 🆕 Comment Button -->
                             <button onclick="openStationComments(${s.id})" class="px-3 py-2 rounded-xl bg-sky-50 text-sky-600 border border-sky-100 flex items-center gap-1.5 hover:bg-sky-500 hover:text-white transition-all active:scale-95 font-bold text-[12px] shadow-sm"><i class="ph-bold ph-chat-circle-dots text-[16px]"></i> ${chatCount ? toBn(chatCount) : 'কমেন্ট'}</button>
                             <button onclick="handleActionClick('update', ${s.id})" class="px-4 py-2 rounded-xl bg-slate-900 text-white flex items-center gap-1.5 hover:bg-indigo-600 transition-all active:scale-95 font-semibold text-[12.5px] shadow-sm"><i class="ph-bold ph-pencil-simple text-[14px]"></i> আপডেট</button>
                         </div>
                     </div>
                 </div>`;
             });
+        }
+
+        // --- Core UI & Navigation ---
+        function showToast(m, type = "success") { 
+            const el = document.getElementById('toast'); const msgEl = document.getElementById('toastMsg'); const iconEl = document.getElementById('toastIcon');
+            if(!el || !msgEl || !iconEl) return;
+            iconEl.className = type === "error" ? "ph-fill ph-warning-circle text-rose-400 text-[24px]" : "ph-fill ph-check-circle text-emerald-400 text-[24px]";
+            msgEl.textContent = m; el.classList.remove('-translate-y-[150%]'); setTimeout(() => el.classList.add('-translate-y-[150%]'), 3000); 
+        }
+
+        function switchView(viewName) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const mobNav = document.getElementById(`nav${viewName}`); if(mobNav) mobNav.classList.add('active');
+            
+            document.querySelectorAll('.pc-nav-item').forEach(el => { el.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm'); el.classList.add('text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-200/50'); });
+            const pcNav = document.getElementById(`nav${viewName}PC`); if(pcNav) { pcNav.classList.remove('text-slate-500', 'hover:text-slate-800', 'hover:bg-slate-200/50'); pcNav.classList.add('bg-white', 'text-indigo-600', 'shadow-sm'); }
+            
+            ['Home', 'Discussion', 'Feedback', 'About', 'Leaderboard'].forEach(v => { const el = document.getElementById(`view${v}`); if(el) el.classList.add('hidden'); });
+            const target = document.getElementById(`view${viewName}`); if(target) target.classList.remove('hidden');
+            
+            const chatInputArea = document.getElementById('chatInputArea');
+            if (viewName === 'Discussion') {
+                chatInputArea.classList.remove('translate-y-full');
+                loadChats(); 
+                if(!chatRefreshInterval) chatRefreshInterval = setInterval(() => loadChats(true), 20000); 
+            } else {
+                chatInputArea.classList.add('translate-y-full');
+                if(chatRefreshInterval) { clearInterval(chatRefreshInterval); chatRefreshInterval = null; }
+            }
+            
+            if(viewName === 'Leaderboard') loadLeaderboard();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideBanner() {
+            const banner = document.getElementById('welcomeBanner');
+            if(banner) {
+                banner.style.opacity = '0';
+                setTimeout(() => banner.style.display = 'none', 300);
+            }
         }
 
         // --- 💬 CHAT SYSTEM LOGIC ---
@@ -534,19 +594,15 @@
             try {
                 const res = await fetch(API_URL + "?action=getChats&t=" + Date.now(), { cache: 'no-store' });
                 chatsData = await res.json();
-                renderChatFeed(); // General discussion update
-                if (activeCommentStationId) renderStationComments(); // Modal update if open
+                renderChatFeed(); 
+                if (activeCommentStationId) renderStationComments(); 
             } catch(e) {}
         }
 
-        // 1. General Discussion Feed
         function renderChatFeed() {
             const container = document.getElementById('chatFeedContainer'); if(!container) return;
             container.innerHTML = '';
-            
-            // Only show general discussion (stationId = "0" or undefined)
             const genChats = chatsData.filter(c => !c.stationId || String(c.stationId) === "0");
-
             if(genChats.length === 0) { container.innerHTML = `<div class="py-16 text-center text-slate-400 fade-in bg-white rounded-[1.5rem] border border-slate-200 shadow-sm"><i class="ph-fill ph-chats-circle text-[64px] mb-4 opacity-40"></i><p class="font-extrabold text-[16px]">এখনও কোনো আলোচনা হয়নি</p><p class="text-[12px] mt-1 font-medium">নিচ থেকে প্রথম মেসেজটি আপনিই দিন!</p></div>`; return; }
 
             const { uid } = getUserIdentity(); const isAdmin = safeGetLocal('mft_admin') === 'true';
@@ -566,7 +622,6 @@
             });
         }
 
-        // 2. Station Specific Modal Feed
         function renderStationComments() {
             const container = document.getElementById('scFeedContainer'); if(!container || !activeCommentStationId) return;
             container.innerHTML = '';
@@ -575,7 +630,7 @@
             if(stChats.length === 0) { container.innerHTML = `<div class="py-16 text-center text-slate-400 fade-in"><i class="ph-fill ph-chat-circle-dots text-[54px] mb-4 opacity-30"></i><p class="font-bold text-[15px]">কোনো কমেন্ট নেই</p><p class="text-[12px] mt-1 font-medium text-slate-400">এই পাম্প সম্পর্কে আপনার প্রশ্ন বা খবর শেয়ার করুন!</p></div>`; return; }
 
             const { uid } = getUserIdentity(); const isAdmin = safeGetLocal('mft_admin') === 'true';
-            const parents = stChats.filter(c => parseInt(c.parentId) === 0).sort((a,b) => parseInt(a.timestamp) - parseInt(b.timestamp)); // Oldest first inside modal
+            const parents = stChats.filter(c => parseInt(c.parentId) === 0).sort((a,b) => parseInt(a.timestamp) - parseInt(b.timestamp)); 
             const replies = stChats.filter(c => parseInt(c.parentId) !== 0);
 
             parents.forEach(p => {
@@ -589,11 +644,10 @@
                 const pLiked = p.likes.includes(String(uid)); const pInitial = (p.uname || 'U').charAt(0).toUpperCase();
                 container.innerHTML += `<div class="flex gap-3 fade-in"><div class="w-9 h-9 rounded-full ${getAvatarColor(p.uname)} flex items-center justify-center font-black text-[13px] shrink-0 border-2 border-white">${pInitial}</div><div class="flex-1 relative"><div class="bg-white p-3 rounded-[1.2rem] rounded-tl-none border border-slate-100 shadow-sm"><div class="flex justify-between items-center mb-1"><span class="font-bold text-[13px] text-slate-900">${p.uname}</span><span class="text-[9.5px] font-bold text-slate-400">${timeAgo(p.timestamp)}</span></div><p class="text-[13.5px] text-slate-700 leading-relaxed">${p.message}</p></div><div class="flex items-center gap-3 mt-1.5 mb-1 ml-2"><button onclick="toggleChatLike('${p.id}')" class="flex items-center gap-1 text-[11px] font-bold ${pLiked ? 'text-rose-500' : 'text-slate-400 hover:text-slate-600'}"><i class="${pLiked ? 'ph-fill' : 'ph-bold'} ph-heart text-[14px]"></i> ${p.likes.length ? toBn(p.likes.length) : 'লাইক'}</button><button onclick="setStationReply('${p.id}', '${p.uname}')" class="flex items-center gap-1 text-[11px] font-bold text-slate-400 hover:text-slate-600"><i class="ph-bold ph-arrow-u-up-left text-[14px]"></i> রিপ্লাই</button>${isAdmin ? `<button onclick="deleteChatAdmin('${p.id}')" class="text-[11px] font-bold text-rose-400 hover:text-rose-600 ml-auto flex items-center gap-1"><i class="ph-bold ph-trash"></i></button>` : ''}</div>${pReplies.length > 0 ? `<div class="relative"><div class="chat-reply-line" style="top: -5px; left: -26px;"></div>${repliesHtml}</div>` : ''}</div></div>`;
             });
-            // Scroll to bottom
             setTimeout(() => container.scrollTop = container.scrollHeight, 50);
         }
 
-        // --- Core Interactions (Both Chats) ---
+        // --- Core Interactions ---
         function setReply(id, name) { replyingToId = id; document.getElementById('replyToText').textContent = `রিপ্লাই: ${name}`; document.getElementById('replyIndicator').classList.remove('hidden'); document.getElementById('chatInput').focus(); document.getElementById('chatInput').placeholder = `${name}-কে রিপ্লাই দিন...`; }
         function cancelReply() { replyingToId = 0; document.getElementById('replyIndicator').classList.add('hidden'); document.getElementById('chatInput').placeholder = `আপনার প্রশ্ন বা খবর শেয়ার করুন...`; }
 
@@ -643,7 +697,7 @@
             
             const m = document.getElementById('stationCommentModal'); const c = document.getElementById('stationCommentModalContent'); 
             m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); if(window.innerWidth < 768) { c.classList.remove('translate-y-full'); } else { c.classList.remove('md:scale-95', 'md:opacity-0'); } }, 10);
-            if(!chatRefreshInterval) chatRefreshInterval = setInterval(() => loadChats(true), 15000); // 15s refresh when modal open
+            if(!chatRefreshInterval) chatRefreshInterval = setInterval(() => loadChats(true), 15000); 
         }
 
         function closeStationComments() {
@@ -652,7 +706,6 @@
             if(document.getElementById('viewDiscussion').classList.contains('hidden') && chatRefreshInterval) { clearInterval(chatRefreshInterval); chatRefreshInterval = null; }
         }
 
-        // 🆕 For the input from Modal
         function sendStationChat() { sendChat(String(activeCommentStationId)); }
 
         async function toggleChatLike(chatId) {
@@ -673,14 +726,135 @@
             try { await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: "deleteChat", chatId: chatId }) }); showToast("ডিলিট করা হয়েছে।"); } catch(e) { showToast("সমস্যা হয়েছে!", "error"); }
         }
 
-        // --- Event Listeners Initialization ---
+        function getUserIdentity() {
+            let uid = safeGetLocal('mft_uid'); let uname = safeGetLocal('mft_uname');
+            if(!uid) { uid = 'user_' + Math.random().toString(36).substr(2, 9); safeSetLocal('mft_uid', uid); }
+            return { uid, uname };
+        }
+
+        function handleActionClick(actionType, stationId = null, btnEl = null) {
+            const { uname } = getUserIdentity();
+            if(!uname) {
+                pendingAction = actionType; pendingStationId = stationId;
+                const m = document.getElementById('nameSetupModal');
+                if(m) { m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => m.classList.remove('opacity-0'), 10); }
+                return;
+            }
+            executeAction(actionType, stationId, btnEl);
+        }
+
+        function closeNameSetup() {
+            const m = document.getElementById('nameSetupModal');
+            if(m) { m.classList.add('opacity-0'); setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300); }
+            pendingAction = null; pendingStationId = null;
+        }
+
+        function saveNameAndProceed() {
+            const input = document.getElementById('setupNameInput'); const name = input ? input.value.trim() : '';
+            if(name.length < 3) return showToast("দয়া করে আপনার সঠিক নাম দিন!", "error");
+            safeSetLocal('mft_uname', name); closeNameSetup();
+            
+            // 🛠️ ফিক্স: চ্যাট করার ক্ষেত্রে সঠিক টার্গেট আইডিতে চ্যাট পাঠানো
+            if(pendingAction === 'send_chat') sendChat(pendingTargetStationId);
+            else if(pendingAction) executeAction(pendingAction, pendingStationId);
+        }
+
+        function executeAction(actionType, stationId, btnEl = null) {
+            if(actionType === 'update') openUpdateModal(stationId);
+            else if(actionType === 'verify_station' || actionType === 'dispute_station') submitReaction(stationId, actionType, btnEl);
+        }
+
+        async function submitReaction(id, actionType, btnEl) {
+            if(!btnEl) return;
+            const timeKey = actionType.includes('notice') ? `mft_nv_time_${id}` : `mft_v_time_${id}`; 
+            
+            const parent = btnEl.parentElement;
+            const originalHtml = parent.innerHTML;
+            parent.innerHTML = `<div class="px-2 py-1.5 text-slate-500 text-[11px] font-bold flex items-center gap-1"><i class="ph-bold ph-spinner animate-spin text-[14px]"></i> প্রসেসিং...</div>`;
+            
+            const { uid, uname } = getUserIdentity();
+            let backendAction = 'verify';
+            if (actionType === 'verify_station') backendAction = 'verify';
+            else if (actionType === 'dispute_station') backendAction = 'dispute';
+            
+            try {
+                await fetch(API_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ id, action: backendAction, uid: uid, uname: uname }) });
+                
+                const st = stations.find(s => parseInt(s.id) === parseInt(id));
+                if (st) {
+                    if (backendAction === 'verify') { st.verifiedCount = (parseInt(st.verifiedCount)||0) + 1; st.lastVerified = Date.now(); }
+                    else if (backendAction === 'dispute') { st.disputeCount = (parseInt(st.disputeCount)||0) + 1; }
+                }
+                
+                safeSetLocal(timeKey, Date.now().toString()); 
+                processUI(); 
+                if(backendAction === 'dispute') showToast("ধন্যবাদ! রিপোর্টটি গ্রহণ করা হয়েছে।", "error");
+                else showToast("ধন্যবাদ! তথ্য নিশ্চিত করা হয়েছে।");
+            } catch(e) { 
+                showToast("নেটওয়ার্ক সমস্যা!", "error"); 
+                parent.innerHTML = originalHtml; 
+            }
+        }
+
+        function shareStation(id) {
+            const st = stations.find(s => parseInt(s.id) === parseInt(id)); if(!st) return;
+            let fAmt = st.fuelAmount || 'অজানা'; if(fAmt === 'Unknown') fAmt = 'অজানা'; if(fAmt === 'Unlimited') fAmt = 'আনলিমিটেড'; if(fAmt === '500 TK') fAmt = '৫০০ টাকা'; if(fAmt === '300 TK') fAmt = '৩০০ টাকা'; if(fAmt === '200 TK') fAmt = '২০০ টাকা'; if(fAmt === '100 TK') fAmt = '১০০ টাকা';
+            let enfText = st.enforcementStatus || 'অজ্ঞাত';
+            const text = `⛽ ${st.name}-এ এখন তেলের অবস্থা:\n\n🔴 পেট্রোল: ${st.petrol}\n🔵 অকটেন: ${st.octane}\n👥 ভিড়: ${st.queueStatus || 'অজ্ঞাত'}\n⛽ পরিমাণ: ${fAmt}\n🚨 চেকিং: ${enfText}\n⏱️ আপডেট: ${timeAgo(st.lastUpdated)}\n\n🔗 বিস্তারিত: https://mfueltracker.pages.dev/\n- মেহেরপুর ফুয়েল ট্র্যাকার`;
+            
+            const textArea = document.createElement("textarea"); textArea.value = text; textArea.setAttribute('readonly', ''); textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); 
+            if (navigator.userAgent.match(/ipad|iphone/i)) { const range = document.createRange(); range.selectNodeContents(textArea); const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); }
+            try { document.execCommand('copy'); showToast("তথ্য কপি করা হয়েছে!"); } catch (err) { showToast("কপি করতে সমস্যা", "error"); } document.body.removeChild(textArea);
+        }
+
+        function openUpdateModal(id) {
+            currentEditingId = parseInt(id); const st = stations.find(s => parseInt(s.id) === currentEditingId); document.getElementById('modalStationName').textContent = st.name;
+            ['petrolStatus', 'octaneStatus', 'fuelAmount', 'queueStatus', 'enforcementStatus'].forEach(n => document.querySelectorAll(`input[name="${n}"]`).forEach(r => r.checked = false));
+            const pR = document.querySelector(`input[name="petrolStatus"][value="${st.petrol}"]`); if(pR) pR.checked = true;
+            const oR = document.querySelector(`input[name="octaneStatus"][value="${st.octane}"]`); if(oR) oR.checked = true;
+            let curAmt = st.fuelAmount || 'অজানা'; if(curAmt === 'Unknown') curAmt = 'অজানা'; if(curAmt === 'Unlimited') curAmt = 'আনলিমিটেড'; if(curAmt === '500 TK') curAmt = '৫০০ টাকা'; if(curAmt === '300 TK') curAmt = '৩০০ টাকা'; if(curAmt === '200 TK') curAmt = '২০০ টাকা'; if(curAmt === '100 TK') curAmt = '১০০ টাকা';
+            const aR = document.querySelector(`input[name="fuelAmount"][value="${curAmt}"]`); if(aR) aR.checked = true;
+            const qR = document.querySelector(`input[name="queueStatus"][value="${st.queueStatus||'অজ্ঞাত'}"]`); if(qR) qR.checked = true;
+            const eR = document.querySelector(`input[name="enforcementStatus"][value="${st.enforcementStatus||'অজ্ঞাত'}"]`); if(eR) eR.checked = true;
+            const noteInput = document.getElementById('shortNoteInput'); if(noteInput) noteInput.value = st.note || ""; 
+            const m = document.getElementById('updateModal'); const c = document.getElementById('updateModalContent'); m.classList.remove('hidden'); m.classList.add('flex'); setTimeout(() => { m.classList.remove('opacity-0'); if(window.innerWidth < 768) { c.classList.remove('translate-y-full'); } else { c.classList.remove('md:scale-95', 'md:opacity-0'); } }, 10);
+        }
+        
+        function closeUpdateModal() { const m = document.getElementById('updateModal'); const c = document.getElementById('updateModalContent'); m.classList.add('opacity-0'); if(window.innerWidth < 768) { c.classList.add('translate-y-full'); } else { c.classList.add('md:scale-95', 'md:opacity-0'); } setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); currentEditingId=null; }, 400); }
+
+        async function loadLeaderboard() {
+            const container = document.getElementById('leaderboardContainer'); if(!container) return;
+            container.innerHTML = `<div class="py-10 text-center text-slate-400"><i class="ph-bold ph-spinner animate-spin text-[32px] mb-3"></i><p class="font-bold text-[13px]">ডেটা লোড হচ্ছে...</p></div>`;
+            try {
+                const res = await fetch(API_URL + "?action=getLeaderboard&t=" + Date.now(), { cache: 'no-store' }); const allLeaders = await res.json();
+                container.innerHTML = '';
+                if(allLeaders.length === 0) { container.innerHTML = `<div class="py-10 text-center text-slate-400"><p class="font-bold text-[14px]">এখনও কেউ তথ্য দেননি!</p></div>`; return; }
+
+                const { uid } = getUserIdentity(); let currentUserRank = -1; let currentUserData = null;
+                for(let i = 0; i < allLeaders.length; i++) { if(String(allLeaders[i].uid) === String(uid)) { currentUserRank = i + 1; currentUserData = allLeaders[i]; break; } }
+
+                const top10 = allLeaders.slice(0, 10);
+                const renderRow = (user, rank, isCurrentUser) => {
+                    let rankClass = "bg-slate-50 border-slate-100"; let rankIcon = `<span class="w-7 h-7 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-black text-[12px]">${toBn(rank)}</span>`;
+                    if(rank === 1) { rankClass = "rank-1"; rankIcon = `<i class="ph-fill ph-medal text-amber-500 text-[28px]"></i>`; } else if(rank === 2) { rankClass = "rank-2"; rankIcon = `<i class="ph-fill ph-medal text-slate-400 text-[28px]"></i>`; } else if(rank === 3) { rankClass = "rank-3"; rankIcon = `<i class="ph-fill ph-medal text-amber-700 text-[28px]"></i>`; }
+                    if (isCurrentUser) rankClass = "bg-emerald-50 border-emerald-300 shadow-md transform scale-[1.02] relative z-10";
+                    const displayName = isCurrentUser ? `${user.name} <span class="text-emerald-700 text-[10px] font-black bg-emerald-200/60 px-1.5 py-0.5 rounded ml-1.5 uppercase tracking-widest">(আপনি)</span>` : user.name;
+                    return `<div class="flex items-center justify-between p-3.5 rounded-2xl border ${rankClass} shadow-sm transition-all hover:scale-[1.01]"><div class="flex items-center gap-3">${rankIcon}<div class="flex flex-col"><span class="font-bold text-slate-800 text-[15px] flex items-center">${displayName}</span>${rank === 1 ? '<span class="text-[10px] font-black text-amber-600 uppercase tracking-widest mt-0.5">টপ কন্ট্রিবিউটর</span>' : ''}${isCurrentUser && rank > 1 ? `<span class="text-[10px] font-bold text-emerald-600 mt-0.5">আপনার বর্তমান র‍্যাংক: ${toBn(rank)}</span>` : ''}</div></div><div class="bg-white px-3 py-1.5 rounded-xl border ${isCurrentUser ? 'border-emerald-200' : 'border-slate-200'} shadow-sm flex items-center gap-1.5"><i class="ph-bold ph-check-circle ${isCurrentUser ? 'text-emerald-600' : 'text-emerald-500'} text-[16px]"></i><span class="font-black text-slate-700 text-[14px]">${toBn(user.count)}</span></div></div>`;
+                };
+
+                top10.forEach((user, index) => { container.innerHTML += renderRow(user, index + 1, String(user.uid) === String(uid)); });
+                if (currentUserRank > 10) { container.innerHTML += `<div class="flex items-center justify-center gap-2 my-1 opacity-40"><div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div><div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div><div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div></div>`; container.innerHTML += renderRow(currentUserData, currentUserRank, true); } 
+                else if (currentUserRank === -1) { container.innerHTML += `<div class="mt-5 p-4 bg-slate-50 border border-slate-200 rounded-2xl text-center"><p class="text-[13px] font-bold text-slate-500">আপনি এখনও কোনো তথ্য প্রদান করেননি।</p><p class="text-[11px] font-medium text-slate-400 mt-1">তথ্য আপডেট বা নিশ্চিত করে লিডারবোর্ডে যুক্ত হোন!</p></div>`; }
+            } catch(e) { container.innerHTML = `<div class="py-10 text-center text-rose-400"><p class="font-bold text-[14px]">লিডারবোর্ড লোড করতে সমস্যা হয়েছে!</p></div>`; }
+        }
+
         function initApp() {
             const searchInput = document.getElementById('searchInput');
             if (searchInput) { searchInput.addEventListener('input', e => { const val = e.target.value; if (val === '*admin*') { safeSetLocal('mft_admin', 'true'); showToast("অ্যাডমিন মোড চালু হয়েছে!"); e.target.value = ''; searchQuery = ''; } else if (val === '*user*') { safeSetLocal('mft_admin', 'false'); showToast("অ্যাডমিন মোড বন্ধ হয়েছে!", "error"); e.target.value = ''; searchQuery = ''; } else { searchQuery = val; } processUI(); }); }
             document.getElementById('sortSelect')?.addEventListener('change', e => { activeSort = e.target.value; processUI(); });
             document.getElementById('areaFilter')?.addEventListener('change', e => { activeArea = e.target.value; processUI(); });
             document.getElementById('statusFilter')?.addEventListener('change', e => { activeFilter = e.target.value; processUI(); });
-            document.querySelectorAll('.drag-handle').forEach(h => { if(h && h.parentElement) { h.parentElement.addEventListener('click', function() { if(this.closest('#updateModalContent')) closeUpdateModal(); if(this.closest('#addNoticeModalContent')) closeNoticeModal(); if(this.closest('#stationCommentModalContent')) closeStationComments(); }); } });
+            document.querySelectorAll('.drag-handle').forEach(h => { if(h && h.parentElement) { h.parentElement.addEventListener('click', function() { if(this.closest('#updateModalContent')) closeUpdateModal(); if(this.closest('#stationCommentModalContent')) closeStationComments(); }); } });
             
             const chatInput = document.getElementById('chatInput'); if(chatInput) { chatInput.addEventListener('keypress', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat('0'); } }); }
             const scInput = document.getElementById('scInput'); if(scInput) { scInput.addEventListener('keypress', function (e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendStationChat(); } }); }
@@ -716,15 +890,11 @@
                     } catch(e) { showToast("নেটওয়ার্ক সমস্যা!", "error"); } finally { btn.innerHTML = ob; btn.disabled = false; }
                 });
             }
+            
+            // 🛠️ ফিক্স: স্বাগতম ব্যানার অটো-হাইড (৫ সেকেন্ড পর)
+            setTimeout(() => hideBanner(), 5000);
+            
             loadData();
-        }
-
-        // Core identity setup
-        function switchViewSaveName() {
-            if(pendingAction === 'send_chat') {
-                if (pendingTargetStationId === "0") sendChat("0");
-                else sendChat(pendingTargetStationId);
-            }
         }
         window.onload = initApp;
     </script>
