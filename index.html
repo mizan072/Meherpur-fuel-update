@@ -69,7 +69,7 @@
             <div class="flex flex-col justify-center">
                 <h1 class="font-extrabold text-[19px] md:text-[21px] leading-none tracking-tight text-slate-900">ফুয়েল ট্র্যাকার</h1>
                 <p class="text-[11px] font-bold text-indigo-600 flex items-center gap-1 mt-1 tracking-wide">
-                    <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-indigo-500"></span></span> 
+                    <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span></span> 
                     মেহেরপুর লাইভ
                 </p>
             </div>
@@ -237,7 +237,7 @@
                 <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[10.5px] font-black text-slate-400 uppercase tracking-widest mt-2">
                     <span><i class="ph-bold ph-copyright"></i> ২০২৬ সর্বস্বত্ব সংরক্ষিত</span>
                     <span class="hidden sm:inline">•</span>
-                    <span>ভার্সন ৩.২.০ (Admin Pinned Chat)</span>
+                    <span>ভার্সন ৩.৩.০ (Pin Fix)</span>
                 </div>
             </div>
         </footer>
@@ -460,16 +460,21 @@
 
                 const outWarn = isOut ? `<div class="w-full bg-rose-50/80 text-rose-600 text-[11px] font-semibold py-1.5 px-3 rounded-lg flex items-center gap-1.5 mb-2"><i class="ph-fill ph-warning-circle text-[14px]"></i> ১২ ঘণ্টার বেশি পুরোনো তথ্য</div>` : '';
                 
-                // 📌 Admin Pinned Chat Logic
                 const stChats = chatsData.filter(c => String(c.stationId) === String(s.id));
                 const chatCount = stChats.length;
-                const pinnedChat = stChats.find(c => c.isPinned === "true" || c.isPinned === true);
-                let pinnedChatHtml = '';
+                const pinnedChat = stChats.find(c => String(c.isPinned) === "true");
+                let chatDisplayHtml = '';
                 
                 if(pinnedChat) {
-                    pinnedChatHtml = `<div class="mb-2.5 bg-amber-50/80 border border-amber-200/60 p-2.5 rounded-xl flex flex-col gap-1 text-[12px] font-medium leading-snug shadow-sm cursor-pointer hover:bg-amber-100/60 transition-colors" onclick="openStationComments(${s.id})">
+                    chatDisplayHtml = `<div class="mb-2.5 bg-amber-50/80 border border-amber-200/60 p-2.5 rounded-xl flex flex-col gap-1 text-[12px] font-medium leading-snug shadow-sm cursor-pointer hover:bg-amber-100/60 transition-colors" onclick="openStationComments(${s.id})">
                         <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-amber-600 flex items-center gap-1 uppercase tracking-widest"><i class="ph-fill ph-push-pin text-[13px]"></i> অ্যাডমিন পিন</span><span class="text-[9px] font-bold text-slate-400">${timeAgo(pinnedChat.timestamp)}</span></div>
                         <p class="text-slate-700 truncate"><b class="text-slate-800">${pinnedChat.uname}:</b> ${pinnedChat.message}</p>
+                    </div>`;
+                } else if(chatCount > 0) {
+                    const latestChat = [...stChats].sort((a,b) => parseInt(b.timestamp) - parseInt(a.timestamp))[0];
+                    chatDisplayHtml = `<div class="mb-2.5 bg-sky-50/80 border border-sky-200/60 p-2.5 rounded-xl flex flex-col gap-1 text-[12px] font-medium leading-snug shadow-sm cursor-pointer hover:bg-sky-100/60 transition-colors" onclick="openStationComments(${s.id})">
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-sky-600 flex items-center gap-1 uppercase tracking-widest"><i class="ph-fill ph-chats text-[13px]"></i> লেটেস্ট কমেন্ট</span><span class="text-[9px] font-bold text-slate-400">${timeAgo(latestChat.timestamp)}</span></div>
+                        <p class="text-slate-700 truncate"><b class="text-slate-800">${latestChat.uname}:</b> ${latestChat.message}</p>
                     </div>`;
                 }
 
@@ -497,7 +502,7 @@
                         </div>
                     </div>
                     
-                    <div class="pl-1">${outWarn} ${pinnedChatHtml} ${noteHtml}</div>
+                    <div class="pl-1">${outWarn} ${chatDisplayHtml} ${noteHtml}</div>
                     
                     <div class="grid grid-cols-2 gap-2.5 mb-3 pl-1">
                         <div class="bg-gradient-to-r ${pt.bg} border ${pt.border} rounded-xl p-2.5 flex items-center justify-between shadow-sm relative overflow-hidden"><div class="flex items-center gap-1.5 z-10"><div class="w-6 h-6 rounded-full bg-white/60 flex items-center justify-center shadow-sm"><i class="ph-fill ph-gas-pump ${pt.text} text-[12px]"></i></div><span class="text-[11px] font-bold text-slate-600">পেট্রোল</span></div><span class="text-[14px] font-black ${pt.text} z-10">${s.petrol}</span><div class="absolute -right-2 -bottom-2 w-8 h-8 rounded-full ${pt.dot} opacity-10"></div></div>
@@ -558,7 +563,7 @@
                 const res = await fetch(API_URL + "?action=getChats&t=" + Date.now(), { cache: 'no-store' });
                 chatsData = await res.json();
                 if (activeCommentStationId) renderStationComments(); 
-                processUI(); // Refresh cards to show new comment counts and pins
+                processUI(); 
             } catch(e) {}
         }
 
@@ -576,14 +581,32 @@
             parents.forEach(p => {
                 const pReplies = replies.filter(r => parseInt(r.parentId) === parseInt(p.id)).sort((a,b) => parseInt(a.timestamp) - parseInt(b.timestamp));
                 let repliesHtml = '';
+                
                 pReplies.forEach(r => {
                     const rLiked = r.likes.includes(String(uid)); const rInitial = (r.uname || 'U').charAt(0).toUpperCase();
-                    repliesHtml += `<div class="flex gap-2.5 relative group fade-in mt-2.5"><div class="w-6 h-6 rounded-full ${getAvatarColor(r.uname)} flex items-center justify-center font-black text-[10px] shrink-0 border border-white z-10">${rInitial}</div><div class="flex-1"><div class="bg-white p-2 rounded-[1rem] rounded-tl-none shadow-sm border border-slate-100 relative"><div class="flex justify-between items-center mb-0.5"><span class="font-bold text-[11.5px] text-slate-800">${r.uname}</span><span class="text-[9px] font-bold text-slate-400">${timeAgo(r.timestamp)}</span></div><p class="text-[12.5px] text-slate-700 leading-snug">${r.message}</p></div><div class="flex items-center gap-3 mt-1 ml-2"><button onclick="toggleChatLike('${r.id}')" class="flex items-center gap-1 text-[10px] font-bold ${rLiked ? 'text-rose-500' : 'text-slate-400 hover:text-slate-600'}"><i class="${rLiked ? 'ph-fill' : 'ph-bold'} ph-heart text-[12px]"></i> ${r.likes.length ? toBn(r.likes.length) : 'লাইক'}</button>${isAdmin ? `<button onclick="deleteChatAdmin('${r.id}')" class="text-[10px] font-bold text-rose-400 hover:text-rose-600 ml-auto"><i class="ph-bold ph-trash"></i></button>` : ''}</div></div></div>`;
+                    
+                    const isRPinned = String(r.isPinned) === "true";
+                    const rBgClass = isRPinned ? 'bg-amber-50/60 border-amber-200' : 'bg-white border-slate-100';
+                    const rPinIndicator = isRPinned ? `<div class="absolute -top-2.5 -right-2 w-6 h-6 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center border-[2px] border-white shadow-sm z-20"><i class="ph-fill ph-push-pin text-[10px]"></i></div>` : '';
+                    let rPinBtn = isAdmin ? `<button onclick="pinChatAdmin('${r.id}', '${activeCommentStationId}')" class="text-[10px] font-bold ${isRPinned ? 'text-amber-500' : 'text-slate-400 hover:text-amber-500'} ml-2 transition-colors flex items-center gap-1" title="${isRPinned ? 'আনপিন করুন' : 'পিন করুন'}"><i class="${isRPinned ? 'ph-fill' : 'ph-bold'} ph-push-pin text-[14px]"></i></button>` : '';
+
+                    repliesHtml += `<div class="flex gap-2.5 relative group fade-in mt-2.5">
+                        <div class="w-6 h-6 rounded-full ${getAvatarColor(r.uname)} flex items-center justify-center font-black text-[10px] shrink-0 border border-white z-10">${rInitial}</div>
+                        <div class="flex-1 relative">
+                            ${rPinIndicator}
+                            <div class="${rBgClass} p-2 rounded-[1rem] rounded-tl-none shadow-sm transition-colors relative">
+                                <div class="flex justify-between items-center mb-0.5"><span class="font-bold text-[11.5px] text-slate-800">${r.uname}</span><span class="text-[9px] font-bold text-slate-400">${timeAgo(r.timestamp)}</span></div>
+                                <p class="text-[12.5px] text-slate-700 leading-snug">${r.message}</p>
+                            </div>
+                            <div class="flex items-center gap-3 mt-1 ml-2">
+                                <button onclick="toggleChatLike('${r.id}')" class="flex items-center gap-1 text-[10px] font-bold ${rLiked ? 'text-rose-500' : 'text-slate-400 hover:text-slate-600'}"><i class="${rLiked ? 'ph-fill' : 'ph-bold'} ph-heart text-[12px]"></i> ${r.likes.length ? toBn(r.likes.length) : 'লাইক'}</button>
+                                ${isAdmin ? `<button onclick="deleteChatAdmin('${r.id}')" class="text-[10px] font-bold text-rose-400 hover:text-rose-600 ml-auto"><i class="ph-bold ph-trash"></i></button>${rPinBtn}` : ''}
+                            </div>
+                        </div>
+                    </div>`;
                 });
 
                 const pLiked = p.likes.includes(String(uid)); const pInitial = (p.uname || 'U').charAt(0).toUpperCase();
-                
-                // 📌 Pin Styling
                 const isPinned = String(p.isPinned) === "true";
                 const bgClass = isPinned ? 'bg-amber-50/60 border-amber-200' : 'bg-white border-slate-100';
                 const pinIndicator = isPinned ? `<div class="absolute -top-2.5 -right-2.5 w-7 h-7 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center border-[3px] border-white shadow-sm z-20"><i class="ph-fill ph-push-pin text-[12px]"></i></div>` : '';
@@ -619,7 +642,7 @@
             const tempId = Date.now().toString();
             chatsData.push({ id: tempId, parentId: scReplyingToId, uid: uid, uname: uname, message: finalMsg, timestamp: tempId, likes: [], stationId: activeCommentStationId, isPinned: "false" });
             
-            renderStationComments();
+            renderStationComments(); processUI();
             
             input.value = ''; input.style.height = ''; pendingChatMsg = ""; pendingTargetStationId = "0";
             const currentReplyId = scReplyingToId;
@@ -669,14 +692,10 @@
         async function pinChatAdmin(chatId, stationId) {
             if(!confirm("এই কমেন্টটির পিন স্ট্যাটাস পরিবর্তন করবেন?")) return;
             
-            // Optimistic UI Update
             chatsData.forEach(c => {
                 if (String(c.stationId) === String(stationId)) {
-                    if (String(c.id) === String(chatId)) {
-                        c.isPinned = String(c.isPinned) === "true" ? "false" : "true";
-                    } else {
-                        c.isPinned = "false"; // Only one pin allowed per station
-                    }
+                    if (String(c.id) === String(chatId)) { c.isPinned = String(c.isPinned) === "true" ? "false" : "true"; } 
+                    else { c.isPinned = "false"; }
                 }
             });
             renderStationComments(); processUI();
