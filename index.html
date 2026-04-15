@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <title>মেহেরপুর ফুয়েল ট্র্যাকার | ধন্যবাদ!</title>
+    <meta name="theme-color" content="#0f172a">
+    
+    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/phosphor-icons/core/main/assets/fill/rocket-launch-fill.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+
+    <script>
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    fontFamily: { sans: ['"Noto Sans Bengali"', 'sans-serif'] }, 
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                } 
+            } 
+        }
+    </script>
+
+    <style>
+        body { 
+            font-family: 'Noto Sans Bengali', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        /* Premium Animated Background */
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -200px;
+            left: -200px;
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-glow-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(236,72,153,0.1) 0%, rgba(0,0,0,0) 70%);
+            bottom: -100px;
+            right: -100px;
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7); /* Slate 800 with opacity */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Scrollbar Styling for better UX */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.5); border-radius: 10px; }
+        
+        .fade-in-up { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px); }
+        
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative py-12 px-4 sm:px-6 lg:px-8 selection:bg-indigo-500 selection:text-white">
+
+    <!-- Background Elements -->
+    <div class="bg-glow animate-pulse-slow"></div>
+    <div class="bg-glow-2 animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+    <div class="relative z-10 max-w-2xl mx-auto w-full space-y-8 my-auto">
+        
+        <!-- 🛑 Farewell Notice -->
+        <div class="text-center space-y-4 fade-in-up" style="animation-delay: 0.1s;">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-800 border border-slate-700 mb-2 shadow-lg relative">
+                <div class="absolute inset-0 rounded-full border-t-2 border-indigo-500 animate-spin" style="animation-duration: 3s;"></div>
+                <i class="ph-fill ph-gas-pump text-[36px] text-slate-400"></i>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight">আমাদের কার্যক্রম বন্ধ ঘোষণা করা হলো</h1>
+            <p class="text-slate-400 text-[14.5px] md:text-[15px] font-medium leading-relaxed max-w-lg mx-auto">
+                মেহেরপুর ফুয়েল ট্র্যাকার-এর সাথে থাকার জন্য আপনাদের অসংখ্য ধন্যবাদ। আপনাদের স্বতঃস্ফূর্ত অংশগ্রহণ আমাদের মুগ্ধ করেছে। বর্তমান পরিস্থিতির উন্নতি হওয়ায় আমাদের এই সার্ভিসের আর প্রয়োজন নেই, তাই অ্যাপটির কার্যক্রম এখানেই সমাপ্ত হলো।
+            </p>
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700/50 text-[12px] font-bold text-indigo-400 mt-2">
+                <i class="ph-fill ph-heart"></i> ভালোবাসার জন্য কৃতজ্ঞ
+            </div>
+        </div>
+
+        <!-- 🚀 Promotional Card -->
+        <div class="glass-card rounded-[2rem] p-1 md:p-2 fade-in-up relative overflow-hidden group" style="animation-delay: 0.3s;">
+            <!-- Animated Gradient Border Effect -->
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
+            
+            <div class="bg-slate-900 rounded-[1.8rem] p-6 md:p-10 relative z-10">
+                <div class="absolute top-0 right-0 p-6 opacity-10 transform translate-x-4 -translate-y-4">
+                    <i class="ph-fill ph-rocket-launch text-[150px] text-white"></i>
+                </div>
+
+                <div class="relative z-10 flex flex-col items-center md:items-start text-center md:text-left">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-[0_0_30px_rgba(99,102,241,0.3)] animate-float">
+                        <i class="ph-bold ph-code text-white text-[28px]"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl md:text-4xl font-black mb-3 leading-tight">
+                        আপনার ব্যবসার জন্য <br/> 
+                        <span class="gradient-text">প্রিমিয়াম অ্যাপ</span> বানাতে চান?
+                    </h2>
+                    
+                    <p class="text-slate-400 text-[14.5px] mb-8 max-w-md font-medium leading-relaxed">
+                        আপনার প্রতিষ্ঠান, দোকান, রেস্টুরেন্ট বা যেকোনো ব্যবসার জন্য আধুনিক, ফাস্ট এবং ইউজার-ফ্রেন্ডলি অ্যাপ বা ওয়েবসাইট তৈরি করুন <b class="text-white">সবচেয়ে কম খরচে!</b>
+                    </p>
+
+                    <!-- Features -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-8">
+                        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0"><i class="ph-fill ph-device-mobile text-[18px]"></i></div>
+                            <span class="font-bold text-[13px] text-slate-200">মোবাইল ও পিসি সাপোর্ট</span>
+                        </div>
+                        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0"><i class="ph-fill ph-paint-brush text-[18px]"></i></div>
+                            <span class="font-bold text-[13px] text-slate-200">সম্পূর্ণ কাস্টম ডিজাইন</span>
+                        </div>
+                        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center shrink-0"><i class="ph-fill ph-wallet text-[18px]"></i></div>
+                            <span class="font-bold text-[13px] text-slate-200">সর্বনিম্ন খরচের নিশ্চয়তা</span>
+                        </div>
+                        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-3.5 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0"><i class="ph-fill ph-headset text-[18px]"></i></div>
+                            <span class="font-bold text-[13px] text-slate-200">সার্বক্ষণিক সাপোর্ট</span>
+                        </div>
+                    </div>
+
+                    <!-- Contact Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 w-full mt-2">
+                        <a href="https://t.me/Mizan0072" target="_blank" class="flex-1 bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600 text-white px-6 py-4 rounded-xl font-bold text-[15px] flex items-center justify-center gap-2.5 transition-all shadow-[0_10px_20px_-10px_rgba(14,165,233,0.5)] hover:shadow-[0_15px_30px_-10px_rgba(14,165,233,0.6)] active:scale-95">
+                            <i class="ph-fill ph-telegram-logo text-[22px]"></i> টেলিগ্রামে মেসেজ দিন
+                        </a>
+                        <button onclick="scrollToContact()" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-6 py-4 rounded-xl font-bold text-[15px] flex items-center justify-center gap-2.5 transition-all active:scale-95">
+                            <i class="ph-bold ph-envelope-simple text-[22px]"></i> সরাসরি মতামত পাঠান
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 💬 Contact Form Section -->
+        <div id="contactSection" class="glass-card rounded-[2rem] p-6 md:p-8 fade-in-up" style="animation-delay: 0.5s;">
+            <div class="text-center mb-6">
+                <h3 class="font-extrabold text-[18px] text-white">আমাদের সাথে যোগাযোগ করুন</h3>
+                <p class="text-[13px] text-slate-400 mt-1">যেকোনো প্রশ্ন, প্রোজেক্ট আইডিয়া বা মতামত নির্দ্বিধায় লিখতে পারেন।</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-bold text-slate-400 text-[12px] mb-1.5 pl-1">আপনার নাম (ঐচ্ছিক)</label>
+                    <input type="text" id="fbName" placeholder="আপনার নাম লিখুন..." class="w-full px-4 py-3.5 bg-slate-900/50 border border-slate-700 rounded-xl font-medium text-[14px] text-white focus:bg-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all placeholder-slate-600">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-400 text-[12px] mb-1.5 pl-1">আপনার মেসেজ বা প্রয়োজন (আবশ্যক)</label>
+                    <textarea id="fbDesc" rows="4" placeholder="আপনার প্রোজেক্টের ধারণা বা মতামত বিস্তারিত লিখুন..." class="w-full px-4 py-3.5 bg-slate-900/50 border border-slate-700 rounded-xl font-medium text-[14px] text-white focus:bg-slate-800 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition-all resize-none placeholder-slate-600"></textarea>
+                </div>
+                <button onclick="submitFeedbackForm()" id="submitFeedbackBtn" class="mt-4 w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-500 transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)] active:scale-95 text-[15px] flex items-center justify-center gap-2">
+                    মেসেজ পাঠান <i class="ph-bold ph-paper-plane-right text-[20px]"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center text-slate-500 text-[11px] font-bold uppercase tracking-widest mt-8 pb-4 fade-in-up" style="animation-delay: 0.7s;">
+            © ২০২৬ সর্বস্বত্ব সংরক্ষিত • Mizanur Rahaman
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 md:top-8 left-1/2 transform -translate-x-1/2 -translate-y-[150%] bg-white/10 backdrop-blur-xl border border-white/20 text-white px-5 py-3.5 rounded-2xl shadow-2xl transition-transform duration-400 ease-out z-[5000] flex items-center gap-3 min-w-[280px]">
+        <i class="ph-fill ph-check-circle text-[24px] text-emerald-400" id="toastIcon"></i>
+        <div class="flex-1"><p class="font-bold tracking-wide text-[14px]" id="toastMsg">সফল হয়েছে!</p></div>
+    </div>
+
+    <script>
+        // API URL (আপনার গুগল শিটের API লিংক)
+        const API_URL = "https://script.google.com/macros/s/AKfycbzS6N1exM7m5vJdZav5wncSW-NfHLPjOaM-SpbtCl0M1miQPOGxGLfq59tifsQh0p0N/exec";
+
+        function showToast(msg, type = "success") { 
+            const el = document.getElementById('toast'); 
+            const msgEl = document.getElementById('toastMsg'); 
+            const iconEl = document.getElementById('toastIcon');
+            
+            if(!el || !msgEl || !iconEl) return;
+            
+            iconEl.className = type === "error" ? "ph-fill ph-warning-circle text-rose-400 text-[24px]" : "ph-fill ph-check-circle text-emerald-400 text-[24px]";
+            msgEl.textContent = msg; 
+            
+            el.classList.remove('-translate-y-[150%]'); 
+            setTimeout(() => el.classList.add('-translate-y-[150%]'), 3500); 
+        }
+
+        function scrollToContact() {
+            document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => document.getElementById('fbDesc').focus(), 500);
+        }
+
+        async function submitFeedbackForm() {
+            const fbName = document.getElementById('fbName')?.value.trim() || 'অজ্ঞাত'; 
+            const fbDesc = document.getElementById('fbDesc')?.value.trim();
+            
+            if (!fbDesc || fbDesc.length < 5) return showToast("দয়া করে বিস্তারিত মেসেজ বক্সে কিছু লিখুন!", "error");
+            
+            // Check cooldown to prevent spamming
+            const lastMsg = localStorage.getItem('mft_promo_last_msg'); 
+            if (lastMsg && (Date.now() - parseInt(lastMsg)) < 5 * 60 * 1000) { 
+                return showToast("আপনি ইতিমধ্যে একটি মেসেজ পাঠিয়েছেন। ৫ মিনিট পর আবার চেষ্টা করুন।", "error"); 
+            }
+            
+            const btn = document.getElementById('submitFeedbackBtn'); 
+            const originalBtnHtml = btn.innerHTML; 
+            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-[22px]"></i> মেসেজ পাঠানো হচ্ছে...`; 
+            btn.disabled = true;
+            
+            try {
+                // Request to Google Sheets backend
+                await fetch(API_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                    body: JSON.stringify({ 
+                        action: "submitFeedback", 
+                        name: fbName, 
+                        contact: "N/A", 
+                        type: "App_Development_Query",
+                        description: fbDesc 
+                    }) 
+                });
+                
+                localStorage.setItem('mft_promo_last_msg', Date.now().toString()); 
+                showToast("ধন্যবাদ! আপনার মেসেজটি সফলভাবে পৌঁছেছে।");
+                
+                // Clear fields
+                if(document.getElementById('fbName')) document.getElementById('fbName').value = ''; 
+                if(document.getElementById('fbDesc')) document.getElementById('fbDesc').value = '';
+                
+            } catch(e) { 
+                showToast("ইন্টারনেট সংযোগে সমস্যা হয়েছে!", "error"); 
+            } finally { 
+                btn.innerHTML = originalBtnHtml; 
+                btn.disabled = false; 
+            }
+        }
+    </script>
+</body>
+</html>
