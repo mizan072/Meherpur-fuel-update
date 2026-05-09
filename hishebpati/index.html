@@ -188,7 +188,6 @@
             const { totalOwedToMe, totalIOwe } = useMemo(() => {
                 let owed = 0, iOwe = 0;
                 debts.forEach(d => {
-                    // Calculate based on remaining amount
                     const remaining = d.amount - (d.paidAmount || 0);
                     if (remaining > 0) {
                         if (d.type === 'receivable') owed += remaining;
@@ -528,6 +527,7 @@
 
             return (
                 <div className="min-h-screen flex flex-col relative bg-slate-50">
+                    
                     {/* Header */}
                     <header className="px-5 pt-8 pb-4 max-w-2xl mx-auto w-full flex items-center justify-between relative z-10">
                         <div className="flex items-center gap-3">
@@ -551,6 +551,14 @@
 
                     {/* Main Container */}
                     <main className="flex-grow w-full max-w-2xl mx-auto px-4 sm:px-5 pb-10 relative z-10">
+                        
+                        {apiError && (
+                            <div className="bg-rose-50 text-rose-600 text-sm font-medium p-4 rounded-2xl border border-rose-200 mb-6 flex items-start gap-2 shadow-sm">
+                                <Icons.Activity size={18} className="shrink-0 mt-0.5" />
+                                <div>{apiError}</div>
+                            </div>
+                        )}
+
                         {/* Main Balance Card */}
                         <section className="bg-gradient-to-r from-indigo-500 to-blue-500 rounded-[2rem] p-6 sm:p-8 text-white shadow-xl shadow-indigo-500/20 border border-indigo-400 relative overflow-hidden mb-8">
                             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20 mix-blend-overlay"></div>
@@ -801,12 +809,157 @@
                                 )}
                             </section>
                         )}
-                        
-                        {/* Report Section Omitted for Brevity (unchanged from previous) */}
+
+                        {/* Content: Report / Analytics */}
+                        {activeTab === 'report' && (
+                            <section className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6">
+                                
+                                {/* Report Sub-tabs */}
+                                <div className="bg-white p-1.5 rounded-2xl flex items-center shadow-sm border border-slate-200">
+                                    <button 
+                                        onClick={() => setReportTab('overview')} 
+                                        className={`flex-1 py-2 px-2 rounded-xl text-[14px] font-semibold transition-all ${reportTab === 'overview' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:text-indigo-600'}`}
+                                    >
+                                        সার্বিক
+                                    </button>
+                                    <button 
+                                        onClick={() => setReportTab('income')} 
+                                        className={`flex-1 py-2 px-2 rounded-xl text-[14px] font-semibold transition-all ${reportTab === 'income' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:text-emerald-600'}`}
+                                    >
+                                        আয়
+                                    </button>
+                                    <button 
+                                        onClick={() => setReportTab('expense')} 
+                                        className={`flex-1 py-2 px-2 rounded-xl text-[14px] font-semibold transition-all ${reportTab === 'expense' ? 'bg-rose-50 text-rose-700' : 'text-slate-500 hover:text-rose-600'}`}
+                                    >
+                                        ব্যয়
+                                    </button>
+                                </div>
+
+                                {/* Overview Tab */}
+                                {reportTab === 'overview' && (
+                                    <>
+                                        <div className="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm animate-in fade-in">
+                                            <div className="flex items-center gap-2 mb-4">
+                                                <Icons.TrendingUp size={20} className="text-indigo-500" />
+                                                <h2 className="text-lg font-bold text-slate-800">আয় বনাম ব্যয়</h2>
+                                            </div>
+                                            
+                                            {totalIncome === 0 && totalExpense === 0 ? (
+                                                <p className="text-slate-500 text-sm py-4 text-center font-medium">এখনো কোনো ডেটা নেই</p>
+                                            ) : (
+                                                <>
+                                                    <div className="flex justify-between text-sm font-semibold mb-2">
+                                                        <span className="text-emerald-600">আয় {((totalIncome / (totalIncome + totalExpense)) * 100).toFixed(0)}%</span>
+                                                        <span className="text-rose-500">ব্যয় {((totalExpense / (totalIncome + totalExpense)) * 100).toFixed(0)}%</span>
+                                                    </div>
+                                                    <div className="w-full h-3 bg-slate-100 rounded-full flex overflow-hidden">
+                                                        <div className="h-full bg-emerald-500 transition-all duration-1000" style={{ width: `${(totalIncome / (totalIncome + totalExpense)) * 100}%` }}></div>
+                                                        <div className="h-full bg-rose-500 transition-all duration-1000" style={{ width: `${(totalExpense / (totalIncome + totalExpense)) * 100}%` }}></div>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+
+                                        <div className="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm animate-in fade-in">
+                                            <div className="flex items-center justify-between mb-5">
+                                                <div className="flex items-center gap-2">
+                                                    <Icons.ChartBar size={20} className="text-indigo-500" />
+                                                    <h2 className="text-lg font-bold text-slate-800">সর্বোচ্চ ব্যয়ের খাত (Top 3)</h2>
+                                                </div>
+                                            </div>
+
+                                            {topExpenses.length === 0 ? (
+                                                <p className="text-slate-500 text-sm text-center py-4 font-medium">কোনো ব্যয়ের রেকর্ড নেই</p>
+                                            ) : (
+                                                <div className="space-y-4">
+                                                    {topExpenses.map(([desc, amount], idx) => (
+                                                        <div key={idx} className="flex flex-col gap-1.5">
+                                                            <div className="flex justify-between items-end">
+                                                                <span className="text-[15px] font-semibold text-slate-700 truncate pr-4">{desc}</span>
+                                                                <span className="text-[15px] font-bold text-rose-500">{formatCurrency(amount)}</span>
+                                                            </div>
+                                                            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                                                <div className="h-full bg-rose-400 rounded-full" style={{ width: `${(amount / totalExpense) * 100}%` }}></div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+
+                                {/* Income Tab */}
+                                {reportTab === 'income' && (
+                                    <div className="animate-in fade-in">
+                                        {Object.keys(groupTransactionsByMonth('income')).length === 0 ? (
+                                            <div className="text-center py-10 bg-white rounded-[1.5rem] border border-slate-200 shadow-sm">
+                                                <p className="text-slate-500 font-medium">কোনো আয়ের রেকর্ড পাওয়া যায়নি</p>
+                                            </div>
+                                        ) : (
+                                            Object.entries(groupTransactionsByMonth('income')).map(([month, data]) => (
+                                                <div key={month} className="bg-white p-5 rounded-[1.5rem] border border-slate-200 shadow-sm mb-4">
+                                                    <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                                                        <h3 className="font-bold text-slate-800">{month}</h3>
+                                                        <span className="font-bold text-emerald-600">+{formatCurrency(data.total)}</span>
+                                                    </div>
+                                                    <div className="space-y-3">
+                                                        {data.items.map(t => (
+                                                            <div key={t.id} className="flex justify-between items-center">
+                                                                <div>
+                                                                    <p className="font-semibold text-slate-700 text-sm">{t.description}</p>
+                                                                    <p className="text-[11px] text-slate-500">{formatDate(t.date)}</p>
+                                                                </div>
+                                                                <span className="font-semibold text-slate-800 text-sm">{formatCurrency(t.amount)}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Expense Tab */}
+                                {reportTab === 'expense' && (
+                                    <div className="animate-in fade-in">
+                                        {Object.keys(groupTransactionsByMonth('expense')).length === 0 ? (
+                                            <div className="text-center py-10 bg-white rounded-[1.5rem] border border-slate-200 shadow-sm">
+                                                <p className="text-slate-500 font-medium">কোনো ব্যয়ের রেকর্ড পাওয়া যায়নি</p>
+                                            </div>
+                                        ) : (
+                                            Object.entries(groupTransactionsByMonth('expense')).map(([month, data]) => (
+                                                <div key={month} className="bg-white p-5 rounded-[1.5rem] border border-slate-200 shadow-sm mb-4">
+                                                    <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-3">
+                                                        <h3 className="font-bold text-slate-800">{month}</h3>
+                                                        <span className="font-bold text-rose-500">-{formatCurrency(data.total)}</span>
+                                                    </div>
+                                                    <div className="space-y-3">
+                                                        {data.items.map(t => (
+                                                            <div key={t.id} className="flex justify-between items-center">
+                                                                <div>
+                                                                    <p className="font-semibold text-slate-700 text-sm">{t.description}</p>
+                                                                    <p className="text-[11px] text-slate-500">{formatDate(t.date)}</p>
+                                                                </div>
+                                                                <span className="font-semibold text-slate-800 text-sm">{formatCurrency(t.amount)}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
+                            </section>
+                        )}
                     </main>
+
+                    {/* Footer */}
                     <footer className="w-full max-w-2xl mx-auto px-5 py-6 text-center text-slate-400 font-medium text-sm mt-auto">
                         <p>© {new Date().getFullYear()} হিসেবপাতি।</p>
                     </footer>
+
                     {isTransactionModalOpen && <TransactionModal />}
                     {isDebtModalOpen && <DebtModal />}
                 </div>
