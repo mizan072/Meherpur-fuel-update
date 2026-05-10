@@ -12,8 +12,8 @@
     <meta name="apple-mobile-web-app-title" content="হিসেবপাতি">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIiIGZpbGw9IiM2MzY2ZjEiPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTI4Ii8+PHBhdGggZD0iTTI1NiAxNDRsMTEyIDExMmgtODF2MTEyaC02MlYyNTZIMTQ0TDI1NiAxNDR6IiBmaWxsPSIjZmZmIi8+PC9zdmc+">
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tiro Bangla Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,7 +21,7 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Hind Siliguri', 'sans-serif'] },
+                    fontFamily: { sans: ['"Tiro Bangla"', 'serif'] },
                 }
             }
         }
@@ -32,6 +32,30 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- PWA Setup -->
+    <script>
+        const manifest = {
+            "name": "হিসেবপাতি",
+            "short_name": "হিসেবপাতি",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#f8fafc",
+            "theme_color": "#ffffff",
+            "description": "আপনার দৈনন্দিন আয়-ব্যয় এবং দেনা-পাওনার হিসাব",
+            "icons": [{
+                "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIiIGZpbGw9IiM2MzY2ZjEiPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTI4Ii8+PHBhdGggZD0iTTI1NiAxNDRsMTEyIDExMmgtODF2MTEyaC02MlYyNTZIMTQ0TDI1NiAxNDR6IiBmaWxsPSIjZmZmIi8+PC9zdmc+",
+                "sizes": "512x512",
+                "type": "image/svg+xml"
+            }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestUrl;
+        document.head.appendChild(link);
+    </script>
 
     <style>
         body { -webkit-tap-highlight-color: transparent; }
@@ -354,7 +378,7 @@
                 return (
                     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
                         <Icons.Loader size={48} strokeWidth="1.5" className="text-indigo-500 mb-4" />
-                        <p className="text-slate-500 font-semibold animate-pulse">ডেটা লোড হচ্ছে...</p>
+                        <p className="text-slate-500 font-semibold animate-pulse mt-3">ডেটা লোড হচ্ছে...</p>
                     </div>
                 );
             }
@@ -527,7 +551,6 @@
 
             return (
                 <div className="min-h-screen flex flex-col relative bg-slate-50">
-                    
                     {/* Header */}
                     <header className="px-5 pt-8 pb-4 max-w-2xl mx-auto w-full flex items-center justify-between relative z-10">
                         <div className="flex items-center gap-3">
@@ -641,9 +664,26 @@
                                     <h2 className="text-lg font-bold text-slate-800">
                                         {searchQuery ? `সার্চ রেজাল্ট (${sortedAndFilteredTransactions.length})` : "সাম্প্রতিক লেনদেন"}
                                     </h2>
-                                    <button onClick={() => {setEditingTransaction(null); setIsTransactionModalOpen(true);}} className="text-white font-semibold text-[13px] sm:text-sm bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-full transition-all flex items-center gap-1 shadow-sm">
-                                        <Icons.Plus size={16} strokeWidth="2" /> <span className="hidden sm:inline">যোগ</span>
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative bg-white border border-slate-200 rounded-full flex items-center px-3 py-1.5 shadow-sm">
+                                            <Icons.Filter size={14} className="text-slate-400 mr-1.5" />
+                                            <select 
+                                                value={txSort} 
+                                                onChange={(e) => setTxSort(e.target.value)} 
+                                                className="bg-transparent text-[13px] font-semibold text-slate-600 outline-none appearance-none pr-3 cursor-pointer"
+                                            >
+                                                <option value="date-desc">নতুন আগে</option>
+                                                <option value="date-asc">পুরোনো আগে</option>
+                                                <option value="amount-desc">বেশি টাকার</option>
+                                                <option value="amount-asc">কম টাকার</option>
+                                                <option value="filter-income">শুধু আয়</option>
+                                                <option value="filter-expense">শুধু ব্যয়</option>
+                                            </select>
+                                        </div>
+                                        <button onClick={() => {setEditingTransaction(null); setIsTransactionModalOpen(true);}} className="text-white font-semibold text-[13px] sm:text-sm bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-full transition-all flex items-center gap-1 shadow-sm shadow-indigo-500/20">
+                                            <Icons.Plus size={16} strokeWidth="2" /> <span className="hidden sm:inline">যোগ</span>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {isLoading ? (
@@ -751,8 +791,8 @@
                                             return (
                                                 <div key={d.id} className="bg-white p-4 sm:p-5 rounded-[1.25rem] border border-slate-200 shadow-sm transition-all duration-300 flex items-center justify-between">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-50 text-slate-500 shrink-0">
-                                                            {isPaid ? <Icons.CheckCircle size={22} className="text-emerald-500" /> : <Icons.Users size={22} />}
+                                                        <div className={`w-12 h-12 flex items-center justify-center rounded-xl shrink-0 ${isPaid ? 'bg-emerald-50 text-emerald-500' : 'bg-slate-50 text-slate-500'}`}>
+                                                            {isPaid ? <Icons.CheckCircle size={22} /> : <Icons.Users size={22} />}
                                                         </div>
                                                         <div>
                                                             <p className="font-semibold text-slate-800 text-[15px] sm:text-base leading-tight">{d.person}</p>
