@@ -376,13 +376,15 @@ function showTyping() {
 function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
 async function callTavily(query) {
-  const proxyUrl = 'https://corsproxy.io/?';
-  const res = await fetch(proxyUrl + encodeURIComponent(WORKER_URL), { 
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json' }, 
-    body: JSON.stringify({ provider: 'tavily', uid: 'anonymous', query }) 
-  });
-  return await res.json();
+  try {
+    const proxyUrl = 'https://api.allorigins.win/raw?url=';
+    const res = await fetch(proxyUrl + encodeURIComponent(WORKER_URL), { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify({ provider: 'tavily', uid: 'anonymous', query }) 
+    });
+    return await res.json();
+  } catch(e) { return null; }
 }
 
 async function send() {
@@ -412,9 +414,10 @@ async function send() {
   try {
     const payloadQuery = webContext ? `Context: ${webContext}\n\nQuestion: ${text}` : text;
     
-    // Bypassing CORS blocks using a public front-end access proxy proxy
-    const proxyUrl = 'https://corsproxy.io/?';
-    const res = await fetch(proxyUrl + encodeURIComponent(WORKER_URL), {
+    // Using AllOrigins tracking proxy to completely bypass preflight checks
+    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(WORKER_URL);
+    
+    const res = await fetch(proxyUrl, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json', 
@@ -428,6 +431,7 @@ async function send() {
         uid: 'anonymous' 
       })
     });
+    
     const d = await res.json();
     removeTyping();
     const reply = d?.choices?.[0]?.message?.content || '⚠️ এই মুহূর্তে সংযোগ করা সম্ভব হচ্ছে না।';
