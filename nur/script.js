@@ -376,7 +376,12 @@ function showTyping() {
 function removeTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
 
 async function callTavily(query) {
-  const res = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ provider: 'tavily', uid: 'anonymous', query }) });
+  const proxyUrl = 'https://corsproxy.io/?';
+  const res = await fetch(proxyUrl + encodeURIComponent(WORKER_URL), { 
+    method: 'POST', 
+    headers: { 'Content-Type': 'application/json' }, 
+    body: JSON.stringify({ provider: 'tavily', uid: 'anonymous', query }) 
+  });
   return await res.json();
 }
 
@@ -406,10 +411,22 @@ async function send() {
 
   try {
     const payloadQuery = webContext ? `Context: ${webContext}\n\nQuestion: ${text}` : text;
-    const res = await fetch(WORKER_URL, {
+    
+    // Bypassing CORS blocks using a public front-end access proxy proxy
+    const proxyUrl = 'https://corsproxy.io/?';
+    const res = await fetch(proxyUrl + encodeURIComponent(WORKER_URL), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-NurVai-Secret': 'NurVai-2026-xK9mP3qL' },
-      body: JSON.stringify({ provider: 'groq', model: 'llama-3.3-70b-versatile', messages: history.slice(-10), mode, uid: 'anonymous' })
+      headers: { 
+        'Content-Type': 'application/json', 
+        'X-NurVai-Secret': 'NurVai-2026-xK9mP3qL' 
+      },
+      body: JSON.stringify({ 
+        provider: 'groq', 
+        model: 'llama-3.3-70b-versatile', 
+        messages: history.slice(-10), 
+        mode: mode, 
+        uid: 'anonymous' 
+      })
     });
     const d = await res.json();
     removeTyping();
