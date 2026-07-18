@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Infographic Animator – Download Ready</title>
+    <style>
+        :root {
+            --bg: #0f0f1a;
+            --surface: #1a1a2e;
+            --surface2: #22223a;
+            --border: #2a2a44;
+            --text: #e0e0e0;
+            --text2: #a0a0b8;
+            --accent: #ff5e7a;
+            --accent2: #ff8fa3;
+            --blue: #5b9cf5;
+            --green: #4ecb71;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            z-index: 20;
+            gap: 8px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .logo .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent), #ff3d6f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn.accent {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-weight: 600;
+        }
+        .btn.blue {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+            font-weight: 600;
+        }
+        .btn.green {
+            background: var(--green);
+            border-color: var(--green);
+            color: #fff;
+            font-weight: 600;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .mode-indicator {
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            white-space: nowrap;
+        }
+        .mode-indicator.active {
+            border-color: var(--accent);
+            color: var(--accent2);
+            background: #1f1a2e;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .canvas-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0a0a16;
+            padding: 10px;
+            overflow: auto;
+            min-width: 0;
+        }
+        .canvas-inner {
+            position: relative;
+            box-shadow: var(--shadow);
+            border-radius: 4px;
+            overflow: hidden;
+            background: #111;
+            flex-shrink: 0;
+        }
+        canvas {
+            display: block;
+            cursor: crosshair;
+            max-width: 100%;
+            max-height: 100%;
+            touch-action: none;
+        }
+        canvas.playing {
+            cursor: default;
+        }
+        .canvas-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text2);
+            gap: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            min-width: 250px;
+            min-height: 250px;
+            cursor: pointer;
+        }
+        .canvas-placeholder:hover {
+            border-color: var(--accent);
+        }
+
+        .side-panel {
+            width: 320px;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 15;
+            transition: width 0.25s ease, transform 0.25s ease;
+            flex-shrink: 0;
+        }
+        .side-panel.collapsed {
+            width: 0;
+            border-left: none;
+            overflow: hidden;
+        }
+        .panel-header {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            z-index: 2;
+        }
+        .object-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .object-card {
+            background: var(--surface2);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .object-card.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(255, 94, 122, 0.2);
+        }
+        .obj-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .obj-color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .obj-name {
+            font-weight: 600;
+            font-size: 0.8rem;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .obj-delete {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .obj-controls select, .obj-controls input[type="range"] {
+            width: 100%;
+            margin: 2px 0;
+        }
+        .obj-controls label {
+            font-size: 0.7rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            font-weight: 600;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .playback-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .timeline-container {
+            flex: 1;
+            height: 36px;
+            background: var(--surface2);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            min-width: 80px;
+        }
+        .timeline-track {
+            position: absolute;
+            top: 6px;
+            left: 4px;
+            right: 4px;
+            height: 24px;
+            border-radius: 4px;
+            background: #1a1a30;
+        }
+        .timeline-segment {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border-radius: 4px;
+            opacity: 0.85;
+        }
+        .timeline-playhead {
+            position: absolute;
+            top: 2px;
+            width: 3px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+            z-index: 3;
+        }
+
+        .panel-toggle {
+            display: none;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 25;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 850px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .side-panel {
+                width: 100%;
+                max-height: 45vh;
+                border-left: none;
+                border-top: 1px solid var(--border);
+                order: 2;
+            }
+            .side-panel.collapsed {
+                max-height: 0;
+                width: 100%;
+                overflow: hidden;
+            }
+            .panel-toggle {
+                display: block;
+            }
+            .canvas-wrapper {
+                padding: 8px;
+            }
+            .header {
+                padding: 8px 12px;
+            }
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.78rem;
+            }
+            .playback-bar {
+                gap: 6px;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="icon">✨</div>
+            <span>Infographic Animator</span>
+        </div>
+        <div class="header-actions">
+            <span class="mode-indicator" id="modeIndicator">🖱️ Draw Mode</span>
+            <button class="btn" id="btnClearAll">🗑️ Clear</button>
+            <button class="btn blue" id="btnUploadTrigger">📁 Upload</button>
+            <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="canvas-wrapper" id="canvasWrapper">
+            <div class="canvas-placeholder" id="placeholder">
+                <div class="upload-icon">🖼️</div>
+                <p><strong>Upload an infographic</strong> to start animating</p>
+                <p style="font-size:0.8rem;opacity:0.6;">PNG, JPG, WEBP, SVG</p>
+                <button class="btn accent" id="btnUploadPlaceholder">📁 Choose File</button>
+            </div>
+            <div class="canvas-inner" id="canvasInner" style="display:none;">
+                <canvas id="mainCanvas"></canvas>
+            </div>
+            <button class="panel-toggle" id="panelToggle" style="display:none;">📋 Objects</button>
+        </div>
+
+        <div class="side-panel" id="sidePanel">
+            <div class="panel-header">
+                📦 Animated Objects <span class="count" id="objectCount">0</span>
+            </div>
+            <div class="object-list" id="objectList">
+                <div class="no-objects" style="text-align:center;padding:20px;color:var(--text2);">
+                    <p>No objects yet</p>
+                    <p style="font-size:0.75rem;opacity:0.7;">Click & drag on the image to select regions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="playback-bar">
+        <button class="btn blue" id="btnPlay" disabled>▶️ Play</button>
+        <button class="btn" id="btnStop" disabled>⏹️ Stop</button>
+        <button class="btn" id="btnReset" disabled>↺ Reset</button>
+        <button class="btn green" id="btnDownload" disabled>⬇️ Download</button>
+        <span class="time-display" id="timeDisplay">0.00s / 0.00s</span>
+        <div class="timeline-container" id="timelineContainer">
+            <div class="timeline-track" id="timelineTrack"></div>
+            <div class="timeline-playhead" id="timelinePlayhead" style="left:0;"></div>
+        </div>
+        <span style="font-size:0.75rem;color:var(--text2);">Total: <strong id="totalDuration">0.0s</strong></span>
+    </div>
+
+    <script>
+        (function() {
+            const canvasWrapper = document.getElementById('canvasWrapper');
+            const canvasInner = document.getElementById('canvasInner');
+            const placeholder = document.getElementById('placeholder');
+            const mainCanvas = document.getElementById('mainCanvas');
+            const ctx = mainCanvas.getContext('2d');
+            const fileInput = document.getElementById('fileInput');
+            const objectList = document.getElementById('objectList');
+            const objectCount = document.getElementById('objectCount');
+            const modeIndicator = document.getElementById('modeIndicator');
+            const btnPlay = document.getElementById('btnPlay');
+            const btnStop = document.getElementById('btnStop');
+            const btnReset = document.getElementById('btnReset');
+            const btnDownload = document.getElementById('btnDownload');
+            const timeDisplay = document.getElementById('timeDisplay');
+            const timelineTrack = document.getElementById('timelineTrack');
+            const timelinePlayhead = document.getElementById('timelinePlayhead');
+            const timelineContainer = document.getElementById('timelineContainer');
+            const totalDurationEl = document.getElementById('totalDuration');
+            const sidePanel = document.getElementById('sidePanel');
+            const panelToggle = document.getElementById('panelToggle');
+            const btnClearAll = document.getElementById('btnClearAll');
+            const btnUploadTrigger = document.getElementById('btnUploadTrigger');
+            const btnUploadPlaceholder = document.getElementById('btnUploadPlaceholder');
+
+            let sourceImage = null;
+            let imageDrawParams = null;
+            let objects = [];
+            let selectedObjectId = null;
+            let isDrawing = false;
+            let drawStart = null;
+            let isPlaying = false;
+            let animationFrameId = null;
+            let totalAnimationTime = 0;
+            let mediaRecorder = null;
+            let recordedChunks = [];
+            const OBJECT_COLORS = ['#ff5e7a','#5b9cf5','#4ecb71','#f5a623','#a78bfa','#22d3bb','#facc15','#ff8fa3','#64b5f6'];
+            let colorIndex = 0;
+
+            function createObject(srcX, srcY, srcW, srcH) {
+                return {
+                    id: 'obj_' + Date.now() + Math.random().toString(36).substr(2,6),
+                    name: 'Region ' + (objects.length+1),
+                    srcX, srcY, srcW, srcH,
+                    animationType: 'fadeIn',
+                    duration: 0.8,
+                    delay: objects.length * 0.4,
+                    color: OBJECT_COLORS[colorIndex % OBJECT_COLORS.length],
+                    slideDirection: 'left',
+                    easing: 'easeOut',
+                };
+            }
+
+            function setupCanvas() {
+                if (!sourceImage) return;
+                const maxW = Math.min(canvasWrapper.clientWidth - 30, 1200);
+                const maxH = Math.min(canvasWrapper.clientHeight - 30, 800);
+                const imgAspect = sourceImage.width / sourceImage.height;
+                let cw, ch;
+                if (maxW / maxH > imgAspect) {
+                    ch = maxH;
+                    cw = ch * imgAspect;
+                } else {
+                    cw = maxW;
+                    ch = cw / imgAspect;
+                }
+                cw = Math.floor(cw);
+                ch = Math.floor(ch);
+                mainCanvas.width = cw;
+                mainCanvas.height = ch;
+                imageDrawParams = {
+                    x: 0, y: 0, w: cw, h: ch,
+                    scale: cw / sourceImage.width
+                };
+            }
+
+            function sourceToCanvas(sx, sy, sw, sh) {
+                if (!imageDrawParams) return {x:0,y:0,w:0,h:0};
+                const s = imageDrawParams.scale;
+                return { x: sx*s, y: sy*s, w: sw*s, h: sh*s };
+            }
+
+            function canvasToSource(cx, cy) {
+                if (!imageDrawParams) return {x:0,y:0};
+                return { x: cx / imageDrawParams.scale, y: cy / imageDrawParams.scale };
+            }
+
+            function getCanvasPos(e) {
+                const rect = mainCanvas.getBoundingClientRect();
+                const scaleX = mainCanvas.width / rect.width;
+                const scaleY = mainCanvas.height / rect.height;
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY,
+                };
+            }
+
+            function render(playTime = null) {
+                if (!sourceImage || !imageDrawParams) return;
+                ctx.clearRect(0,0,mainCanvas.width,mainCanvas.height);
+                ctx.drawImage(sourceImage,0,0,mainCanvas.width,mainCanvas.height);
+                if (isPlaying && playTime !== null) {
+                    for (const obj of objects) {
+                        const start = obj.delay, end = obj.delay+obj.duration;
+                        if (playTime < start) continue;
+                        let progress = Math.min((playTime-start)/obj.duration, 1);
+                        const eased = applyEasing(progress, obj.easing);
+                        renderAnimatedObject(obj, eased, progress);
+                    }
+                } else {
+                    for (const obj of objects) {
+                        const c = sourceToCanvas(obj.srcX, obj.srcY, obj.srcW, obj.srcH);
+                        const sel = obj.id === selectedObjectId;
+                        ctx.fillStyle = hexToRgba(obj.color, 0.2);
+                        ctx.fillRect(c.x,c.y,c.w,c.h);
+                        ctx.strokeStyle = sel ? '#fff' : obj.color;
+                        ctx.lineWidth = sel ? 3 : 2;
+                        ctx.setLineDash(sel ? [] : [4,3]);
+                        ctx.strokeRect(c.x,c.y,c.w,c.h);
+                        ctx.setLineDash([]);
+                        const label = obj.name;
+                        ctx.font = 'bold 10px "Segoe UI"';
+                        const tw = ctx.measureText(label).width;
+                        const ly = c.y-8 > 14 ? c.y-8 : c.y+c.h+14;
+                        ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                        ctx.fillRect(c.x-2, ly-11, tw+8, 16);
+                        ctx.fillStyle = '#fff';
+                        ctx.fillText(label, c.x+2, ly+1);
+                    }
+                    if (isDrawing && drawStart) {
+                        const rect = getDrawRect();
+                        ctx.strokeStyle = '#fff';
+                        ctx.lineWidth = 2;
+                        ctx.setLineDash([6,3]);
+                        ctx.strokeRect(rect.x, rect.y, rect.w, rect.h);
+                        ctx.setLineDash([]);
+                    }
+                }
+            }
+
+            function renderAnimatedObject(obj, progress, raw) {
+                const c = sourceToCanvas(obj.srcX, obj.srcY, obj.srcW, obj.srcH);
+                const cx = c.x+c.w/2, cy = c.y+c.h/2;
+                ctx.save();
+                const type = obj.animationType;
+                if (type === 'fadeIn') {
+                    ctx.globalAlpha = progress;
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, c.x,c.y,c.w,c.h);
+                } else if (type === 'slideIn') {
+                    ctx.globalAlpha = Math.min(1, progress*1.5);
+                    let ox=0,oy=0; const d=Math.max(c.w,c.h)*1.2;
+                    const dir = obj.slideDirection;
+                    if(dir==='left') ox = -d*(1-progress);
+                    else if(dir==='right') ox = d*(1-progress);
+                    else if(dir==='top') oy = -d*(1-progress);
+                    else if(dir==='bottom') oy = d*(1-progress);
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, c.x+ox,c.y+oy,c.w,c.h);
+                } else if (type === 'bounce') {
+                    const by = -Math.sin(progress*Math.PI*3)*(1-progress)*c.h*0.5;
+                    ctx.translate(cx, cy+by);
+                    ctx.globalAlpha = Math.min(1,progress*2);
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, -c.w/2,-c.h/2,c.w,c.h);
+                } else if (type === 'pulse') {
+                    const s = 0.3+progress*0.7 + Math.sin(raw*Math.PI*4)*(1-raw)*0.2;
+                    ctx.translate(cx,cy); ctx.scale(s,s);
+                    ctx.globalAlpha = Math.min(1,progress*2);
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, -c.w/2,-c.h/2,c.w,c.h);
+                } else if (type === 'rotate') {
+                    const rot = (1-progress)*Math.PI*2*1.2;
+                    ctx.translate(cx,cy); ctx.rotate(rot);
+                    ctx.globalAlpha = Math.min(1,progress*2);
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, -c.w/2,-c.h/2,c.w,c.h);
+                } else if (type === 'shake') {
+                    const sx = Math.sin(progress*Math.PI*8)*(1-progress)*c.w*0.15;
+                    ctx.globalAlpha = Math.min(1,progress*2);
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, c.x+sx,c.y,c.w,c.h);
+                } else if (type === 'scaleUp') {
+                    ctx.translate(cx,cy); ctx.scale(progress,progress);
+                    ctx.globalAlpha = progress;
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, -c.w/2,-c.h/2,c.w,c.h);
+                } else if (type === 'flip') {
+                    const flip = Math.cos(progress*Math.PI);
+                    ctx.translate(cx,cy); ctx.scale(Math.sign(flip)||0.001,1);
+                    ctx.globalAlpha = Math.min(1,progress*2);
+                    ctx.drawImage(sourceImage, obj.srcX,obj.srcY,obj.srcW,obj.srcH, -c.w/2,-c.h/2,c.w,c.h);
+                }
+                ctx.restore();
+            }
+
+            function getDrawRect() {
+                if (!drawStart) return {x:0,y:0,w:0,h:0};
+                return {
+                    x: Math.min(drawStart.x, drawStart.currentX),
+                    y: Math.min(drawStart.y, drawStart.currentY),
+                    w: Math.abs(drawStart.currentX - drawStart.x),
+                    h: Math.abs(drawStart.currentY - drawStart.y)
+                };
+            }
+
+            function hexToRgba(hex,a) {
+                const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+                return `rgba(${r},${g},${b},${a})`;
+            }
+
+            function applyEasing(t, type) {
+                if (type==='easeOut') return 1-Math.pow(1-t,3);
+                if (type==='easeIn') return t*t*t;
+                if (type==='easeInOut') return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+                if (type==='bounce') {
+                    const n1=7.5625,d1=2.75;
+                    return t<1/d1?n1*t*t:t<2/d1?n1*(t-=1.5/d1)*t+.75:t<2.5/d1?n1*(t-=2.25/d1)*t+.9375:n1*(t-=2.625/d1)*t+.984375;
+                }
+                if (type==='elastic') return t===0||t===1?t:-Math.pow(2,10*t-10)*Math.sin((t*10-10.75)*(2*Math.PI)/3);
+                return t;
+            }
+
+            function loadImage(file) {
+                if (!file || !file.type.startsWith('image/')) return;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = new Image();
+                    img.onload = () => {
+                        sourceImage = img;
+                        objects = [];
+                        selectedObjectId = null;
+                        colorIndex = 0;
+                        stopPlayback();
+                        placeholder.style.display='none';
+                        canvasInner.style.display='block';
+                        setupCanvas();
+                        updateAllUI();
+                        render();
+                        btnPlay.disabled = false;
+                        btnReset.disabled = false;
+                        btnDownload.disabled = false;
+                        modeIndicator.textContent='🖱️ Draw Mode';
+                        modeIndicator.classList.add('active');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            fileInput.addEventListener('change', e => { if(e.target.files[0]) loadImage(e.target.files[0]); fileInput.value=''; });
+            btnUploadTrigger.addEventListener('click', ()=>fileInput.click());
+            btnUploadPlaceholder.addEventListener('click', ()=>fileInput.click());
+            placeholder.addEventListener('click', (e)=>{ if(e.target!==btnUploadPlaceholder) fileInput.click(); });
+
+            function startDraw(pos) {
+                if (isPlaying || !sourceImage) return;
+                const obj = findObjectAtCanvasPos(pos.x, pos.y);
+                if (obj && !window.event?.shiftKey) {
+                    selectObject(obj.id);
+                    isDrawing = true;
+                    drawStart = { x: pos.x, y: pos.y, currentX: pos.x, currentY: pos.y, isResize: true, objectId: obj.id };
+                } else {
+                    selectedObjectId = null;
+                    updateSidePanel();
+                    isDrawing = true;
+                    drawStart = { x: pos.x, y: pos.y, currentX: pos.x, currentY: pos.y, isResize: false };
+                }
+            }
+            function moveDraw(pos) {
+                if (!isDrawing || !drawStart) return;
+                drawStart.currentX = pos.x; drawStart.currentY = pos.y;
+                render();
+            }
+            function endDraw(pos) {
+                if (!isDrawing || !drawStart) return;
+                drawStart.currentX = pos.x; drawStart.currentY = pos.y;
+                if (!drawStart.isResize) {
+                    const r = getDrawRect();
+                    if (r.w>10 && r.h>10) {
+                        const s1 = canvasToSource(r.x, r.y);
+                        const s2 = canvasToSource(r.x+r.w, r.y+r.h);
+                        const sx = Math.min(s1.x,s2.x), sy = Math.min(s1.y,s2.y);
+                        const sw = Math.abs(s2.x-s1.x), sh = Math.abs(s2.y-s1.y);
+                        if (sw>5 && sh>5) {
+                            const newObj = createObject(sx,sy,sw,sh);
+                            objects.push(newObj);
+                            colorIndex++;
+                            selectObject(newObj.id);
+                            updateAllUI();
+                        }
+                    }
+                }
+                isDrawing = false; drawStart = null; render();
+            }
+
+            mainCanvas.addEventListener('mousedown', e => { e.preventDefault(); startDraw(getCanvasPos(e)); });
+            mainCanvas.addEventListener('mousemove', e => { e.preventDefault(); moveDraw(getCanvasPos(e)); });
+            mainCanvas.addEventListener('mouseup', e => { endDraw(getCanvasPos(e)); });
+            mainCanvas.addEventListener('mouseleave', () => { if(isDrawing){ isDrawing=false; drawStart=null; render(); } });
+
+            mainCanvas.addEventListener('touchstart', e => {
+                e.preventDefault();
+                if (e.touches.length===1) startDraw(getCanvasPos(e.touches[0]));
+            }, {passive:false});
+            mainCanvas.addEventListener('touchmove', e => {
+                e.preventDefault();
+                if (e.touches.length===1) moveDraw(getCanvasPos(e.touches[0]));
+            }, {passive:false});
+            mainCanvas.addEventListener('touchend', e => {
+                if (drawStart) endDraw(drawStart.currentX ? {x:drawStart.currentX, y:drawStart.currentY} : getCanvasPos(e.changedTouches[0]));
+                else { isDrawing=false; drawStart=null; }
+            });
+
+            function findObjectAtCanvasPos(cx, cy) {
+                for (let i=objects.length-1; i>=0; i--) {
+                    const c = sourceToCanvas(objects[i].srcX, objects[i].srcY, objects[i].srcW, objects[i].srcH);
+                    if (cx>=c.x && cx<=c.x+c.w && cy>=c.y && cy<=c.y+c.h) return objects[i];
+                }
+                return null;
+            }
+
+            function selectObject(id) { selectedObjectId = id; updateSidePanel(); render(); }
+            function deleteObject(id) { objects = objects.filter(o=>o.id!==id); if(selectedObjectId===id) selectedObjectId=null; updateAllUI(); render(); }
+            function updateObjectProperty(id, prop, value) {
+                const obj = objects.find(o=>o.id===id); if(!obj) return;
+                obj[prop] = value; updateAllUI(); render();
+            }
+
+            function updateSidePanel() {
+                objectList.innerHTML = '';
+                objectCount.textContent = objects.length;
+                if (objects.length===0) {
+                    objectList.innerHTML = '<div class="no-objects"><p>No objects yet</p><p style="font-size:0.75rem;">Draw on image</p></div>';
+                    return;
+                }
+                objects.forEach(obj => {
+                    const card = document.createElement('div');
+                    card.className = 'object-card' + (obj.id===selectedObjectId?' selected':'');
+                    card.innerHTML = `
+                        <div class="obj-header">
+                            <span class="obj-color-dot" style="background:${obj.color}"></span>
+                            <span class="obj-name">${obj.name}</span>
+                            <button class="obj-delete" data-del="${obj.id}">×</button>
+                        </div>
+                        <div class="obj-controls">
+                            <label>Animation</label>
+                            <select data-prop="animationType" data-id="${obj.id}">
+                                <option value="fadeIn" ${obj.animationType==='fadeIn'?'selected':''}>Fade In</option>
+                                <option value="slideIn" ${obj.animationType==='slideIn'?'selected':''}>Slide In</option>
+                                <option value="bounce" ${obj.animationType==='bounce'?'selected':''}>Bounce</option>
+                                <option value="pulse" ${obj.animationType==='pulse'?'selected':''}>Pulse</option>
+                                <option value="rotate" ${obj.animationType==='rotate'?'selected':''}>Rotate</option>
+                                <option value="shake" ${obj.animationType==='shake'?'selected':''}>Shake</option>
+                                <option value="scaleUp" ${obj.animationType==='scaleUp'?'selected':''}>Scale Up</option>
+                                <option value="flip" ${obj.animationType==='flip'?'selected':''}>Flip</option>
+                            </select>
+                            ${obj.animationType==='slideIn'?`
+                            <label>Slide From</label>
+                            <select data-prop="slideDirection" data-id="${obj.id}">
+                                <option value="left" ${obj.slideDirection==='left'?'selected':''}>Left</option>
+                                <option value="right" ${obj.slideDirection==='right'?'selected':''}>Right</option>
+                                <option value="top" ${obj.slideDirection==='top'?'selected':''}>Top</option>
+                                <option value="bottom" ${obj.slideDirection==='bottom'?'selected':''}>Bottom</option>
+                            </select>`:''}
+                            <label>Duration: ${obj.duration.toFixed(1)}s</label>
+                            <input type="range" min="0.2" max="3" step="0.1" value="${obj.duration}" data-prop="duration" data-id="${obj.id}">
+                            <label>Delay: ${obj.delay.toFixed(1)}s</label>
+                            <input type="range" min="0" max="8" step="0.1" value="${obj.delay}" data-prop="delay" data-id="${obj.id}">
+                            <label>Easing</label>
+                            <select data-prop="easing" data-id="${obj.id}">
+                                <option value="easeOut" ${obj.easing==='easeOut'?'selected':''}>Ease Out</option>
+                                <option value="easeIn" ${obj.easing==='easeIn'?'selected':''}>Ease In</option>
+                                <option value="easeInOut" ${obj.easing==='easeInOut'?'selected':''}>Ease In-Out</option>
+                                <option value="bounce" ${obj.easing==='bounce'?'selected':''}>Bounce</option>
+                                <option value="elastic" ${obj.easing==='elastic'?'selected':''}>Elastic</option>
+                                <option value="linear" ${obj.easing==='linear'?'selected':''}>Linear</option>
+                            </select>
+                        </div>`;
+                    card.addEventListener('click', e => {
+                        if (e.target.tagName==='SELECT'||e.target.tagName==='INPUT'||e.target.tagName==='BUTTON') return;
+                        selectObject(obj.id);
+                    });
+                    card.querySelector('.obj-delete').addEventListener('click', e => { e.stopPropagation(); deleteObject(obj.id); });
+                    card.addEventListener('change', e => {
+                        const prop = e.target.dataset.prop, id = e.target.dataset.id;
+                        updateObjectProperty(id, prop, prop==='duration'||prop==='delay'?parseFloat(e.target.value):e.target.value);
+                    });
+                    card.addEventListener('input', e => {
+                        if (e.target.type==='range') updateObjectProperty(e.target.dataset.id, e.target.dataset.prop, parseFloat(e.target.value));
+                    });
+                    objectList.appendChild(card);
+                });
+            }
+
+            function updateAllUI() { updateSidePanel(); updateTimeline(); updateTotalDuration(); }
+            function updateTotalDuration() {
+                let maxT=0; objects.forEach(o=>{ const end=o.delay+o.duration; if(end>maxT) maxT=end; });
+                totalAnimationTime = Math.max(maxT,0.5);
+                totalDurationEl.textContent = totalAnimationTime.toFixed(1)+'s';
+            }
+            function updateTimeline() {
+                timelineTrack.innerHTML = '';
+                if (totalAnimationTime<=0) return;
+                objects.forEach(obj => {
+                    const left = (obj.delay/totalAnimationTime)*100;
+                    const width = Math.max((obj.duration/totalAnimationTime)*100, 0.5);
+                    const seg = document.createElement('div');
+                    seg.className='timeline-segment';
+                    seg.style.left=left+'%'; seg.style.width=width+'%'; seg.style.background=obj.color;
+                    seg.title = obj.name;
+                    seg.addEventListener('click', e => { e.stopPropagation(); selectObject(obj.id); });
+                    timelineTrack.appendChild(seg);
+                });
+                timelinePlayhead.style.left='0%';
+            }
+            function updatePlayhead(t) {
+                if (totalAnimationTime<=0) return;
+                timelinePlayhead.style.left = Math.min((t/totalAnimationTime)*100,100)+'%';
+                timeDisplay.textContent = t.toFixed(2)+'s / '+totalAnimationTime.toFixed(2)+'s';
+            }
+
+            timelineContainer.addEventListener('click', e => {
+                if (isPlaying || totalAnimationTime<=0) return;
+                const rect = timelineContainer.getBoundingClientRect();
+                const pct = (e.clientX-rect.left)/rect.width;
+                const scrub = pct*totalAnimationTime;
+                render(scrub); updatePlayhead(scrub);
+            });
+
+            function startPlayback() {
+                if (isPlaying || objects.length===0 || !sourceImage) return;
+                isPlaying=true; mainCanvas.classList.add('playing');
+                btnPlay.disabled=true; btnStop.disabled=false; btnReset.disabled=false; btnDownload.disabled=true;
+                modeIndicator.textContent='🎬 Playing...'; modeIndicator.classList.remove('active');
+                animationStartTime = performance.now()/1000;
+                function loop() {
+                    if (!isPlaying) return;
+                    const elapsed = performance.now()/1000 - animationStartTime;
+                    const t = Math.min(elapsed, totalAnimationTime);
+                    render(t); updatePlayhead(t);
+                    if (elapsed >= totalAnimationTime+0.3) { stopPlayback(); render(totalAnimationTime); updatePlayhead(totalAnimationTime); return; }
+                    animationFrameId = requestAnimationFrame(loop);
+                }
+                loop();
+            }
+
+            function stopPlayback() {
+                isPlaying=false; mainCanvas.classList.remove('playing');
+                if(animationFrameId) cancelAnimationFrame(animationFrameId);
+                btnPlay.disabled = (objects.length===0||!sourceImage);
+                btnStop.disabled=true;
+                btnReset.disabled = (objects.length===0||!sourceImage);
+                btnDownload.disabled = (objects.length===0||!sourceImage);
+                modeIndicator.textContent='🖱️ Draw Mode'; modeIndicator.classList.add('active');
+                render(); updatePlayhead(0);
+            }
+
+            // DOWNLOAD FUNCTIONALITY
+            async function downloadRecording() {
+                if (!sourceImage || objects.length === 0 || isPlaying) return;
+                btnPlay.disabled = true;
+                btnStop.disabled = true;
+                btnReset.disabled = true;
+                btnDownload.disabled = true;
+                modeIndicator.textContent = '🔴 Recording...';
+
+                const stream = mainCanvas.captureStream(30);
+                recordedChunks = [];
+                const mimeType = MediaRecorder.isTypeSupported('video/webm; codecs=vp9') ? 'video/webm; codecs=vp9' : 'video/webm';
+                mediaRecorder = new MediaRecorder(stream, { mimeType });
+
+                mediaRecorder.ondataavailable = e => {
+                    if (e.data.size > 0) recordedChunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'animated-infographic.webm';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    stopPlayback();
+                    btnDownload.disabled = false;
+                    modeIndicator.textContent = '🖱️ Draw Mode';
+                    modeIndicator.classList.add('active');
+                };
+
+                isPlaying = true;
+                mainCanvas.classList.add('playing');
+                mediaRecorder.start();
+                animationStartTime = performance.now() / 1000;
+
+                function recordLoop() {
+                    const elapsed = performance.now() / 1000 - animationStartTime;
+                    const playTime = Math.min(elapsed, totalAnimationTime);
+                    render(playTime);
+                    updatePlayhead(playTime);
+                    if (elapsed >= totalAnimationTime) {
+                        mediaRecorder.stop();
+                        isPlaying = false;
+                        mainCanvas.classList.remove('playing');
+                        return;
+                    }
+                    requestAnimationFrame(recordLoop);
+                }
+                recordLoop();
+            }
+
+            btnPlay.addEventListener('click', startPlayback);
+            btnStop.addEventListener('click', stopPlayback);
+            btnReset.addEventListener('click', ()=>{ stopPlayback(); render(); updatePlayhead(0); });
+            btnDownload.addEventListener('click', downloadRecording);
+
+            btnClearAll.addEventListener('click', ()=>{
+                if(isPlaying) stopPlayback();
+                objects=[]; selectedObjectId=null; colorIndex=0; updateAllUI(); render();
+                btnPlay.disabled=true; btnStop.disabled=true; btnReset.disabled=true; btnDownload.disabled=true;
+                timeDisplay.textContent='0.00s / 0.00s'; totalDurationEl.textContent='0.0s';
+            });
+
+            panelToggle.addEventListener('click', ()=>{
+                sidePanel.classList.toggle('collapsed');
+                panelToggle.textContent = sidePanel.classList.contains('collapsed') ? '📋 Objects' : '✖ Close';
+            });
+            function autoPanelState() {
+                if (window.innerWidth <= 850) {
+                    panelToggle.style.display = 'block';
+                    sidePanel.classList.add('collapsed');
+                    panelToggle.textContent = '📋 Objects';
+                } else {
+                    panelToggle.style.display = 'none';
+                    sidePanel.classList.remove('collapsed');
+                }
+            }
+            window.addEventListener('resize', ()=>{
+                clearTimeout(window.resized);
+                window.resized = setTimeout(()=>{
+                    autoPanelState();
+                    if (sourceImage && !isPlaying) { setupCanvas(); render(); }
+                }, 200);
+            });
+            autoPanelState();
+
+            canvasWrapper.addEventListener('dragover', e => { e.preventDefault(); canvasWrapper.style.background='#111122'; });
+            canvasWrapper.addEventListener('dragleave', ()=> canvasWrapper.style.background='');
+            canvasWrapper.addEventListener('drop', e => {
+                e.preventDefault(); canvasWrapper.style.background='';
+                if (e.dataTransfer.files[0]) loadImage(e.dataTransfer.files[0]);
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.key==='Delete'||e.key==='Backspace') {
+                    if (selectedObjectId && !isPlaying && document.activeElement===document.body) { deleteObject(selectedObjectId); e.preventDefault(); }
+                }
+                if (e.key===' ' && !isPlaying && sourceImage && objects.length>0 && document.activeElement===document.body) { e.preventDefault(); startPlayback(); }
+                if (e.key==='Escape' && isPlaying) stopPlayback();
+            });
+
+            btnPlay.disabled=true; btnStop.disabled=true; btnReset.disabled=true; btnDownload.disabled=true;
+            updateAllUI();
+            console.log('✅ Ready – Draw, animate, and download as WebM video.');
+        })();
+    </script>
+</body>
+</html>
