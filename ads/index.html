@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rewarded Ads – 1 Point</title>
+    <title>Rewarded Ads – 1 Point (Real Ads Only)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -117,7 +117,6 @@
         #statusMsg.success { color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.2); }
         #statusMsg.error   { color: #f87171; border: 1px solid rgba(248, 113, 113, 0.2); }
         #statusMsg.loading { color: #facc15; border: 1px solid rgba(250, 204, 21, 0.2); }
-        #statusMsg.sim     { color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.2); }
         .footer {
             margin-top: 1.8rem;
             font-size: 0.7rem;
@@ -134,13 +133,15 @@
             border-radius: 9999px;
             margin-top: 0.5rem;
         }
+        .badge.live { background: #16a34a; }
+        .badge.error-badge { background: #dc2626; }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h1>🎬 Watch & Earn</h1>
-        <p class="subtitle">Complete a short ad → get <strong>1 point</strong></p>
+        <p class="subtitle">Complete a <strong>real ad</strong> → get <strong>1 point</strong></p>
 
         <div class="reward-box">
             <span class="reward-label">⭐ Your Points</span>
@@ -152,7 +153,7 @@
         </button>
 
         <div id="statusMsg">Ready to earn!</div>
-        <div id="modeBadge" class="badge">🔧 Mode: loading…</div>
+        <div id="modeBadge" class="badge">⏳ Checking SDK…</div>
 
         <div class="footer">
             Powered by <a href="https://monetag.com" target="_blank">Monetag</a> &nbsp;·&nbsp;
@@ -160,16 +161,16 @@
         </div>
     </div>
 
-    <!-- Load Monetag SDK explicitly with HTTPS -->
-    <script src="https://libtl.com/sdk.js" data-zone="11166644" data-sdk="show_11166644"></script>
+    <!-- YOUR UPDATED ZONE: 11161317 -->
+    <script src="https://libtl.com/sdk.js" data-zone="11161317" data-sdk="show_11161317"></script>
 
     <script>
         (function() {
             "use strict";
 
             // ---- CONFIG ----
-            const REWARD_AMOUNT = 1;        // 👈 changed to 1 point
-            const SIMULATE_IF_SDK_MISSING = true;   // if true, simulates ad when SDK fails
+            const REWARD_AMOUNT = 1;
+            const SIMULATE_IF_SDK_MISSING = false; // 👈 REAL ADS ONLY – no simulation
 
             // ---- DOM ----
             const watchBtn = document.getElementById('watchBtn');
@@ -178,7 +179,6 @@
             const modeBadge = document.getElementById('modeBadge');
 
             let totalPoints = 0;
-            let usingSimulation = false;
 
             // ---- Helpers ----
             function updateUI() {
@@ -191,45 +191,34 @@
                 if (type) statusMsg.classList.add(type);
             }
 
-            function setModeBadge(text) {
+            function setBadge(text, className = '') {
                 modeBadge.textContent = text;
+                modeBadge.className = 'badge' + (className ? ' ' + className : '');
             }
 
-            // ---- The main ad-watching function ----
+            // ---- The main ad-watching function (REAL ADS ONLY) ----
             async function watchAd() {
+                // Double-check SDK is available before proceeding
+                if (typeof show_11161317 !== 'function') {
+                    setStatus('❌ SDK not available. Please disable ad blocker or try again.', 'error');
+                    console.error('show_11161317 is not defined – SDK blocked or failed to load.');
+                    return;
+                }
+
                 watchBtn.disabled = true;
-                setStatus('Loading ad…', 'loading');
+                setStatus('Loading real ad…', 'loading');
 
                 try {
-                    let adCompleted = false;
+                    // 🎯 Show the ACTUAL Monetag rewarded interstitial
+                    await show_11161317();
 
-                    // Try to use the real Monetag SDK
-                    if (typeof show_11166644 === 'function') {
-                        console.log('🎯 Using real Monetag SDK.');
-                        await show_11166644();   // resolves when ad is fully watched
-                        adCompleted = true;
-                    } 
-                    // If SDK is missing and simulation is enabled
-                    else if (SIMULATE_IF_SDK_MISSING) {
-                        console.warn('⚠️ SDK not loaded – using SIMULATION for testing.');
-                        setStatus('🔮 Simulating ad… (test mode)', 'sim');
-                        // Simulate a 2‑second ad view
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                        adCompleted = true;
-                    } 
-                    else {
-                        throw new Error('Monetag SDK not loaded and simulation is disabled.');
-                    }
-
-                    // ---- Reward granted ----
-                    if (adCompleted) {
-                        totalPoints += REWARD_AMOUNT;
-                        updateUI();
-                        setStatus(`✅ +${REWARD_AMOUNT} point${REWARD_AMOUNT > 1 ? 's' : ''} earned!`, 'success');
-                    }
+                    // ✅ Promise resolved = user watched the full ad
+                    totalPoints += REWARD_AMOUNT;
+                    updateUI();
+                    setStatus(`✅ +${REWARD_AMOUNT} point earned from real ad!`, 'success');
 
                 } catch (error) {
-                    console.error('Ad error:', error);
+                    console.error('Real ad error:', error);
                     setStatus('❌ Ad failed. Please try again.', 'error');
                 } finally {
                     watchBtn.disabled = false;
@@ -238,21 +227,18 @@
 
             // ---- Initialisation ----
             function init() {
-                // Check if the real SDK function exists
-                if (typeof show_11166644 === 'function') {
-                    setModeBadge('✅ Live SDK');
-                    console.log('✅ Monetag SDK loaded successfully.');
+                if (typeof show_11161317 === 'function') {
+                    setBadge('✅ Live SDK (real ads)', 'live');
+                    console.log('✅ Monetag SDK loaded successfully for zone 11161317.');
                     setStatus('Ready to earn!');
-                } else if (SIMULATE_IF_SDK_MISSING) {
-                    setModeBadge('🔬 Simulation (SDK missing)');
-                    console.warn('⚠️ SDK not found – simulation mode ACTIVE. Points will be awarded for testing.');
-                    setStatus('⚡ Test mode: ads are simulated', 'sim');
+                    watchBtn.disabled = false;
                 } else {
-                    setModeBadge('❌ SDK unavailable');
-                    setStatus('❌ SDK not loaded. Check console.', 'error');
+                    setBadge('❌ SDK blocked / missing', 'error-badge');
+                    setStatus('❌ SDK not loaded. Check ad blocker.', 'error');
+                    console.warn('⚠️ SDK not found. Real ads will NOT work. Disable ad blocker or host on a public domain.');
+                    // Disable the button since we have NO simulation fallback
                     watchBtn.disabled = true;
                 }
-
                 updateUI();
             }
 
@@ -264,6 +250,5 @@
 
         })();
     </script>
-
 </body>
 </html>
