@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rewarded Ads – 1 Point</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 1rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2.5rem 2rem;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 0.25rem;
+        }
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 0.75rem;
+        }
+        .reward-box {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .reward-label {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+        .reward-amount {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fbbf24;
+            background: rgba(251, 191, 36, 0.15);
+            padding: 0.1rem 1.2rem;
+            border-radius: 9999px;
+            line-height: 1.4;
+        }
+        #watchBtn {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 8px 20px -6px rgba(37, 99, 235, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        #watchBtn:hover:not(:disabled) {
+            background: linear-gradient(145deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -8px rgba(37, 99, 235, 0.6);
+        }
+        #watchBtn:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+        #watchBtn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        #statusMsg {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #94a3b8;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+        #statusMsg.success { color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.2); }
+        #statusMsg.error   { color: #f87171; border: 1px solid rgba(248, 113, 113, 0.2); }
+        #statusMsg.loading { color: #facc15; border: 1px solid rgba(250, 204, 21, 0.2); }
+        #statusMsg.sim     { color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.2); }
+        .footer {
+            margin-top: 1.8rem;
+            font-size: 0.7rem;
+            color: #475569;
+        }
+        .footer a { color: #64748b; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .badge {
+            display: inline-block;
+            background: #475569;
+            color: #e2e8f0;
+            font-size: 0.6rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 9999px;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🎬 Watch & Earn</h1>
+        <p class="subtitle">Complete a short ad → get <strong>1 point</strong></p>
+
+        <div class="reward-box">
+            <span class="reward-label">⭐ Your Points</span>
+            <span class="reward-amount" id="coinCounter">0</span>
+        </div>
+
+        <button id="watchBtn">
+            <span>▶</span> Watch Ad
+        </button>
+
+        <div id="statusMsg">Ready to earn!</div>
+        <div id="modeBadge" class="badge">🔧 Mode: loading…</div>
+
+        <div class="footer">
+            Powered by <a href="https://monetag.com" target="_blank">Monetag</a> &nbsp;·&nbsp;
+            <a href="https://docs.monetag.com/docs/ad-integration/rewarded-interstitial/" target="_blank">Docs</a>
+        </div>
+    </div>
+
+    <!-- Load Monetag SDK explicitly with HTTPS -->
+    <script src="https://libtl.com/sdk.js" data-zone="11166644" data-sdk="show_11166644"></script>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ---- CONFIG ----
+            const REWARD_AMOUNT = 1;        // 👈 changed to 1 point
+            const SIMULATE_IF_SDK_MISSING = true;   // if true, simulates ad when SDK fails
+
+            // ---- DOM ----
+            const watchBtn = document.getElementById('watchBtn');
+            const coinDisplay = document.getElementById('coinCounter');
+            const statusMsg = document.getElementById('statusMsg');
+            const modeBadge = document.getElementById('modeBadge');
+
+            let totalPoints = 0;
+            let usingSimulation = false;
+
+            // ---- Helpers ----
+            function updateUI() {
+                coinDisplay.textContent = totalPoints;
+            }
+
+            function setStatus(text, type = '') {
+                statusMsg.textContent = text;
+                statusMsg.className = '';
+                if (type) statusMsg.classList.add(type);
+            }
+
+            function setModeBadge(text) {
+                modeBadge.textContent = text;
+            }
+
+            // ---- The main ad-watching function ----
+            async function watchAd() {
+                watchBtn.disabled = true;
+                setStatus('Loading ad…', 'loading');
+
+                try {
+                    let adCompleted = false;
+
+                    // Try to use the real Monetag SDK
+                    if (typeof show_11166644 === 'function') {
+                        console.log('🎯 Using real Monetag SDK.');
+                        await show_11166644();   // resolves when ad is fully watched
+                        adCompleted = true;
+                    } 
+                    // If SDK is missing and simulation is enabled
+                    else if (SIMULATE_IF_SDK_MISSING) {
+                        console.warn('⚠️ SDK not loaded – using SIMULATION for testing.');
+                        setStatus('🔮 Simulating ad… (test mode)', 'sim');
+                        // Simulate a 2‑second ad view
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        adCompleted = true;
+                    } 
+                    else {
+                        throw new Error('Monetag SDK not loaded and simulation is disabled.');
+                    }
+
+                    // ---- Reward granted ----
+                    if (adCompleted) {
+                        totalPoints += REWARD_AMOUNT;
+                        updateUI();
+                        setStatus(`✅ +${REWARD_AMOUNT} point${REWARD_AMOUNT > 1 ? 's' : ''} earned!`, 'success');
+                    }
+
+                } catch (error) {
+                    console.error('Ad error:', error);
+                    setStatus('❌ Ad failed. Please try again.', 'error');
+                } finally {
+                    watchBtn.disabled = false;
+                }
+            }
+
+            // ---- Initialisation ----
+            function init() {
+                // Check if the real SDK function exists
+                if (typeof show_11166644 === 'function') {
+                    setModeBadge('✅ Live SDK');
+                    console.log('✅ Monetag SDK loaded successfully.');
+                    setStatus('Ready to earn!');
+                } else if (SIMULATE_IF_SDK_MISSING) {
+                    setModeBadge('🔬 Simulation (SDK missing)');
+                    console.warn('⚠️ SDK not found – simulation mode ACTIVE. Points will be awarded for testing.');
+                    setStatus('⚡ Test mode: ads are simulated', 'sim');
+                } else {
+                    setModeBadge('❌ SDK unavailable');
+                    setStatus('❌ SDK not loaded. Check console.', 'error');
+                    watchBtn.disabled = true;
+                }
+
+                updateUI();
+            }
+
+            // ---- Event listener ----
+            watchBtn.addEventListener('click', watchAd);
+
+            // ---- Start ----
+            init();
+
+        })();
+    </script>
+
+</body>
+</html>
